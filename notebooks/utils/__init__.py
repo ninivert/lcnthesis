@@ -14,5 +14,5 @@ class Timer:
 		res = ''
 		if self.name is not None:
 			res += f'[{self.name}] '
-		res += f'{(time.time() - self.t0)*1e3} ms'
+		res += f'{(time.time() - self.t0)*1e3:.2f} ms'
 		print(res)
