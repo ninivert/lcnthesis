@@ -1,6 +1,11 @@
+"""Input currents to the RNN"""
+
 import numpy as np
 from abc import ABC, abstractmethod
 from typing import Callable, Union
+
+# TODO
+#  	- I_ext as Weiner process
 
 __all__ = ['Delta', 'Flat', 'Heaviside']
 

@@ -3,8 +3,13 @@
 import scipy.integrate
 import numpy as np
 from typing import Callable, Union
+from .lagging import LaggingFunction
+from tqdm import tqdm
 
-__all__ = ['DiscreteRNN', 'LowRankRNN']
+__all__ = ['DiscreteRNN', 'LowRankRNN', 'LowRankCyclingRNN']
+
+# TODO
+# 	- have a way to save the params into a string/json representation (for reproducibility)
 
 class LowRankRNN:
 	"""RNN with low-rank connectivity $J = \sum_\mu F^\mu_i G^\mu_i$"""
@@ -27,24 +32,70 @@ class LowRankRNN:
 	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
 		rhs = np.zeros_like(h)
 		rhs -= h  # exponential decay
-		rhs += self.I_rec(h)  # recurrent drive
+		rhs += self.I_rec(t, h)  # recurrent drive
 		rhs += self.I_ext(t)  # external drive
 		return rhs
 
-	def I_rec(self, h: np.ndarray) -> np.ndarray:
+	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
 		drive = np.zeros_like(h)
+		
+		# firing rate
 		rate = self.phi(h)
+		
 		# drive += np.einsum('im,jm,j->i', self.F, self.G, rate)
 		drive += np.einsum('im,jm,j->i', self.F, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
+		
 		if self.exclude_self_connections:	
 			# remove self-connections
 			# drive -= np.einsum('im,im,i->i', self.F, self.G, rate)
 			drive -= np.einsum('im,im,i->i', self.F, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
+		
 		drive /= self.N
+		
+		return drive
+
+	def simulate_h(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, pbar: bool = False):
+		res = scipy.integrate.solve_ivp(self.dh, t_span, h0, max_step=dt_max)
+		return res
+
+
+class LowRankCyclingRNN(LowRankRNN):
+	"""RNN with low-rank connectivity, cycling through patterns"""
+
+	def __init__(self,
+		F: np.ndarray,  # N, p matrix
+		G: np.ndarray,  # N, p matrix
+		phi: Callable[[np.ndarray], np.ndarray],  # phi(u) : R -> R 
+		I_ext: Callable[[float], np.ndarray],  # I_ext(t): R -> N vector (current for each neuron)
+		exclude_self_connections: bool = True,  # whether to include self-connections
+		delta: float = 1.0,  # delay for the activation
+	):
+		super().__init__(self, F, G, phi, I_ext, exclude_self_connections)
+		self.F = np.roll(self.F, shift=1, axis=0)  # implement the cycling behavior
+		self.delta = delta
+
+	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
+		drive = np.zeros_like(h)
+
+		# lagging firing rate
+		h_lag = self.h_lagging(t, h)
+		rate = self.phi(h_lag)
+		
+		drive += np.einsum('im,jm,j->i', self.F, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
+		
+		if self.exclude_self_connections:	
+			# remove self-connections
+			drive -= np.einsum('im,im,i->i', self.F, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
+		
+		drive /= self.N
+		
 		return drive
 
 	def simulate_h(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1):
-		res = scipy.integrate.solve_ivp(self.dh, t_span, h0, max_step=dt_max)
+		# TODO : test this
+		self.h_lagging = LaggingFunction([t_span[0]], [h0], self.delta)
+		res = super().simulate_h(self, h0, t_span, dt_max)
+		del self.h_lagging
 		return res
 
 
