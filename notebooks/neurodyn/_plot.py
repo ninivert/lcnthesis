@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from scipy.integrate._ivp.ivp import OdeResult
-from .rnn import LowRankRNN
+from ._rnn import LowRankRNN
 
 __all__ = ['plot_neuron_trajectory', 'plot_dh_hist']
 
