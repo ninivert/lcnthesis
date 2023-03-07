@@ -50,7 +50,7 @@ class LowRankRNN:
 
 	def simulate_h(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False):
 		if progress:
-			self.pbar = tqdm(total=t_span[1])
+			self.pbar = tqdm(total=t_span[1], desc='simulation time', bar_format='{desc}: {percentage:.2f}%|{bar}| t={n:.3f} of {total_fmt} [{elapsed}<{remaining}]')
 		res = scipy.integrate.solve_ivp(self.dh, t_span, h0, max_step=dt_max)
 		if progress:
 			self.pbar.close()

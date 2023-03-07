@@ -8,8 +8,9 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from scipy.integrate._ivp.ivp import OdeResult
 from ._rnn import LowRankRNN
+from ._overlap import overlap
 
-__all__ = ['plot_neuron_trajectory', 'plot_dh_hist']
+__all__ = ['plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist']
 
 def _unwrap_figax(figax: tuple[Figure, Axes] | None = None) -> tuple[Figure, Axes]:
 	if figax is None:
@@ -29,6 +30,23 @@ def plot_neuron_trajectory(res: OdeResult, n: int = 5, figax: tuple[Figure, Axes
 	ax.legend()
 
 	return fig, ax
+
+
+def plot_overlap_trajectory(rnn: LowRankRNN, res: OdeResult, figax: tuple[Figure, Axes] | None = None) -> tuple[Figure, Axes]:
+	fig, ax = _unwrap_figax(figax)
+
+	ax.set_xlabel('Time $t$ [s]')
+	ax.set_ylabel('Overlap $m^{{\\mu}}$')
+	m = overlap(rnn, res.y)
+
+	for mu in range(len(m)):
+		ax.plot(res.t, m[mu], label=f'$\\mu={mu}$')
+
+	ax.legend()
+	ax.grid(axis='y')
+
+	return fig, ax
+
 
 def plot_dh_hist(rnn: LowRankRNN, figax: tuple[Figure, Axes] | None = None) -> tuple[Figure, Axes]:
 	fig, ax = _unwrap_figax(figax)
