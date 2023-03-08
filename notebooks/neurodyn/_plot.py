@@ -37,6 +37,7 @@ def plot_overlap_trajectory(rnn: LowRankRNN, res: OdeResult, figax: tuple[Figure
 
 	ax.set_xlabel('Time $t$ [s]')
 	ax.set_ylabel('Overlap $m^{{\\mu}}$')
+	ax.set_title('Overlap trajectory')
 	m = overlap(rnn, res.y)
 
 	for mu in range(len(m)):
@@ -56,6 +57,6 @@ def plot_dh_hist(rnn: LowRankRNN, figax: tuple[Figure, Axes] | None = None) -> t
 
 	ax.set_xlabel('$\\dot h_i$')
 	ax.legend()
-	fig.suptitle('Derivative $\dot h_i$ at $\\xi_i^{\\mu}$')
+	ax.set_title('Derivative $\dot h_i$ at $\\xi_i^{\\mu}$')
 
 	return fig, ax
