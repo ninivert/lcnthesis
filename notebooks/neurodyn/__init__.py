@@ -5,3 +5,4 @@ from ._overlap import *
 from ._lagging import *
 from ._rnn import *
 from ._plot import *
+from ._anim import *

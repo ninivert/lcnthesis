@@ -1,6 +1,6 @@
 import time
 
-__all__ = ['Timer']
+__all__ = ['Timer', 'midpoints']
 
 class Timer:
 	def __init__(self, name: str | None):
@@ -16,3 +16,7 @@ class Timer:
 			res += f'[{self.name}] '
 		res += f'{(time.time() - self.t0)*1e3:.2f} ms'
 		print(res)
+
+
+def midpoints(arr):
+	return (arr[:-1] + arr[1:]) / 2
