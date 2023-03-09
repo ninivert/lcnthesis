@@ -71,7 +71,7 @@ class LowRankCyclingRNN(LowRankRNN):
 		shift: int = 1,  # roll shift
 	):
 		super().__init__(F, G, phi, I_ext, exclude_self_connections)
-		self.F = np.roll(self.F, shift=shift, axis=0)  # implement the cycling behavior
+		self.F = np.roll(self.F, shift=shift, axis=1)  # implement the cycling behavior
 		self.delta = delta
 		self.shift = shift
 
