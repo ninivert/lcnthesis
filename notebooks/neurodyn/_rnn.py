@@ -31,12 +31,18 @@ class LowRankRNN:
 		self.pbar: tqdm | None = None
 
 	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
+		# self.t_log.append(t)  # DEBUG
+		# self.h_log.append(h.copy())  # DEBUG
+
 		rhs = np.zeros_like(h)
 		rhs -= h  # exponential decay
 		rhs += self.I_rec(t, h)  # recurrent drive
 		rhs += self.I_ext(t)  # external drive
 		if self.pbar is not None:
 			self.pbar.update(t-self.pbar.n)
+
+		# self.rhs_log.append(rhs.copy())  # DEBUG
+		
 		return rhs
 
 	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
@@ -51,6 +57,7 @@ class LowRankRNN:
 	def simulate_h(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False):
 		if progress:
 			self.pbar = tqdm(total=t_span[1], desc='simulation time', bar_format='{desc}: {percentage:.2f}%|{bar}| t={n:.3f} of {total_fmt} [{elapsed}<{remaining}]')
+		# self.h_log, self.t_log, self.rhs_log = [], [], []  # DEBUG
 		res = scipy.integrate.solve_ivp(self.dh, t_span, h0, max_step=dt_max)
 		if progress:
 			self.pbar.close()
@@ -86,10 +93,11 @@ class LowRankCyclingRNN(LowRankRNN):
 		return drive
 
 	def simulate_h(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False):
-		# TODO : test this
 		self.h_lagging = LaggingFunction([t_span[0]], [h0], self.delta)
+		# self.h_lagging = LaggingFunction([], [], self.delta)  # DEBUG
+		# self.h_lagging = lambda t, h: h  # DEBUG
 		res = super().simulate_h(h0, t_span, dt_max, progress)
-		del self.h_lagging
+		del self.h_lagging  # DEBUG
 		return res
 
 
