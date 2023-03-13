@@ -71,7 +71,7 @@ class LowRankCyclingRNN(LowRankRNN):
 		shift: int = 1,  # roll shift
 	):
 		super().__init__(F, G, phi, I_ext, exclude_self_connections)
-		self.F = np.roll(self.F, shift=shift, axis=1)  # implement the cycling behavior
+		self.F_rolled = np.roll(self.F, shift=shift, axis=1)  # implement the cycling behavior
 		self.delta = delta
 		self.shift = shift
 
@@ -79,9 +79,9 @@ class LowRankCyclingRNN(LowRankRNN):
 		drive = np.zeros_like(h)
 		h_lag = self.h_lagging(t, h)  # lagging firing rate
 		rate = self.phi(h_lag)
-		drive += np.einsum('im,jm,j->i', self.F, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
+		drive += np.einsum('im,jm,j->i', self.F_rolled, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
 		if self.exclude_self_connections:	# remove self-connections
-			drive -= np.einsum('im,im,i->i', self.F, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
+			drive -= np.einsum('im,im,i->i', self.F_rolled, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
 		drive /= self.N
 		return drive
 
