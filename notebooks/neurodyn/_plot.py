@@ -4,13 +4,14 @@
 # 	- cleanup animation writer
 
 import matplotlib.pyplot as plt
+import colorsys
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from scipy.integrate._ivp.ivp import OdeResult
 from ._rnn import LowRankRNN
 from ._overlap import overlap
 
-__all__ = ['plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist']
+__all__ = ['plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist', 'add_headers', 'scale_lightness']
 
 def _unwrap_figax(figax: tuple[Figure, Axes] | None = None) -> tuple[Figure, Axes]:
 	if figax is None:
@@ -60,3 +61,58 @@ def plot_dh_hist(rnn: LowRankRNN, figax: tuple[Figure, Axes] | None = None, **kw
 	ax.legend()
 
 	return fig, ax
+
+
+def add_headers(
+	fig,
+	*,
+	row_headers=None,
+	col_headers=None,
+	row_pad=1,
+	col_pad=5,
+	rotate_row_headers=True,
+	**text_kwargs
+):
+	# Stolen from : https://stackoverflow.com/questions/25812255/row-and-column-headers-in-matplotlibs-subplots
+	# Based on https://stackoverflow.com/a/25814386
+
+	axes = fig.get_axes()
+
+	for ax in axes:
+		sbs = ax.get_subplotspec()
+
+		# Putting headers on cols
+		if (col_headers is not None) and sbs.is_first_row():
+			ax.annotate(
+				col_headers[sbs.colspan.start],
+				xy=(0.5, 1),
+				xytext=(0, col_pad),
+				xycoords="axes fraction",
+				textcoords="offset points",
+				ha="center",
+				va="baseline",
+				**text_kwargs,
+			)
+
+		# Putting headers on rows
+		if (row_headers is not None) and sbs.is_first_col():
+			ax.annotate(
+				row_headers[sbs.rowspan.start],
+				xy=(0, 0.5),
+				xytext=(-ax.yaxis.labelpad - row_pad, 0),
+				xycoords=ax.yaxis.label,
+				textcoords="offset points",
+				ha="right",
+				va="center",
+				rotation=rotate_row_headers * 90,
+				**text_kwargs,
+			)
+
+
+def scale_lightness(rgb, scale_l):
+	# Stolen from : https://stackoverflow.com/a/60562502
+
+	# convert rgb to hls
+	h, l, s = colorsys.rgb_to_hls(*rgb)
+	# manipulate h, l, s values and return as rgb
+	return colorsys.hls_to_rgb(h, min(1, l * scale_l), s = s)

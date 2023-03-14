@@ -28,6 +28,7 @@ class LowRankRNN:
 		self.I_ext = I_ext
 		self.exclude_self_connections = exclude_self_connections
 		self.N = self.F.shape[0]
+		self.p = self.F.shape[1]
 		self.pbar: tqdm | None = None
 
 	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
@@ -56,13 +57,16 @@ class LowRankRNN:
 
 	def simulate_h(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False):
 		if progress:
-			self.pbar = tqdm(total=t_span[1], desc='simulation time', bar_format='{desc}: {percentage:.2f}%|{bar}| t={n:.3f} of {total_fmt} [{elapsed}<{remaining}]')
+			self.pbar = tqdm(total=t_span[1], desc=f'simulating {str(self)}', bar_format='{desc}: {percentage:.2f}%|{bar}| t={n:.3f} of {total_fmt} [{elapsed}<{remaining}]')
 		# self.h_log, self.t_log, self.rhs_log = [], [], []  # DEBUG
 		res = scipy.integrate.solve_ivp(self.dh, t_span, h0, max_step=dt_max)
 		if progress:
 			self.pbar.close()
 			self.pbar = None
 		return res
+
+	def __str__(self) -> str:
+		return f'LowRankRNN{{N={self.N}, p={self.p}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}}}'
 
 
 class LowRankCyclingRNN(LowRankRNN):
@@ -99,6 +103,9 @@ class LowRankCyclingRNN(LowRankRNN):
 		res = super().simulate_h(h0, t_span, dt_max, progress)
 		del self.h_lagging  # DEBUG
 		return res
+
+	def __str__(self) -> str:
+		return f'LowRankCyclingRNN{{N={self.N}, p={self.p}, delta={self.delta}, shift={self.shift}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}}}'
 
 
 class DiscreteRNN:

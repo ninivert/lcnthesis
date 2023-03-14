@@ -1,20 +1,22 @@
 import numpy as np
-import matplotlib.pyplot as plt, matplotlib.animation as animation
+import matplotlib as mpl, matplotlib.pyplot as plt, matplotlib.animation as animation
 from tqdm import tqdm
 from scipy import stats
 from scipy.integrate._ivp.ivp import OdeResult
 from pathlib import Path
+from math import ceil
 from ._rnn import LowRankRNN
-from ._plot import plot_overlap_trajectory
+from ._plot import plot_overlap_trajectory, scale_lightness
 
 __all__ = ['animate2d']
 
 def midpoints(arr):
 	return (arr[:-1] + arr[1:]) / 2
 
-def animate2d(rnn: LowRankRNN, res: OdeResult, outpath: Path, time_stride: int = 1):
+def animate2d(rnn: LowRankRNN, res: OdeResult, outpath: Path, time_stride: int = 1, Nmax = 1500):
 	idt = 0
 	activity = rnn.phi(res.y)
+	cmap = mpl.colormaps['RdBu_r']
 
 	fig, axes = plt.subplot_mosaic([
 		['a','b'],
@@ -24,9 +26,14 @@ def animate2d(rnn: LowRankRNN, res: OdeResult, outpath: Path, time_stride: int =
 	# 2d plotting
 
 	contour = axes['b'].tricontourf(rnn.F[:, 0], rnn.F[:, 1], activity[:, idt], levels=np.linspace(0, 1, 20+1), cmap='RdBu_r')
-	fig.colorbar(contour, ax=axes['b'], label='Activity $A = \\phi(h_i)$ [Hz]')
+	cbar = fig.colorbar(contour, ax=axes['b'], label='Activity $A = \\phi(h_i)$ [Hz]')
+	sc = axes['b'].scatter(
+		rnn.F[:Nmax, 0], rnn.F[:Nmax, 1], s=5,
+		facecolors=[ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax, idt]) ], edgecolor=None, alpha=0.6,
+		zorder=1000  # we need this, otherwise the new contours get drawn on top of the scatterpoints
+	)
 
-	axes['b'].set_title('$(\\xi^0_i, \\xi^1_i)$ embedding contour plot')
+	axes['b'].set_title(f'$(\\xi^0_i, \\xi^1_i)$ embedding contour plot\nand {Nmax} scattered neurons', fontsize='medium')
 	axes['b'].set_xlabel('$\\xi^0_i$')
 	axes['b'].set_ylabel('$\\xi^1_i$')
 	axes['b'].set_xlim((-4, 4))
@@ -51,7 +58,7 @@ def animate2d(rnn: LowRankRNN, res: OdeResult, outpath: Path, time_stride: int =
 	axes['a'].set_ylabel('$\\xi^1_i$')
 	axes['a'].set_zlabel('Activity $A = \\phi(h_i)$ [Hz]')
 	axes['a'].view_init(azim=180+45)
-	axes['a'].set_title('$(\\xi^0_i, \\xi^1_i)$ embedding surface plot')
+	axes['a'].set_title('$(\\xi^0_i, \\xi^1_i)$ embedding surface plot', fontsize='medium')
 
 	# trajectory
 
@@ -63,9 +70,10 @@ def animate2d(rnn: LowRankRNN, res: OdeResult, outpath: Path, time_stride: int =
 		'contour': contour,
 		'line': line,
 		'surf': surf,
+		'sc': sc,
 	}
 
-	with tqdm(total=len(res.t)//time_stride) as pbar:
+	with tqdm(total=ceil(len(res.t)/time_stride)+1) as pbar:
 		def update(idt: int):
 
 			# update the contour
@@ -80,6 +88,9 @@ def animate2d(rnn: LowRankRNN, res: OdeResult, outpath: Path, time_stride: int =
 
 			# update the line
 			things['line'].set_xdata([res.t[idt], res.t[idt]])
+
+			# update the scatter
+			things['sc'].set_facecolors([ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax, idt]) ])
 
 			pbar.update(1)
 

@@ -7,7 +7,10 @@ from typing import Callable, Union
 # TODO
 #  	- I_ext as Weiner process
 
-__all__ = ['Delta', 'Flat', 'Heaviside']
+__all__ = ['zero', 'Delta', 'Flat', 'Heaviside']
+
+def zero(t: float):
+	return 0
 
 class FunctionalFunction:
 	"""A functional which implements mathematical operations"""
