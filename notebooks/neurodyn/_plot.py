@@ -1,14 +1,10 @@
 """Plotting utilities"""
 
-# TODO
-# 	- cleanup animation writer
-
 import matplotlib.pyplot as plt
 import colorsys
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-from scipy.integrate._ivp.ivp import OdeResult
-from ._rnn import LowRankRNN
+from ._rnn import LowRankRNN, Result
 from ._overlap import overlap
 
 __all__ = ['plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist', 'add_headers', 'scale_lightness']
@@ -19,27 +15,27 @@ def _unwrap_figax(figax: tuple[Figure, Axes] | None = None) -> tuple[Figure, Axe
 
 	return figax
 
-def plot_neuron_trajectory(res: OdeResult, n: int = 5, figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
+def plot_neuron_trajectory(res: Result, n: int = 5, figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
 	fig, ax = _unwrap_figax(figax)
 
 	ax.set_xlabel('Time $t$ [s]')
 	ax.set_ylabel('Potential $h_i$ [V]')
 
 	for i in range(n):
-		ax.plot(res.t, res.y[i, :], label=f'${i=}$', **kwargs)
+		ax.plot(res.t, res.h[i, :], label=f'${i=}$', **kwargs)
 
 	ax.legend()
 
 	return fig, ax
 
 
-def plot_overlap_trajectory(rnn: LowRankRNN, res: OdeResult, figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
+def plot_overlap_trajectory(rnn: LowRankRNN, res: Result, figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
 	fig, ax = _unwrap_figax(figax)
 
 	ax.set_xlabel('Time $t$ [s]')
 	ax.set_ylabel('Overlap $m^{{\\mu}}$')
 	ax.set_title('Overlap trajectory')
-	m = overlap(rnn, res.y)
+	m = overlap(rnn, res.h)
 
 	for mu in range(len(m)):
 		ax.plot(res.t, m[mu], label=f'$\\mu={mu}$', **kwargs)
