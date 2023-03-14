@@ -2,10 +2,9 @@ import numpy as np
 import matplotlib as mpl, matplotlib.pyplot as plt, matplotlib.animation as animation
 from tqdm import tqdm
 from scipy import stats
-from scipy.integrate._ivp.ivp import OdeResult
 from pathlib import Path
 from math import ceil
-from ._rnn import LowRankRNN
+from ._rnn import LowRankRNN, Result
 from ._plot import plot_overlap_trajectory, scale_lightness
 
 __all__ = ['animate2d']
@@ -13,9 +12,9 @@ __all__ = ['animate2d']
 def midpoints(arr):
 	return (arr[:-1] + arr[1:]) / 2
 
-def animate2d(rnn: LowRankRNN, res: OdeResult, outpath: Path, time_stride: int = 1, Nmax = 1500):
+def animate2d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1, Nmax = 1500):
 	idt = 0
-	activity = rnn.phi(res.y)
+	activity = rnn.phi(res.h)
 	cmap = mpl.colormaps['RdBu_r']
 
 	fig, axes = plt.subplot_mosaic([
