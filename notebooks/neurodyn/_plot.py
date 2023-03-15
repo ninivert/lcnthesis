@@ -1,6 +1,6 @@
 """Plotting utilities"""
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt, matplotlib.ticker as ticker
 import colorsys
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -50,8 +50,10 @@ def plot_dh_hist(rnn: LowRankRNN, figax: tuple[Figure, Axes] | None = None, **kw
 	fig, ax = _unwrap_figax(figax)
 
 	for mu in range(rnn.F.shape[1]):
-		ax.hist(rnn.dh(0, rnn.F[:, mu]), bins=30, histtype='step', label=f'$\\mu = {mu}$', **kwargs)
+		ax.hist(rnn.dh(0, rnn.F[:, mu]), bins=30, histtype='step', label=f'$\\mu = {mu}$', density=True, **kwargs)
 
+	ax.yaxis.set_major_locator(ticker.NullLocator())
+	ax.yaxis.set_minor_locator(ticker.NullLocator())
 	ax.set_xlabel('$\\dot h_i$')
 	ax.set_title('Derivative $\dot h_i$ at $\\xi_i^{\\mu}$')
 	ax.legend()

@@ -2,6 +2,7 @@
 
 import numpy as np
 from typing import Callable
+import warnings
 
 __all__ = ['make_low_rank_valentin', 'make_F_G_valentin']
 
@@ -28,6 +29,8 @@ def make_low_rank_valentin(p: int, N: int, phi: Callable[[np.ndarray], np.ndarra
 	return J, z_samples
 
 def make_F_G_valentin(p: int, N: int, phi: Callable[[np.ndarray], np.ndarray], random_state: int = 42) -> tuple[np.ndarray, np.ndarray]:
+	warnings.warn('use LowRankRNN.new_valentin instead')
+
 	F, G = np.zeros((N, p)), np.zeros((N, p))
 	s = np.random.default_rng(random_state)
 
