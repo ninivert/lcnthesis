@@ -1,13 +1,18 @@
 """Plotting utilities"""
 
-import matplotlib.pyplot as plt, matplotlib.ticker as ticker
+import matplotlib as mpl, matplotlib.pyplot as plt, matplotlib.ticker as ticker, matplotlib.tri as tri, matplotlib.collections as collections
+import numpy as np
 import colorsys
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from ._rnn import LowRankRNN, Result
 from ._overlap import overlap
 
-__all__ = ['plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist', 'add_headers', 'scale_lightness']
+__all__ = [
+	'plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist',
+	'plot_2D_embedding_contour', 'plot_2D_embedding_scatter',
+	'add_headers', 'scale_lightness'
+]
 
 def _unwrap_figax(figax: tuple[Figure, Axes] | None = None) -> tuple[Figure, Axes]:
 	if figax is None:
@@ -20,6 +25,7 @@ def plot_neuron_trajectory(res: Result, n: int = 5, figax: tuple[Figure, Axes] |
 
 	ax.set_xlabel('Time $t$ [s]')
 	ax.set_ylabel('Potential $h_i$ [V]')
+	ax.set_title('Neuron trajectory')
 
 	for i in range(n):
 		ax.plot(res.t, res.h[i, :], label=f'${i=}$', **kwargs)
@@ -59,6 +65,43 @@ def plot_dh_hist(rnn: LowRankRNN, figax: tuple[Figure, Axes] | None = None, **kw
 	ax.legend()
 
 	return fig, ax
+
+
+def plot_2D_embedding_contour(
+	rnn: LowRankRNN, activity: np.ndarray, draw_cbar: bool = True,
+	figax: tuple[Figure, Axes] | None = None
+) -> tuple[tuple[Figure, Axes], tri.TriContourSet]:
+	fig, ax = _unwrap_figax(figax)
+
+	contour = ax.tricontourf(rnn.F[:, 0], rnn.F[:, 1], activity, levels=np.linspace(0, 1, 20+1), cmap='RdBu_r')
+	if draw_cbar:
+		cbar = fig.colorbar(contour, ax=ax, label='Activity $A = \\phi(h_i)$ [Hz]')
+
+	ax.set_xlabel('$\\xi^0_i$')
+	ax.set_ylabel('$\\xi^1_i$')
+	ax.set_aspect('equal')
+
+	return (fig, ax), contour
+
+
+def plot_2D_embedding_scatter(
+	rnn: LowRankRNN, activity: np.ndarray, Nmax: int = 1500,
+	figax: tuple[Figure, Axes] | None = None
+) -> tuple[tuple[Figure, Axes], collections.PathCollection]:
+	fig, ax = _unwrap_figax(figax)
+
+	cmap = mpl.colormaps['RdBu_r']
+	sc = ax.scatter(
+		rnn.F[:Nmax, 0], rnn.F[:Nmax, 1], s=5,
+		facecolors=[ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax]) ], edgecolor=None, alpha=0.6,
+		zorder=1000  # we need this, otherwise the new contours get drawn on top of the scatterpoints
+	)
+
+	ax.set_xlabel('$\\xi^0_i$')
+	ax.set_ylabel('$\\xi^1_i$')
+	ax.set_aspect('equal')
+
+	return (fig, ax), sc
 
 
 def add_headers(
