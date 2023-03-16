@@ -4,5 +4,6 @@ from ._activation import *
 from ._connectivity import *
 from ._overlap import *
 from ._lagging import *
+from ._mapping import *
 from ._plot import *
 from ._anim import *

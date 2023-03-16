@@ -1,5 +1,7 @@
 """Generate connectivity matrices J"""
 
+# TODO : remove this
+
 import numpy as np
 from typing import Callable
 import warnings
