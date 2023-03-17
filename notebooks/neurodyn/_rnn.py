@@ -9,12 +9,14 @@ import hashlib
 import pickle
 import os
 import itertools
+import logging
 from pathlib import Path
 from ._lagging import LaggingFunction
 
 
 __all__ = ['DiscreteRNN', 'LowRankRNN', 'LowRankCyclingRNN', 'LowRankRNNParams', 'LowRankCyclingRNNParams', 'Result']
 
+_logger = logging.getLogger(__name__)
 
 @dataclass
 class LowRankRNNParams:
@@ -132,7 +134,7 @@ class LowRankRNN:
 			# attempt to load a previous simulation
 			res_or_none = load_or_none(self.params, simparams)
 			if res_or_none is not None:
-				print(f'[{str(self)}] loading cached simulation {hsh[:10]}...')
+				_logger.info(f'[{str(self)}] loading cached simulation {hsh[:10]}...')
 				return res_or_none
 
 		if progress:
@@ -147,7 +149,7 @@ class LowRankRNN:
 
 		if cache:
 			# if we get to here, that means this simulation has not been cached
-			print(f'[{str(self)}] writing cache for simulation {hsh[:10]}...')
+			_logger.info(f'[{str(self)}] writing cache for simulation {hsh[:10]}...')
 			dump(res)
 
 		return res
