@@ -3,7 +3,12 @@
 import numpy as np
 from dataclasses import dataclass
 
-__all__ = ['Box', 'recursive_quadrant_mapping_coords', 'recursive_quadrant_mapping']
+__all__ = [
+	'Box', 'recursive_quadrant_mapping', 'recursive_quadrant_mapping_coords',
+	'linear_mapping', 'x_projection_mapping', 'y_projection_mapping', 'xy_projection_mapping', 'xy45_projection_mapping', 'xy135_projection_mapping',
+]
+
+# Recursive quadrant mapping
 
 @dataclass
 class Box:
@@ -72,8 +77,7 @@ def recursive_quadrant_mapping_coords(F: np.ndarray, n: int, box: Box | None = N
 
 	return coords
 
-
-def recursive_quadrant_mapping(F: np.ndarray, n: int = 5):
+def recursive_quadrant_mapping(F: np.ndarray, n: int = 5) -> np.ndarray:
 	"""Recursive quadrant mapping R² -> [0,1]
 
 	See Pham 2018
@@ -92,3 +96,50 @@ def recursive_quadrant_mapping(F: np.ndarray, n: int = 5):
 	"""		
 	coords = recursive_quadrant_mapping_coords(F, n)
 	return (coords-1) @ np.logspace(1, n, num=n, base=1/4)
+
+# Linear mappings
+
+def linear_mapping(F: np.ndarray, tangent: np.ndarray) -> np.ndarray:
+	"""Linear projection mapping R² -> R by projecting on the tangent vector
+
+
+	Parameters
+	----------
+	F : np.ndarray
+		2d embedding of shape (N, 2)
+	tangent : np.ndarray
+		tangent vector of shape (2,)
+
+	Returns
+	-------
+	np.ndarray
+		projected embedding of shape (N,)
+	"""
+	return F @ tangent
+
+def x_projection_mapping(F: np.ndarray) -> np.ndarray:
+	"""Linear projection mapping R² -> R by projecting on (1, 0)"""
+	tangent = np.zeros(F.shape[1])
+	tangent[0] = 1
+	return linear_mapping(F, tangent)
+
+def y_projection_mapping(F: np.ndarray) -> np.ndarray:
+	"""Linear projection mapping R² -> R by projecting on (0, 1)"""
+	tangent = np.zeros(F.shape[1])
+	tangent[1] = 1
+	return linear_mapping(F, tangent)
+
+def xy_projection_mapping(F: np.ndarray, angle: float = np.pi/4) -> np.ndarray:
+	"""Linear projection mapping R² -> R by projecting on (sin(angle), cos(angle))"""
+	tangent = np.zeros(F.shape[1])
+	tangent[0] = np.cos(angle)
+	tangent[1] = np.sin(angle)
+	return linear_mapping(F, tangent)
+
+def xy45_projection_mapping(F: np.ndarray) -> np.ndarray:
+	"""Linear projection mapping R² -> R by projecting on (sin(pi/4), cos(pi/4))"""
+	return xy_projection_mapping(F, angle=np.pi/4)
+
+def xy135_projection_mapping(F: np.ndarray) -> np.ndarray:
+	"""Linear projection mapping R² -> R by projecting on (sin(3pi/4), cos(3pi/4))"""
+	return xy_projection_mapping(F, angle=3*np.pi/4)

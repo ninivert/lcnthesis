@@ -11,12 +11,13 @@ from ._overlap import overlap
 __all__ = [
 	'plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist',
 	'plot_2D_embedding_contour', 'plot_2D_embedding_scatter',
+	'plot_2D_to_1D_mapping',
 	'add_headers', 'scale_lightness'
 ]
 
-def _unwrap_figax(figax: tuple[Figure, Axes] | None = None) -> tuple[Figure, Axes]:
+def _unwrap_figax(figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
 	if figax is None:
-		figax = plt.subplots()
+		figax = plt.subplots(**kwargs)
 
 	return figax
 
@@ -104,6 +105,27 @@ def plot_2D_embedding_scatter(
 	return (fig, ax), sc
 
 
+def plot_2D_to_1D_mapping(
+	rnn: LowRankRNN, mapping: np.ndarray, activity: np.ndarray,
+	figax: tuple[Figure, Axes] | None = None,
+	**kwargs
+) -> tuple[tuple[Figure, Axes], collections.PathCollection, collections.PathCollection]:
+	fig, axes = _unwrap_figax(figax, nrows=2)
+	
+	scat2d = axes[0].scatter(rnn.F[:, 0], rnn.F[:, 1], c=mapping, **kwargs)
+	axes[0].set_xlabel('$\\xi_i^0$')
+	axes[0].set_ylabel('$\\xi_i^1$')
+	axes[0].set_aspect('equal')
+
+	scat1d = axes[1].scatter(mapping, activity, c=mapping, **kwargs)
+	axes[1].set_xlabel('Mapping')
+	axes[1].set_ylabel('Activity $A = \\phi(h_i)$ [Hz]')
+
+	fig.colorbar(scat1d, label='Mapping')
+
+	return (fig, axes), scat1d, scat2d
+
+
 def add_headers(
 	fig,
 	*,
@@ -121,9 +143,9 @@ def add_headers(
 
 	for ax in axes:
 		sbs = ax.get_subplotspec()
-
+		
 		# Putting headers on cols
-		if (col_headers is not None) and sbs.is_first_row():
+		if (col_headers is not None) and (sbs is not None) and sbs.is_first_row():
 			ax.annotate(
 				col_headers[sbs.colspan.start],
 				xy=(0.5, 1),
@@ -136,7 +158,7 @@ def add_headers(
 			)
 
 		# Putting headers on rows
-		if (row_headers is not None) and sbs.is_first_col():
+		if (row_headers is not None) and (sbs is not None) and sbs.is_first_col():
 			ax.annotate(
 				row_headers[sbs.rowspan.start],
 				xy=(0, 0.5),
