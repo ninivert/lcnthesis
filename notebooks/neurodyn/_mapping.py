@@ -6,6 +6,7 @@ from dataclasses import dataclass
 __all__ = [
 	'Box', 'recursive_quadrant_mapping', 'recursive_quadrant_mapping_coords',
 	'linear_mapping', 'x_projection_mapping', 'y_projection_mapping', 'xy_projection_mapping', 'xy45_projection_mapping', 'xy135_projection_mapping',
+	'irrational_mapping',
 ]
 
 # Recursive quadrant mapping
@@ -143,3 +144,9 @@ def xy45_projection_mapping(F: np.ndarray) -> np.ndarray:
 def xy135_projection_mapping(F: np.ndarray) -> np.ndarray:
 	"""Linear projection mapping R² -> R by projecting on (sin(3pi/4), cos(3pi/4))"""
 	return xy_projection_mapping(F, angle=3*np.pi/4)
+
+# Irrational mapping
+
+def irrational_mapping(F: np.ndarray, c: float = np.sqrt(2)) -> np.ndarray:
+	"""Injective and continuous mapping which uses the fact `c` is irrational to map lattice aZ² -> R, `a` size of lattice"""
+	return linear_mapping(F, np.array([1, c]))
