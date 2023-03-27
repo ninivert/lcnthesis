@@ -5,6 +5,7 @@ import numpy as np
 from typing import Callable, Union, Self
 from tqdm import tqdm
 from dataclasses import dataclass, field
+from abc import abstractmethod
 import hashlib
 import pickle
 import os
@@ -14,22 +15,52 @@ from pathlib import Path
 from ._lagging import LaggingFunction
 
 
-__all__ = ['DiscreteRNN', 'LowRankRNN', 'LowRankCyclingRNN', 'LowRankRNNParams', 'LowRankCyclingRNNParams', 'Result']
+__all__ = [
+	'RNN', 'DenseRNN', 'LowRankRNN', 'LowRankCyclingRNN',
+	'RNNParams', 'DenseRNNParams', 'LowRankRNNParams', 'LowRankCyclingRNNParams',
+	'Result'
+]
 
 _logger = logging.getLogger(__name__)
 
+
 @dataclass
-class LowRankRNNParams:
-	F: np.ndarray = field(repr=False)  # N, p matrix
-	G: np.ndarray = field(repr=False)  # N, p matrix
+class RNNParams:
 	phi: Callable[[np.ndarray], np.ndarray]  # phi(u) : R -> R 
 	I_ext: Callable[[float], np.ndarray]  # I_ext(t): R -> N vector (current for each neuron)
 	exclude_self_connections: bool  # whether to include self-connections
+	# tau : can be set to 1, since we can just rescale time
+	# R : can be set to 1, since we can just rescale J
+
+
+@dataclass
+class DenseRNNParams(RNNParams):
+	J: np.ndarray = field(repr=False)  # N, N connectivity matrix
+
+	def __post_init__(self):
+		assert self.J.shape[0] == self.J.shape[1], 'J must be a square matrix'
+		self.N = self.J.shape[0]
+
+
+@dataclass
+class LowRankRNNParams(RNNParams):
+	F: np.ndarray = field(repr=False)  # N, p matrix
+	G: np.ndarray = field(repr=False)  # N, p matrix
 
 	def __post_init__(self):
 		assert self.F.shape == self.G.shape, 'F and G must have the same shape'
 		self.N = self.F.shape[0]
 		self.p = self.F.shape[1]
+
+	def to_dense(self) -> DenseRNNParams:
+		"""Compute $J_{ij} = \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}$"""
+		J = np.zeros((self.N, self.N), dtype=float)
+		J += np.einsum('im,jm->ij', self.F, self.G)
+		J /= self.N  # O(1/N) scaling
+		if self.exclude_self_connections:
+			J -= np.diagflat(np.diagonal(J))  # remove self-connections
+
+		return DenseRNNParams(phi=self.phi, I_ext=self.I_ext, exclude_self_connections=self.exclude_self_connections, J=J)
 
 	@classmethod
 	def new_valentin(cls: Self, p: int, N: int, phi: Callable[[np.ndarray], np.ndarray], random_state: int = 42, **kwargs) -> Self:
@@ -85,48 +116,30 @@ class SimulationParams:
 
 @dataclass
 class Result:
-	params: LowRankRNNParams
+	params: RNNParams | DenseRNNParams | LowRankRNNParams | LowRankCyclingRNNParams
 	simparams: SimulationParams
 	t: np.ndarray | None
 	h: np.ndarray | None
 
 
-class LowRankRNN:
-	"""RNN with low-rank connectivity $J = \sum_\mu F^\mu_i G^\mu_i$"""
+class RNN:
+	"""Base class for RNNs with current I_ext, activation function phi"""
 
-	def __init__(self, params: LowRankRNNParams):
+	def __init__(self, params: RNNParams):
 		self.params = params
 
-		self.F = params.F
-		self.G = params.G
 		self.phi = params.phi
 		self.I_ext = params.I_ext
 		self.exclude_self_connections = params.exclude_self_connections
-		self.N = params.N
-		self.p = params.p
 
 		self._pbar: tqdm | None = None
 
+	@abstractmethod
 	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
-		rhs = np.zeros_like(h)
-		rhs -= h  # exponential decay
-		rhs += self.I_rec(t, h)  # recurrent drive
-		rhs += self.I_ext(t)  # external drive
-		if self._pbar is not None:
-			self._pbar.update(t-self._pbar.n)
-		
-		return rhs
+		"""Compute the RHS for the differential equation of evolution"""
+		pass
 
-	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
-		drive = np.zeros_like(h)
-		rate = self.phi(h)  # firing rate
-		drive += np.einsum('im,jm,j->i', self.F, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
-		if self.exclude_self_connections:  # remove self-connections
-			drive -= np.einsum('im,im,i->i', self.F, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
-		drive /= self.params.N
-		return drive
-
-	def simulate(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False, cache: bool = False) -> 'Result':
+	def simulate(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False, cache: bool = False) -> Result:
 		simparams = SimulationParams(h0=h0.copy(), t_span=t_span, dt_max=dt_max)
 
 		if cache:
@@ -153,6 +166,56 @@ class LowRankRNN:
 			dump(res)
 
 		return res
+
+
+class DenseRNN(RNN):
+	"""RNN with a dense connectivity matrix J"""
+
+	def __init__(self, params: DenseRNNParams):
+		super().__init__(params)
+
+		self.J = params.J
+
+	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
+		rhs = np.zeros_like(h)
+		rhs -= h  # exponential decay
+		rhs += self.J @ self.phi(h)
+		rhs += self.I_ext(t)
+		return rhs
+
+	def __str__(self) -> str:
+		return f'DenseRNN{{N={self.params.N}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}, exclude_self_connections={self.exclude_self_connections}}}'
+
+
+class LowRankRNN(RNN):
+	"""RNN with low-rank connectivity $J = \sum_\mu F^\mu_i G^\mu_i$"""
+
+	def __init__(self, params: LowRankRNNParams):
+		super().__init__(params)
+
+		self.F = params.F
+		self.G = params.G
+		self.N = params.N
+		self.p = params.p
+
+	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
+		rhs = np.zeros_like(h)
+		rhs -= h  # exponential decay
+		rhs += self.I_rec(t, h)  # recurrent drive
+		rhs += self.I_ext(t)  # external drive
+		if self._pbar is not None:
+			self._pbar.update(t-self._pbar.n)
+		
+		return rhs
+
+	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
+		drive = np.zeros_like(h)
+		rate = self.phi(h)  # firing rate
+		drive += np.einsum('im,jm,j->i', self.F, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
+		if self.exclude_self_connections:  # remove self-connections
+			drive -= np.einsum('im,im,i->i', self.F, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
+		drive /= self.params.N
+		return drive
 
 	def __str__(self) -> str:
 		return f'LowRankRNN{{N={self.params.N}, p={self.params.p}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}, exclude_self_connections={self.exclude_self_connections}}}'
@@ -222,10 +285,13 @@ def load_or_none(params: LowRankRNNParams, simparams: SimulationParams) -> Resul
 		return None
 
 	arrays = np.load(filedir / 'arrays.npz')
+
+	# TODO : sanity check, test that the stored params.pkl matches the input (no hash collisions)
+
 	return Result(params, simparams, arrays['t'], arrays['h'])
 
 
-def sha256_params(params: LowRankRNNParams, simparams: SimulationParams) -> str:
+def sha256_params(params: RNNParams | DenseRNNParams | LowRankRNNParams | LowRankCyclingRNNParams, simparams: SimulationParams) -> str:
 	h = hashlib.sha256()
 
 	for key, value in itertools.chain(params.__dict__.items(), simparams.__dict__.items()):
@@ -239,26 +305,3 @@ def sha256_params(params: LowRankRNNParams, simparams: SimulationParams) -> str:
 			h.update(value)
 
 	return h.hexdigest()
-
-
-class DiscreteRNN:
-	# TODO : harmonize this class with the other two classes
-	"""RNN with an arbitrary connectivity matrix J and current I_ext"""
-
-	def __init__(self, J: np.ndarray, phi: Callable[[np.ndarray], np.ndarray], I_ext: Callable[[float], np.ndarray]):
-		self.J = J  # connectivity matrix
-		self.phi = phi  # firing rate
-		self.I_ext = I_ext  # external current
-		# tau : can be set to 1, since we can just rescale time
-		# R : can be set to 1, since we can just rescale J
-
-	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
-		rhs = np.zeros_like(h)
-		rhs -= h  # exponential decay
-		rhs += self.J @ self.phi(h)
-		rhs += self.I_ext(t)
-		return rhs
-
-	def simulate(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1):
-			res = scipy.integrate.solve_ivp(self.dh, t_span, h0, max_step=dt_max)
-			return res
