@@ -155,7 +155,7 @@ class LowRankRNN:
 		return res
 
 	def __str__(self) -> str:
-		return f'LowRankRNN{{N={self.params.N}, p={self.params.p}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}}}'
+		return f'LowRankRNN{{N={self.params.N}, p={self.params.p}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}, exclude_self_connections={self.exclude_self_connections}}}'
 
 	@staticmethod
 	def new_valentin(*args, **kwargs) -> 'LowRankRNN':
@@ -184,13 +184,16 @@ class LowRankCyclingRNN(LowRankRNN):
 		return drive
 
 	def simulate(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False, cache: bool = False) -> 'Result':
-		self.h_lagging = LaggingFunction([t_span[0]], [h0], self.delta)
+		if self.delta == 0:
+			self.h_lagging = lambda t, h: h
+		else:
+			self.h_lagging = LaggingFunction([t_span[0]], [h0], self.delta)
 		res = super().simulate(h0, t_span, dt_max, progress=progress, cache=cache)
 		del self.h_lagging
 		return res
 
 	def __str__(self) -> str:
-		return f'LowRankCyclingRNN{{N={self.params.N}, p={self.params.p}, delta={self.delta}, shift={self.shift}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}}}'
+		return f'LowRankCyclingRNN{{N={self.params.N}, p={self.params.p}, delta={self.delta}, shift={self.shift}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}, exclude_self_connections={self.exclude_self_connections}}}'
 
 	@staticmethod
 	def new_valentin(*args, **kwargs) -> 'LowRankCyclingRNN':
