@@ -175,6 +175,7 @@ class DenseRNN(RNN):
 		super().__init__(params)
 
 		self.J = params.J
+		self.N = params.N
 
 	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
 		rhs = np.zeros_like(h)
