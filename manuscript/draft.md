@@ -1,0 +1,112 @@
+# RNN equation with $\tau=1, R=1, I_\textrm {ext}(t) = 0$
+
+$N$ neurons, each with potential $h_i(t), i = 1,\cdots, N$ evolve according to
+
+$$
+\dot h_i(t) = -h_i(t) + \sum_{j=1}^{N} J_{ij} \phi(h_j(t))
+
+$$
+
+where
+
+$$
+J_{ij} = \frac 1N \sum_{\mu=1}^p \xi_{\mu,i} \tilde \phi(\xi_{\mu,j}),
+\quad
+\xi_{\mu,i} \sim \mathcal{N}(0,1),
+\quad
+\tilde \phi(\xi) = \frac{\phi(\xi) - \mathrm{E}[\phi(\xi)]}{\mathrm{Var}[\phi(\xi)]}
+
+$$
+
+Overlaps are defined as
+
+$$
+m_\mu(t) = \frac 1N \sum_{i=1}^N \tilde \phi(\xi_{\mu,i}) \phi(h_i(t))
+
+$$
+
+Some fixed points :
+
+- $h_i = \xi_{\mu,i} \quad \forall \mu = 1,\cdots,p$
+- $h_i=0$
+
+# Neural field equation in $\mathbb R^p$
+
+Neurons are at position $\vec z = (z_1, \cdots, z_p) \in \mathbb{R}^p$, distributed according to the distribution $\frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p z_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} z_1 \cdots \mathrm d z_p = \rho(\mathrm d \vec z)$
+
+The RNN potential becomes $h_t(\vec z)$ and evolves according to
+
+$$
+\begin{aligned}
+\partial_t h(t, \vec z) &= -h(t, \vec z) + \int_{\mathbb{R}^p} w(\vec y, \vec z) \phi(h(t, \vec y)) \rho(\mathrm d \vec y),
+\quad
+w(\vec y, \vec z) = \sum_{\mu=1}^p \tilde \phi (y_\mu) z_\mu \\
+&= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
+\end{aligned}
+
+$$
+
+Overlaps are now defined as
+
+$$
+m_\mu(t) = \int_{\mathbb R^p} \tilde \phi(y_\mu) \phi(h(t,\vec y)) \rho(\mathrm d \vec y)
+
+$$
+
+Some fixed points :
+
+- $h(\vec z) = z_\mu \quad \mu=1,\cdots,p$
+- $h(\vec z) = 0$
+
+# Neural field equation in $[0,1]$
+
+Define a measurable mapping $S : \mathbb{R}^p \rightarrow [0, 1]$.
+
+Let $\mu : [0,1] \rightarrow [0, \infty]$ be a measure on $([0,1], \mathcal B([0,1]))$.
+
+Then we can write
+
+$$
+\partial_t h(t, \vec z) = -h(t, \vec z) + \int_{[0,1]} [w(\cdot, \vec z) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
+
+$$
+
+# $p$-dimensional closed system
+
+The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\langle f, g \rangle = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
+
+We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
+
+$$
+
+with initial conditions
+
+$$
+\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
+
+$$
+
+and the orthogonal component evolves according to
+
+$$
+h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
+\quad
+h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
+
+$$
+
+# Relation between $p$-dimensional closed system and neural field equation in $\mathbb R^p$
+
+This is consistent with the neural field equation, since
+
+$$
+\begin{aligned}
+\partial_t h(t, \vec z) &= \partial_t h^\perp(t, \vec z) + \sum_{\mu=1}^p z_\mu \dot \kappa_\mu(t) \\
+&= -h^\perp(t, \vec z) - \sum_{\mu=1}^p z_\mu \kappa_\mu(t) + \sum_{\mu=1}^p z_\mu m_\mu(t) \\
+&= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
+\end{aligned}
+
+$$
