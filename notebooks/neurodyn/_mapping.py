@@ -4,7 +4,7 @@ import numpy as np
 from dataclasses import dataclass
 
 __all__ = [
-	'Box', 'recursive_quadrant_mapping', 'recursive_quadrant_mapping_coords',
+	'Box', 'recursive_quadrant_mapping', 'recursive_quadrant_mapping_coords', 'recursive_quadrant_mapping_index',
 	'linear_mapping', 'x_projection_mapping', 'y_projection_mapping', 'xy_projection_mapping', 'xy45_projection_mapping', 'xy135_projection_mapping',
 	'irrational_mapping',
 ]
@@ -38,9 +38,11 @@ class Box:
 def recursive_quadrant_mapping_coords(F: np.ndarray, n: int, box: Box | None = None) -> np.ndarray:
 	"""Generates coordinates (j1, ..., jn) for the recursive quadrant mapping box -> [0,1]"""
 
+	coords = np.zeros((len(F), n), dtype=int)
+
 	# stopping condition
 	if len(F) == 0 or n == 0:
-		return
+		return coords
 
 	if box is None:
 		box = Box(F[:, 0].min(), F[:, 0].max(), F[:, 1].min(), F[:, 1].max())
@@ -64,7 +66,6 @@ def recursive_quadrant_mapping_coords(F: np.ndarray, n: int, box: Box | None = N
 	mask4 = (box4.xmin <= F[:, 0]) & (F[:, 0] <  box4.xmax) & (box4.ymin <= F[:, 1]) & (F[:, 1] <= box4.ymax)
 
 	# generate coordinates for this layer
-	coords = np.zeros((len(F), n))
 	coords[mask1, 0] = 1
 	coords[mask2, 0] = 2
 	coords[mask3, 0] = 3
@@ -97,6 +98,11 @@ def recursive_quadrant_mapping(F: np.ndarray, n: int = 5) -> np.ndarray:
 	"""		
 	coords = recursive_quadrant_mapping_coords(F, n)
 	return (coords-1) @ np.logspace(1, n, num=n, base=1/4)
+
+def recursive_quadrant_mapping_index(F: np.ndarray, n: int = 5) -> np.ndarray:
+	"""Index of the bins corresponding to the mapping"""
+	coords = recursive_quadrant_mapping_coords(F, n)
+	return (coords-1) @ np.logspace(n-1, 0, num=n, base=4, dtype=int)
 
 # Linear mappings
 
