@@ -13,11 +13,12 @@ import itertools
 import logging
 from pathlib import Path
 from ._lagging import LaggingFunction
+from ._mapping import BinMapping
 
 
 __all__ = [
-	'RNN', 'DenseRNN', 'LowRankRNN', 'LowRankCyclingRNN',
-	'RNNParams', 'DenseRNNParams', 'LowRankRNNParams', 'LowRankCyclingRNNParams',
+	'RNN', 'DenseRNN', 'BinMappedRNN', 'LowRankRNN', 'LowRankCyclingRNN',
+	'RNNParams', 'DenseRNNParams', 'BinMappedRNNParams', 'LowRankRNNParams', 'LowRankCyclingRNNParams',
 	'Result'
 ]
 
@@ -43,6 +44,43 @@ class DenseRNNParams(RNNParams):
 
 
 @dataclass
+class BinMappedRNNParams(RNNParams):
+	binmapping: BinMapping
+
+	# the embedding in the original network
+	F: np.ndarray = field(repr=False)  # N, p matrix
+	G: np.ndarray = field(repr=False)  # N, p matrix
+
+	def __post_init__(self):
+		assert self.F.shape == self.G.shape, 'F and G must have the same shape'
+		self.N = self.F.shape[0]
+		self.p = self.F.shape[1]
+		self.num_bins = self.binmapping.num_bins
+
+		self.mapping_index = self.binmapping.mapping_index(self.F)
+		self.binmasks: list[np.ndarray] = [ self.mapping_index == alpha for alpha in range(self.num_bins) ]
+		# |alpha|, number of original neurons in each bin
+		self.bincounts: np.ndarray = np.array([ self.binmasks[alpha].sum() for alpha in range(self.num_bins) ])
+		# "effective" low-rank vectors
+		self.tildeF = np.vstack([ self.F[self.binmasks[alpha], :].sum(axis=0) for alpha in range(self.num_bins) ])
+		self.tildeG = np.vstack([ self.G[self.binmasks[alpha], :].sum(axis=0) for alpha in range(self.num_bins) ])
+
+	def to_dense(self) -> DenseRNNParams:
+		J_ab = np.zeros((self.num_bins, self.num_bins))
+		J_ab += np.einsum('am,bm->ab', self.tildeF, self.tildeG)
+
+		if self.exclude_self_connections:  # exclude the self-connections corresponding to the original connectivity
+			for alpha in range(self.num_bins):
+				J_ab[alpha, alpha] -= np.einsum('am,am->', self.F[self.binmasks[alpha], :],  self.G[self.binmasks[alpha], :])
+
+		J_ab[self.bincounts.nonzero()[0], :] /= self.bincounts[self.bincounts.nonzero()[0], None]
+
+		J_ab /= self.N
+
+		return DenseRNNParams(phi=self.phi, I_ext=self.I_ext, exclude_self_connections=self.exclude_self_connections, J=J_ab)
+
+
+@dataclass
 class LowRankRNNParams(RNNParams):
 	F: np.ndarray = field(repr=False)  # N, p matrix
 	G: np.ndarray = field(repr=False)  # N, p matrix
@@ -61,6 +99,13 @@ class LowRankRNNParams(RNNParams):
 			J -= np.diagflat(np.diagonal(J))  # remove self-connections
 
 		return DenseRNNParams(phi=self.phi, I_ext=self.I_ext, exclude_self_connections=self.exclude_self_connections, J=J)
+
+	def to_binmapped(self, binmapping: BinMapping) -> BinMappedRNNParams:
+		return BinMappedRNNParams(
+			phi=self.phi, I_ext=self.I_ext, exclude_self_connections=self.exclude_self_connections, 
+			binmapping=binmapping,
+			F=self.F.copy(), G=self.G.copy()
+		)
 
 	@classmethod
 	def new_valentin(cls: Self, p: int, N: int, phi: Callable[[np.ndarray], np.ndarray], random_state: int = 42, **kwargs) -> Self:
@@ -135,9 +180,19 @@ class RNN:
 		self._pbar: tqdm | None = None
 
 	@abstractmethod
-	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
-		"""Compute the RHS for the differential equation of evolution"""
+	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
+		"""Compute the recurrent current at time t, given RNN potentials h_i"""
 		pass
+
+	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
+		rhs = np.zeros_like(h)
+		rhs -= h  # exponential decay
+		rhs += self.I_rec(t, h)  # recurrent drive
+		rhs += self.I_ext(t)  # external drive
+		if self._pbar is not None:
+			self._pbar.update(t-self._pbar.n)
+		
+		return rhs
 
 	def simulate(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False, cache: bool = False) -> Result:
 		simparams = SimulationParams(h0=h0.copy(), t_span=t_span, dt_max=dt_max)
@@ -177,12 +232,8 @@ class DenseRNN(RNN):
 		self.J = params.J
 		self.N = params.N
 
-	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
-		rhs = np.zeros_like(h)
-		rhs -= h  # exponential decay
-		rhs += self.J @ self.phi(h)
-		rhs += self.I_ext(t)
-		return rhs
+	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
+		return self.J @ self.phi(h)
 
 	def __str__(self) -> str:
 		return f'DenseRNN{{N={self.params.N}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}, exclude_self_connections={self.exclude_self_connections}}}'
@@ -198,16 +249,6 @@ class LowRankRNN(RNN):
 		self.G = params.G
 		self.N = params.N
 		self.p = params.p
-
-	def dh(self, t: float, h: np.ndarray) -> np.ndarray:
-		rhs = np.zeros_like(h)
-		rhs -= h  # exponential decay
-		rhs += self.I_rec(t, h)  # recurrent drive
-		rhs += self.I_ext(t)  # external drive
-		if self._pbar is not None:
-			self._pbar.update(t-self._pbar.n)
-		
-		return rhs
 
 	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
 		drive = np.zeros_like(h)
@@ -248,6 +289,7 @@ class LowRankCyclingRNN(LowRankRNN):
 		return drive
 
 	def simulate(self, h0: np.ndarray, t_span: tuple[float, float], dt_max: float = 0.1, progress: bool = False, cache: bool = False) -> 'Result':
+		# override this method because we need to handle the lagging function
 		if self.delta == 0:
 			self.h_lagging = lambda t, h: h
 		else:
@@ -262,6 +304,14 @@ class LowRankCyclingRNN(LowRankRNN):
 	@staticmethod
 	def new_valentin(*args, **kwargs) -> 'LowRankCyclingRNN':
 		return LowRankCyclingRNN(LowRankCyclingRNNParams.new_valentin(*args, **kwargs))
+
+
+class BinMappedRNN(RNN):
+	"""RNN representing the [0,1] mapping of a low rank RNN"""
+
+	def __init__(self, params: BinMappedRNNParams):
+		super().__init__(params)
+		# TODO
 
 
 CACHEDIR = Path('cache')
