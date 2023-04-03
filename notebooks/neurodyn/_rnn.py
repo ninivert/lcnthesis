@@ -90,8 +90,7 @@ class LowRankRNNParams(RNNParams):
 		assert self.F.shape == self.G.shape, 'F and G must have the same shape'
 		self.N = self.F.shape[0]
 		self.p = self.F.shape[1]
-		# TODO
-		# self.gamma = 
+		self.gamma = (self.F * self.G).sum(axis=1)
 
 	def to_dense(self) -> DenseRNNParams:
 		"""Compute $J_{ij} = \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}$"""
@@ -248,18 +247,18 @@ class LowRankRNN(RNN):
 	def __init__(self, params: LowRankRNNParams):
 		super().__init__(params)
 
-		self.F = params.F
-		self.G = params.G
 		self.N = params.N
 		self.p = params.p
+		self.F = params.F
+		self.G = params.G
+		self.gamma = params.gamma
 
 	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
 		drive = np.zeros_like(h)
 		rate = self.phi(h)  # firing rate
 		drive += np.einsum('im,jm,j->i', self.F, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
 		if self.exclude_self_connections:  # remove self-connections
-			# TODO : precompute gamma_i and use that instead !
-			drive -= np.einsum('im,im,i->i', self.F, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
+			drive -= self.gamma * rate
 		drive /= self.params.N
 		return drive
 
