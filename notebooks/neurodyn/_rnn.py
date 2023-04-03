@@ -56,7 +56,7 @@ class BinMappedRNNParams(RNNParams):
 		self.N = self.mapping.num_bins
 		self.p = self.F.shape[1]
 
-		mapping_index = self.mapping.mapping_index(self.F)
+		mapping_index = self.mapping.indices(self.F)
 		binmasks: list[np.ndarray] = [ mapping_index == alpha for alpha in range(self.N) ]
 		# |alpha|, number of original neurons in each bin
 		self.bincounts: np.ndarray = np.array([ binmasks[alpha].sum() for alpha in range(self.N) ])
