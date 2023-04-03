@@ -22,4 +22,4 @@ def overlap(rnn: LowRankRNN | BinMappedRNN, h: np.ndarray) -> np.ndarray:
 	if isinstance(rnn, LowRankRNN):
 		return np.einsum('im,i...->m...', rnn.G, rnn.phi(h)) / rnn.N
 	elif isinstance(rnn, BinMappedRNN):
-		return np.einsum('am,a...,a->m...', rnn.mapping.binned_statistic(rnn.F, h=rnn.G.T).T, rnn.phi(h), rnn.bincounts) / rnn.bincounts.sum()
+		return np.einsum('am,a...,a->m...', rnn.tildeG, rnn.phi(h), rnn.bincounts) / rnn.bintotal

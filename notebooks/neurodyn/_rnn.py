@@ -53,28 +53,30 @@ class BinMappedRNNParams(RNNParams):
 
 	def __post_init__(self):
 		assert self.F.shape == self.G.shape, 'F and G must have the same shape'
-		self.num_bins = self.mapping.num_bins
 		self.N = self.mapping.num_bins
 		self.p = self.F.shape[1]
 
-		self.mapping_index = self.mapping.mapping_index(self.F)
-		self.binmasks: list[np.ndarray] = [ self.mapping_index == alpha for alpha in range(self.num_bins) ]
+		mapping_index = self.mapping.mapping_index(self.F)
+		binmasks: list[np.ndarray] = [ mapping_index == alpha for alpha in range(self.N) ]
 		# |alpha|, number of original neurons in each bin
-		self.bincounts: np.ndarray = np.array([ self.binmasks[alpha].sum() for alpha in range(self.num_bins) ])
+		self.bincounts: np.ndarray = np.array([ binmasks[alpha].sum() for alpha in range(self.N) ])
+		# sum(|alpha|) is the number of neurons in the original network !
+		self.bintotal: int = self.bincounts.sum()
 		# "effective" low-rank vectors
-		self.tildeF = np.vstack([ self.F[self.binmasks[alpha], :].sum(axis=0) for alpha in range(self.num_bins) ])
-		self.tildeG = np.vstack([ self.G[self.binmasks[alpha], :].sum(axis=0) for alpha in range(self.num_bins) ])
+		self.tildeF = np.vstack([ self.F[binmasks[alpha]].mean(axis=0) if self.bincounts[alpha] != 0 else np.zeros(self.p) for alpha in range(self.N) ])
+		self.tildeG = np.vstack([ self.G[binmasks[alpha]].mean(axis=0) if self.bincounts[alpha] != 0 else np.zeros(self.p) for alpha in range(self.N) ])
+		self.tildegamma = np.array([ (self.F[binmasks[alpha]] * self.G[binmasks[alpha]]).sum() / self.bincounts[alpha]**2 if self.bincounts[alpha] != 0 else 0 for alpha in range(self.N) ])
 
 	def to_dense(self) -> DenseRNNParams:
-		J_ab = np.zeros((self.num_bins, self.num_bins))
+		J_ab = np.zeros((self.N, self.N))
 		J_ab += np.einsum('am,bm->ab', self.tildeF, self.tildeG)
 
 		if self.exclude_self_connections:  # exclude the self-connections corresponding to the original connectivity
-			for alpha in range(self.num_bins):
-				J_ab[alpha, alpha] -= np.einsum('im,im->', self.F[self.binmasks[alpha], :],  self.G[self.binmasks[alpha], :])
+			di = np.diag_indices_from(J_ab)
+			J_ab[di] -= self.tildegamma
 
-		J_ab[self.bincounts.nonzero()[0], :] /= self.bincounts[self.bincounts.nonzero()[0], None]
-		J_ab /= self.bincounts.sum()
+		J_ab[:, self.bincounts.nonzero()[0]] *= self.bincounts[None, self.bincounts.nonzero()[0]]
+		J_ab /= self.bintotal
 
 		return DenseRNNParams(phi=self.phi, I_ext=self.I_ext, exclude_self_connections=self.exclude_self_connections, J=J_ab)
 
@@ -88,6 +90,8 @@ class LowRankRNNParams(RNNParams):
 		assert self.F.shape == self.G.shape, 'F and G must have the same shape'
 		self.N = self.F.shape[0]
 		self.p = self.F.shape[1]
+		# TODO
+		# self.gamma = 
 
 	def to_dense(self) -> DenseRNNParams:
 		"""Compute $J_{ij} = \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}$"""
@@ -254,6 +258,7 @@ class LowRankRNN(RNN):
 		rate = self.phi(h)  # firing rate
 		drive += np.einsum('im,jm,j->i', self.F, self.G, rate, optimize=['einsum_path', (1, 2), (0, 1)])
 		if self.exclude_self_connections:  # remove self-connections
+			# TODO : precompute gamma_i and use that instead !
 			drive -= np.einsum('im,im,i->i', self.F, self.G, rate, optimize=['einsum_path', (0, 1), (0, 1)])
 		drive /= self.params.N
 		return drive
@@ -311,37 +316,25 @@ class BinMappedRNN(RNN):
 	def __init__(self, params: BinMappedRNNParams):
 		super().__init__(params)
 		
-		self.mapping = params.mapping
-		self.F = params.F
-		self.G = params.G
+		self.N = params.N  # this is equal to mapping.num_bins
+		self.p = params.p
 		self.tildeF = params.tildeF
 		self.tildeG = params.tildeG
-		self.num_bins = params.num_bins
-		self.N = params.N  # this is equal to num_bins
-		self.p = params.p
-		self.binmasks = params.binmasks
-		self.bincounts = params.bincounts
+		self.tildegamma = params.tildegamma
 
-		if self.exclude_self_connections:
-			# precompute these, because they create a copy of the original data
-			self.Falpha = [ self.F[self.binmasks[alpha], :] for alpha in range(self.N) ]
-			self.Galpha = [ self.G[self.binmasks[alpha], :] for alpha in range(self.N) ]
+		self.mapping = params.mapping
+		self.bincounts = params.bincounts
+		self.bintotal = params.bintotal
 
 	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
 		drive = np.zeros_like(h)
 		rate = self.phi(h)  # firing rate
-		drive += np.einsum('am,bm,b->a', self.tildeF, self.tildeG, rate, optimize=['einsum_path', (1, 2), (0, 1)])
+		drive += np.einsum('b,am,bm,b->a', self.bincounts, self.tildeF, self.tildeG, rate, optimize=['einsum_path', (0, 3), (1, 2), (0, 1)])
 		
 		if self.exclude_self_connections:  # remove self-connections
-			# NOTE : we need a for-loop here, because the F[binmasks[alpha]] is inhomogeneous
-			# (some bins have 0 neurons, some bins have many)
-			# therefore we cannot use einsum like einsum('aim,aim,a->a', Falpha, Galpha, rate)
-			# this adds a lot of simulation time, so prefer simulating with exclude_self_connections=False
-			for alpha in range(self.N):
-				drive[alpha] -= np.einsum('im,im->', self.Falpha[alpha], self.Galpha[alpha]) * rate[alpha]
+			drive -= self.bincounts * self.tildegamma * rate
 
-		drive[self.bincounts.nonzero()[0]] /= self.bincounts[self.bincounts.nonzero()[0]]
-		drive /= self.bincounts.sum()
+		drive /= self.bintotal
 		return drive
 
 	def __str__(self) -> str:
