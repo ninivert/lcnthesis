@@ -4,7 +4,6 @@ $N$ neurons, each with potential $h_i(t), i = 1,\cdots, N$ evolve according to
 
 $$
 \dot h_i(t) = -h_i(t) + \sum_{j=1}^{N} J_{ij} \phi(h_j(t))
-
 $$
 
 where
@@ -15,14 +14,12 @@ J_{ij} = \frac 1N \sum_{\mu=1}^p \xi_{\mu,i} \tilde \phi(\xi_{\mu,j}),
 \xi_{\mu,i} \sim \mathcal{N}(0,1),
 \quad
 \tilde \phi(\xi) = \frac{\phi(\xi) - \mathrm{E}[\phi(\xi)]}{\mathrm{Var}[\phi(\xi)]}
-
 $$
 
 Overlaps are defined as
 
 $$
 m_\mu(t) = \frac 1N \sum_{i=1}^N \tilde \phi(\xi_{\mu,i}) \phi(h_i(t))
-
 $$
 
 Some fixed points :
@@ -43,14 +40,12 @@ $$
 w(\vec y, \vec z) = \sum_{\mu=1}^p \tilde \phi (y_\mu) z_\mu \\
 &= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
 \end{aligned}
-
 $$
 
 Overlaps are now defined as
 
 $$
 m_\mu(t) = \int_{\mathbb R^p} \tilde \phi(y_\mu) \phi(h(t,\vec y)) \rho(\mathrm d \vec y)
-
 $$
 
 Some fixed points :
@@ -68,26 +63,55 @@ Then we can write
 
 $$
 \partial_t h(t, \vec z) = -h(t, \vec z) + \int_{[0,1]} [w(\cdot, \vec z) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
-
 $$
 
 # Connectivity matrix in $[0,1]$
+
+## General formulation
 
 For finite number of recursive quadrant iterations $n$, we can do a "mean-field approximation" inside each of the $4^n$ segments. Let $\alpha = \{i_1,\cdots,i_{|\alpha|}\}$ be the multi-index corresponding to all neurons of which the embedding in $\mathbb R^p$ gets mapped to the segment $\alpha$ in $[0,1]$. Let $H_\alpha(t) = \frac 1 {|\alpha|} \sum_{i \in \alpha} h_i(t)$ be the (mean) RNN potential of the segment $\alpha$. The connectivity matrix $\tilde J_{\alpha,\beta}$ satisfies
 
 $$
 \dot H_\alpha(t) = -H_\alpha(t) + \sum_{\beta \in \text{segments of length } 4^{-n}} \tilde J_{\alpha,\beta} \phi(H_\beta(t))
-
 $$
 
 By substituting the original $h_i(t)$, we find the correct rescaling is given by
 
 $$
 \tilde J_{\alpha,\beta} = \frac 1 {|\alpha|} \sum_{i \in \alpha} \sum_{j \in \beta} J_{ij}
-
 $$
 
-TODO : low-rank case
+## Low-rank case
+
+In the low-rank case, we have
+
+$$
+J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
+$$
+
+We can define the "mean pattern" inside each bin :
+
+$$
+\tilde F_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} F_{\mu,i}, \; \tilde G_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} G_{\mu,i}
+$$
+
+Then the connectivity matrix is given by, noting $N = \sum_{\alpha} |\alpha|$,
+
+$$
+\tilde J_{\alpha,\beta} = \frac{|\beta|}{\sum_{\beta'} |\beta'|} \left( \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} - \delta_{\alpha,\beta} \underbrace{\sum_{\mu=1}^p \sum_{i \in \alpha} \frac{F_{\mu,i}}{|\alpha|} \frac{G_{\mu,i}}{|\alpha|}}_{\gamma_{\alpha}} \right)
+$$
+
+Recurrent current is given by
+
+$$
+I^\text{rec}_\alpha(t) = \sum_\beta \tilde J_{\alpha,\beta} \phi(H_\beta(t)) = \frac{1}{\sum_{\beta'} |\beta'|} \left( \sum_\beta |\beta| \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} \phi(H_\beta(t)) - |\alpha| \tilde \gamma_\alpha \phi(H_\alpha(t)) \right)
+$$
+
+The overlaps can be computed as
+
+$$
+\tilde m_\mu(t) = \frac{1}{\sum_{\alpha} |\alpha|} \sum_\alpha |\alpha| G_{\mu,\alpha} \phi(H_\alpha(t))
+$$
 
 # $p$-dimensional closed system
 
@@ -97,14 +121,12 @@ We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z
 
 $$
 \dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
-
 $$
 
 with initial conditions
 
 $$
 \kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
-
 $$
 
 and the orthogonal component evolves according to
@@ -113,7 +135,6 @@ $$
 h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
 \quad
 h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
-
 $$
 
 # Relation between $p$-dimensional closed system and neural field equation in $\mathbb R^p$
@@ -126,5 +147,4 @@ $$
 &= -h^\perp(t, \vec z) - \sum_{\mu=1}^p z_\mu \kappa_\mu(t) + \sum_{\mu=1}^p z_\mu m_\mu(t) \\
 &= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
 \end{aligned}
-
 $$
