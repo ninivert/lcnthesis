@@ -47,7 +47,7 @@ def plot_overlap_trajectory(rnn: LowRankRNN, res: Result, figax: tuple[Figure, A
 	for mu in range(len(m)):
 		ax.plot(res.t, m[mu], label=f'$\\mu={mu}$', **kwargs)
 
-	ax.grid(axis='y')
+	ax.grid(visible=True, axis='y')
 	ax.legend()
 
 	return fig, ax

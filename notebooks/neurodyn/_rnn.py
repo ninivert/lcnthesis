@@ -45,7 +45,7 @@ class DenseRNNParams(RNNParams):
 
 @dataclass
 class BinMappedRNNParams(RNNParams):
-	binmapping: BinMapping
+	mapping: BinMapping
 
 	# the embedding in the original network
 	F: np.ndarray = field(repr=False)  # N, p matrix
@@ -53,11 +53,11 @@ class BinMappedRNNParams(RNNParams):
 
 	def __post_init__(self):
 		assert self.F.shape == self.G.shape, 'F and G must have the same shape'
-		self.N = self.F.shape[0]
+		self.num_bins = self.mapping.num_bins
+		self.N = self.mapping.num_bins
 		self.p = self.F.shape[1]
-		self.num_bins = self.binmapping.num_bins
 
-		self.mapping_index = self.binmapping.mapping_index(self.F)
+		self.mapping_index = self.mapping.mapping_index(self.F)
 		self.binmasks: list[np.ndarray] = [ self.mapping_index == alpha for alpha in range(self.num_bins) ]
 		# |alpha|, number of original neurons in each bin
 		self.bincounts: np.ndarray = np.array([ self.binmasks[alpha].sum() for alpha in range(self.num_bins) ])
@@ -71,11 +71,10 @@ class BinMappedRNNParams(RNNParams):
 
 		if self.exclude_self_connections:  # exclude the self-connections corresponding to the original connectivity
 			for alpha in range(self.num_bins):
-				J_ab[alpha, alpha] -= np.einsum('am,am->', self.F[self.binmasks[alpha], :],  self.G[self.binmasks[alpha], :])
+				J_ab[alpha, alpha] -= np.einsum('im,im->', self.F[self.binmasks[alpha], :],  self.G[self.binmasks[alpha], :])
 
 		J_ab[self.bincounts.nonzero()[0], :] /= self.bincounts[self.bincounts.nonzero()[0], None]
-
-		J_ab /= self.N
+		J_ab /= self.bincounts.sum()
 
 		return DenseRNNParams(phi=self.phi, I_ext=self.I_ext, exclude_self_connections=self.exclude_self_connections, J=J_ab)
 
@@ -103,7 +102,7 @@ class LowRankRNNParams(RNNParams):
 	def to_binmapped(self, binmapping: BinMapping) -> BinMappedRNNParams:
 		return BinMappedRNNParams(
 			phi=self.phi, I_ext=self.I_ext, exclude_self_connections=self.exclude_self_connections, 
-			binmapping=binmapping,
+			mapping=binmapping,
 			F=self.F.copy(), G=self.G.copy()
 		)
 
@@ -161,7 +160,7 @@ class SimulationParams:
 
 @dataclass
 class Result:
-	params: RNNParams | DenseRNNParams | LowRankRNNParams | LowRankCyclingRNNParams
+	params: RNNParams | DenseRNNParams | LowRankRNNParams | LowRankCyclingRNNParams | BinMappedRNNParams
 	simparams: SimulationParams
 	t: np.ndarray | None
 	h: np.ndarray | None
@@ -170,7 +169,7 @@ class Result:
 class RNN:
 	"""Base class for RNNs with current I_ext, activation function phi"""
 
-	def __init__(self, params: RNNParams):
+	def __init__(self, params: RNNParams | DenseRNNParams | LowRankRNNParams | LowRankCyclingRNNParams | BinMappedRNNParams):
 		self.params = params
 
 		self.phi = params.phi
@@ -311,7 +310,42 @@ class BinMappedRNN(RNN):
 
 	def __init__(self, params: BinMappedRNNParams):
 		super().__init__(params)
-		# TODO
+		
+		self.mapping = params.mapping
+		self.F = params.F
+		self.G = params.G
+		self.tildeF = params.tildeF
+		self.tildeG = params.tildeG
+		self.num_bins = params.num_bins
+		self.N = params.N  # this is equal to num_bins
+		self.p = params.p
+		self.binmasks = params.binmasks
+		self.bincounts = params.bincounts
+
+		if self.exclude_self_connections:
+			# precompute these, because they create a copy of the original data
+			self.Falpha = [ self.F[self.binmasks[alpha], :] for alpha in range(self.N) ]
+			self.Galpha = [ self.G[self.binmasks[alpha], :] for alpha in range(self.N) ]
+
+	def I_rec(self, t: float, h: np.ndarray) -> np.ndarray:
+		drive = np.zeros_like(h)
+		rate = self.phi(h)  # firing rate
+		drive += np.einsum('am,bm,b->a', self.tildeF, self.tildeG, rate, optimize=['einsum_path', (1, 2), (0, 1)])
+		
+		if self.exclude_self_connections:  # remove self-connections
+			# NOTE : we need a for-loop here, because the F[binmasks[alpha]] is inhomogeneous
+			# (some bins have 0 neurons, some bins have many)
+			# therefore we cannot use einsum like einsum('aim,aim,a->a', Falpha, Galpha, rate)
+			# this adds a lot of simulation time, so prefer simulating with exclude_self_connections=False
+			for alpha in range(self.N):
+				drive[alpha] -= np.einsum('im,im->', self.Falpha[alpha], self.Galpha[alpha]) * rate[alpha]
+
+		drive[self.bincounts.nonzero()[0]] /= self.bincounts[self.bincounts.nonzero()[0]]
+		drive /= self.bincounts.sum()
+		return drive
+
+	def __str__(self) -> str:
+		return f'BinMappedRNN{{N={self.N}, p={self.p}, phi={self.phi.__name__}, I_ext={self.I_ext.__name__}, exclude_self_connections={self.exclude_self_connections}}}'
 
 
 CACHEDIR = Path('cache')

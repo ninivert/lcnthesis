@@ -1,6 +1,7 @@
 """Compute mappings from R² -> R"""
 
 import numpy as np
+from scipy import stats
 from dataclasses import dataclass
 from abc import abstractmethod
 
@@ -43,6 +44,14 @@ class BinMapping(Mapping):
 	def mapping_index(self, F: np.ndarray) -> np.ndarray:
 		"""Index of the bins corresponding to the mapping"""
 		pass
+
+	def binned_statistic(self, F: np.ndarray, h: np.ndarray, fill_na: float | None = 0.0) -> np.ndarray:
+		"""Compute the mean of `h` inside each bin"""
+		m = self.mapping_index(F)
+		s = stats.binned_statistic(m, h, bins=range(self.num_bins+1)).statistic
+		if fill_na is not None:
+			s = np.nan_to_num(s, nan=fill_na)
+		return s
 
 
 @dataclass

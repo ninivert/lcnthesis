@@ -1,11 +1,11 @@
 """Overlap metric"""
 
 import numpy as np
-from ._rnn import LowRankRNN
+from ._rnn import LowRankRNN, BinMappedRNN
 
 __all__ = ['overlap']
 
-def overlap(rnn: LowRankRNN, h: np.ndarray) -> np.ndarray:
+def overlap(rnn: LowRankRNN | BinMappedRNN, h: np.ndarray) -> np.ndarray:
 	"""Compute overlap
 
 	Parameters
@@ -19,4 +19,7 @@ def overlap(rnn: LowRankRNN, h: np.ndarray) -> np.ndarray:
 	np.ndarray
 		overlap with patterns, shape (p, T)
 	"""
-	return np.einsum('im,i...->m...', rnn.G, rnn.phi(h)) / rnn.N
+	if isinstance(rnn, LowRankRNN):
+		return np.einsum('im,i...->m...', rnn.G, rnn.phi(h)) / rnn.N
+	elif isinstance(rnn, BinMappedRNN):
+		return np.einsum('am,a...,a->m...', rnn.mapping.binned_statistic(rnn.F, h=rnn.G.T).T, rnn.phi(h), rnn.bincounts) / rnn.bincounts.sum()
