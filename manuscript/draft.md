@@ -53,6 +53,42 @@ Some fixed points :
 - $h(\vec z) = z_\mu \quad \mu=1,\cdots,p$
 - $h(\vec z) = 0$
 
+## $p$-dimensional closed system
+
+The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\langle f, g \rangle = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
+
+We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
+$$
+
+with initial conditions
+
+$$
+\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
+$$
+
+and the orthogonal component evolves according to
+
+$$
+h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
+\quad
+h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
+$$
+
+## Relation between $p$-dimensional closed system and neural field equation in $\mathbb R^p$
+
+This is consistent with the neural field equation, since
+
+$$
+\begin{aligned}
+\partial_t h(t, \vec z) &= \partial_t h^\perp(t, \vec z) + \sum_{\mu=1}^p z_\mu \dot \kappa_\mu(t) \\
+&= -h^\perp(t, \vec z) - \sum_{\mu=1}^p z_\mu \kappa_\mu(t) + \sum_{\mu=1}^p z_\mu m_\mu(t) \\
+&= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
+\end{aligned}
+$$
+
 # Neural field equation in $[0,1]$
 
 Define a measurable mapping $S : \mathbb{R}^p \rightarrow [0, 1]$.
@@ -65,9 +101,9 @@ $$
 \partial_t h(t, \vec z) = -h(t, \vec z) + \int_{[0,1]} [w(\cdot, \vec z) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
 $$
 
-# Connectivity matrix in $[0,1]$
+## Connectivity matrix in $[0,1]$
 
-## General formulation
+### General formulation
 
 For finite number of recursive quadrant iterations $n$, we can do a "mean-field approximation" inside each of the $4^n$ segments. Let $\alpha = \{i_1,\cdots,i_{|\alpha|}\}$ be the multi-index corresponding to all neurons of which the embedding in $\mathbb R^p$ gets mapped to the segment $\alpha$ in $[0,1]$. Let $H_\alpha(t) = \frac 1 {|\alpha|} \sum_{i \in \alpha} h_i(t)$ be the (mean) RNN potential of the segment $\alpha$. The connectivity matrix $\tilde J_{\alpha,\beta}$ satisfies
 
@@ -81,7 +117,7 @@ $$
 \tilde J_{\alpha,\beta} = \frac 1 {|\alpha|} \sum_{i \in \alpha} \sum_{j \in \beta} J_{ij}
 $$
 
-## Low-rank case
+### Low-rank case
 
 In the low-rank case, we have
 
@@ -111,40 +147,4 @@ The overlaps can be computed as
 
 $$
 \tilde m_\mu(t) = \frac{1}{\sum_{\alpha} |\alpha|} \sum_\alpha |\alpha| G_{\mu,\alpha} \phi(H_\alpha(t))
-$$
-
-# $p$-dimensional closed system
-
-The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\langle f, g \rangle = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
-
-We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
-
-$$
-\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
-$$
-
-with initial conditions
-
-$$
-\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
-$$
-
-and the orthogonal component evolves according to
-
-$$
-h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
-\quad
-h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
-$$
-
-# Relation between $p$-dimensional closed system and neural field equation in $\mathbb R^p$
-
-This is consistent with the neural field equation, since
-
-$$
-\begin{aligned}
-\partial_t h(t, \vec z) &= \partial_t h^\perp(t, \vec z) + \sum_{\mu=1}^p z_\mu \dot \kappa_\mu(t) \\
-&= -h^\perp(t, \vec z) - \sum_{\mu=1}^p z_\mu \kappa_\mu(t) + \sum_{\mu=1}^p z_\mu m_\mu(t) \\
-&= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
-\end{aligned}
 $$
