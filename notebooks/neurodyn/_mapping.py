@@ -7,7 +7,7 @@ from abc import abstractmethod
 
 __all__ = [
 	'Mapping', 'BinMapping',
-	'RecursiveQuadrantMapping',
+	'RecursiveQuadrantMapping', 'Box',
 	'LinearMapping',
 ]
 
@@ -93,6 +93,37 @@ class Box:
 			Box(self.xmin, self.xmid, self.ymid, self.ymax),  # top left
 		)
 
+	def contains(self, points: np.ndarray) -> np.ndarray:
+		"""Compute a mask for all the points contained in the bounding box
+		
+		Parameters
+		----------
+		points : np.ndarray of shape (N, 2)
+			points to bound
+		
+		Returns
+		-------
+		np.ndarray of type ``bool`` of shape (N,)
+			boolean mask
+		"""
+		return (self.xmin <= points[:, 0]) & (points[:, 0] <= self.xmax) & (self.ymin <= points[:, 1]) & (points[:, 1] <= self.ymax)
+
+	@staticmethod
+	def new_bbox(points: np.ndarray) -> 'Box':
+		"""Construct a ``Box`` that bounds given ``points``
+		
+		Parameters
+		----------
+		points : np.ndarray of shape (N, 2)
+			points to bound
+		
+		Returns
+		-------
+		Box
+			bounding box of ``points``
+		"""
+		return Box(points[:, 0].min(), points[:, 0].max(), points[:, 1].min(), points[:, 1].max())
+
 
 class RecursiveQuadrantMapping(BinMapping):
 	def __init__(self, n: int = 5):
@@ -111,8 +142,8 @@ class RecursiveQuadrantMapping(BinMapping):
 	def num_bins(self) -> int:
 		return 4**self.n
 	
-	def __call__(self, F: np.ndarray) -> np.ndarray:
-		coords = self.coords(F, self.n)
+	def __call__(self, F: np.ndarray, box: Box | None = None) -> np.ndarray:
+		coords = self.coords(F, n=self.n, box=box)
 		return (coords-1) @ np.logspace(1, self.n, num=self.n, base=1/4)
 
 	def inverse(self, coords: np.ndarray) -> np.ndarray:
@@ -176,7 +207,22 @@ class RecursiveQuadrantMapping(BinMapping):
 		# return C
 
 	def coords(self, F: np.ndarray, n: int | None = None, box: Box | None = None) -> np.ndarray:
-		"""Generates coordinates (j1, ..., jn) for the recursive quadrant mapping box -> [0,1]"""
+		"""Generates coordinates (j1, ..., jn) for the recursive quadrant mapping box -> [0,1]
+		
+		Parameters
+		----------
+		F : np.ndarray of shape (N, p)
+			positions of the neurons in R^p
+		n : int or None
+			number of recursive iterations. If `None`, is set to ``self.n``
+		box : Box or None
+			bounding box for the mapping. If `None`, is set to the smallest bounding box that contains points ``F``
+
+		Returns
+		-------
+		np.ndarray of ``int`` of shape (N, n)
+			recursive quadrant coordinates for each neuron
+		"""
 
 		if n is None:
 			n = self.n
@@ -188,7 +234,12 @@ class RecursiveQuadrantMapping(BinMapping):
 			return coords
 
 		if box is None:
-			box = Box(F[:, 0].min(), F[:, 0].max(), F[:, 1].min(), F[:, 1].max())
+			box = Box.new_bbox(F)
+		else:
+			assert box.xmin <= F[:, 0].min(), 'bbox does not contain all neurons'
+			assert F[:, 0].max() <= box.xmax, 'bbox does not contain all neurons'
+			assert box.ymin <= F[:, 1].min(), 'bbox does not contain all neurons'
+			assert F[:, 1].max() <= box.ymax, 'bbox does not contain all neurons'
 		
 		box1, box2, box3, box4 = box.split_quadrants()
 

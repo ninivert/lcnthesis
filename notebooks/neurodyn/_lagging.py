@@ -19,6 +19,8 @@ class LaggingFunction:
 		A call with a (t, h_new) pair will override the stored (t, h) pair
 		"""
 
+		# TODO : when we call with a t < max(self.ts), delete the upper entries (reset history !)
+
 		# OLD : does not sort !
 		# the problem is that scipy.integrate.solve_ivp can call with t going backwards
 		# or the same t as before (which is why we do the if statement)
