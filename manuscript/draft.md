@@ -148,3 +148,19 @@ The overlaps can be computed as
 $$
 \tilde m_\mu(t) = \frac{1}{\sum_{\alpha} |\alpha|} \sum_\alpha |\alpha| G_{\mu,\alpha} \phi(H_\alpha(t))
 $$
+
+## Numerical aspects
+
+Numerically, we want to simulate an integral equation. To do this, take a finite number of iterations $n$, and make an integral-to-sum approximation. We define $\vec z(\alpha) = S(\alpha)$ the 2D point corresponding to the mapping $\alpha$. (details : we need a bounding box to map back).
+
+$$
+\int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu \rightarrow \sum_{\beta} w(\vec z(\alpha), \vec y(\beta)) \rho(\vec y(\beta)) \phi(H_\beta(t))
+$$
+
+Defining a matrix $Z_{\mu,\alpha} = \vec z(\alpha)_\mu$, we can write down a numerical PDF $\tilde \rho(Z_{1,\alpha},\cdots,Z_{p,\alpha}) = \tilde \rho(Z_{:,\alpha}) = \frac{\rho(Z_{:,\alpha})}{\sum_\beta \rho(Z_{:,\beta})}$ and the following patterns to simulate the embedded $[0,1]$ neural field as a low-rank RNN.
+
+$$
+F_{\mu,\alpha} = Z_{\mu,\alpha}, \quad G_{\mu,\alpha} = \tilde\phi(Z_{\mu,\alpha}) \cdot \tilde \rho(Z_{:,\alpha})
+$$
+
+Doing this is equivalent to the formulation of the binned connectivity matrix.
