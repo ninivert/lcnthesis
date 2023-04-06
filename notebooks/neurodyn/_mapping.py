@@ -8,6 +8,9 @@ from abc import abstractmethod
 __all__ = [
 	'Mapping', 'BinMapping',
 	'RecursiveQuadrantMapping', 'Box',
+	'ReshapeMapping',
+	'DiagonalMapping',
+	'FarMapping',
 	'LinearMapping',
 ]
 
@@ -283,6 +286,35 @@ class RecursiveQuadrantMapping(BinMapping):
 		coords[mask4, 1:] = self.coords(F[mask4, :], n-1, box4)
 
 		return coords
+
+
+class ReshapeMapping(BinMapping):
+	def __init__(self, a: int, b: int) -> None:
+		super().__init__()
+
+		self.a = a
+		self.b = b
+
+	@property
+	def num_bins(self) -> int:
+		return self.a * self.b
+
+	def indices(self, F: np.ndarray) -> np.ndarray:
+		pass	
+
+	def inverse(self, alpha: np.ndarray) -> np.ndarray:
+		# TODO
+		pass
+
+
+class DiagonalMapping(BinMapping):
+	# TODO
+	pass
+
+
+class FarMapping(BinMapping):
+	# TODO
+	pass
 
 
 class LinearMapping(Mapping):
