@@ -35,9 +35,9 @@ The RNN potential becomes $h_t(\vec z)$ and evolves according to
 
 $$
 \begin{aligned}
-\partial_t h(t, \vec z) &= -h(t, \vec z) + \int_{\mathbb{R}^p} w(\vec y, \vec z) \phi(h(t, \vec y)) \rho(\mathrm d \vec y),
+\partial_t h(t, \vec z) &= -h(t, \vec z) + \int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y),
 \quad
-w(\vec y, \vec z) = \sum_{\mu=1}^p \tilde \phi (y_\mu) z_\mu \\
+w(\vec z, \vec y) = \sum_{\mu=1}^p \tilde \phi (y_\mu) z_\mu \\
 &= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
 \end{aligned}
 $$
@@ -98,7 +98,7 @@ Let $\mu : [0,1] \rightarrow [0, \infty]$ be a measure on $([0,1], \mathcal B([0
 Then we can write
 
 $$
-\partial_t h(t, \vec z) = -h(t, \vec z) + \int_{[0,1]} [w(\cdot, \vec z) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
+\partial_t h(t, \vec z) = -h(t, \vec z) + \int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
 $$
 
 ## Connectivity matrix in $[0,1]$
