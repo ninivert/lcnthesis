@@ -156,6 +156,17 @@ class RecursiveQuadrantMapping(BinMapping):
 
 		return F
 
+	def inverse_samples(self, centered: bool = True, bbox: Box | None = None) -> np.ndarray:
+		"""Compute point in 2D corresponding to the bins in 1D"""
+		Z = self.inverse(self.indices_to_coords(np.arange(self.num_bins, dtype=int)))
+		if centered:
+			Z += np.array([2**(-self.n)/2, 2**(-self.n)/2])  # center the 2D bins
+		if bbox is not None:
+			Z[:, 0] = (Z[:, 0]-0.5)*(bbox.xmax - bbox.xmin)
+			Z[:, 1] = (Z[:, 1]-0.5)*(bbox.ymax - bbox.ymin)
+		return Z
+
+
 	def indices(self, F: np.ndarray) -> np.ndarray:
 		coords = self.coords(F, self.n)
 		return (coords-1) @ np.logspace(self.n-1, 0, num=self.n, base=4, dtype=int)
