@@ -8,10 +8,10 @@ from abc import abstractmethod
 __all__ = [
 	'Box',
 	'Mapping', 'BinMapping',
-	'RecursiveQuadrantMapping',
+	'RecursiveLocalMapping',
 	'ReshapeMapping',
 	'DiagonalMapping',
-	'FarMapping',
+	'RecursiveFarMapping',
 	'LinearMapping',
 ]
 
@@ -126,9 +126,13 @@ class BinMapping(Mapping):
 	@abstractmethod
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		"""Index of the bins corresponding to the mapping"""
-		pass
+		raise NotImplementedError()
 
-	def inverse(self, alpha: np.ndarray, bbox: Box = Box()) -> np.ndarray:
+	@abstractmethod
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		raise NotImplementedError()
+
+	def inverse_from_values(self, alpha: np.ndarray, bbox: Box = Box()) -> np.ndarray:
 		"""Inverse mapping from [0,1] -> R²
 
 		Note : this method suffers from floating points errors.
@@ -146,13 +150,13 @@ class BinMapping(Mapping):
 		np.ndarray of shape (N, 2)
 			2D embedding
 		"""
-		return self.inverse_indices((alpha*self.num_bins).astype(int))
+		return self.inverse_from_indices((alpha*self.num_bins).astype(int), bbox)
 
-	def inverse_indices(self, indices: np.ndarray, bbox: Box = Box()) -> np.ndarray:
+	def inverse_from_indices(self, indices: np.ndarray, bbox: Box = Box()) -> np.ndarray:
 		"""Compute point in 2D corresponding to the bins in 1D"""
-		return self.inverse_indices2d(self.indices_to_indices2d(indices), bbox)
+		return self.inverse_from_indices2d(self.indices_to_indices2d(indices), bbox)
 
-	def inverse_indices2d(self, indices2d: np.ndarray, bbox: Box = Box()) -> np.ndarray:
+	def inverse_from_indices2d(self, indices2d: np.ndarray, bbox: Box = Box()) -> np.ndarray:
 		return bbox.scale(indices2d / indices2d.max(axis=0))
 
 		# F = np.zeros((len(coords), 2))
@@ -179,12 +183,6 @@ class BinMapping(Mapping):
 			s = np.nan_to_num(s, nan=fill_na)
 		return s
 
-	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
-		return np.vstack(np.unravel_index(indices, shape=(self.nx, self.ny))).T
-
-	def indices2d_to_indices(self, indices2d: np.ndarray) -> np.ndarray:
-		return np.ravel_multi_index(indices2d.T, dims=(self.nx, self.ny))
-
 	def indices2d(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		"""Compute 2D indices of points ``F`` in R²
 		
@@ -209,7 +207,7 @@ class BinMapping(Mapping):
 		]) - 1).T
 
 
-class RecursiveQuadrantMapping(BinMapping):
+class RecursiveLocalMapping(BinMapping):
 	def __init__(self, nrec: int):
 		"""
 		Parameters
@@ -225,6 +223,10 @@ class RecursiveQuadrantMapping(BinMapping):
 			bbox = Box.new_bbox(F)
 		coords = self.j_coords(F, bbox, self.nrec)
 		return (coords-1) @ np.logspace(self.nrec-1, 0, num=self.nrec, base=4, dtype=int)
+
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		# TODO
+		raise NotImplementedError()
 
 	def j_coords(self, F: np.ndarray, box: Box | None = None, n: int | None = None) -> np.ndarray:
 		"""Generates coordinates (j1, ..., jn) for the recursive quadrant mapping box -> [0,1]
@@ -342,25 +344,41 @@ class RecursiveQuadrantMapping(BinMapping):
 
 class ReshapeMapping(BinMapping):
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
-		return self.indices2d_to_indices(self.indices2d(F, bbox))
+		return np.ravel_multi_index(self.indices2d(F, bbox).T, dims=(self.nx, self.ny))
+
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		return np.vstack(np.unravel_index(indices, shape=(self.nx, self.ny))).T
 
 
 class DiagonalMapping(BinMapping):
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
-		indices2d = self.indices2d(F, bbox).T
-		indices_diag = (1/2*(indices2d[0] + indices2d[1])*(indices2d[0]+indices2d[1]+1)+indices2d[0]).astype(int)
+		indices2d = self.indices2d(F, bbox)
+		indices = np.zeros(len(indices2d), dtype=int)
+		mask_lower = (indices2d[:, 0] < self.ny - indices2d[:, 1])
+		indices[mask_lower] = (1/2*(indices2d[mask_lower, 0] + indices2d[mask_lower, 1])*(indices2d[mask_lower, 0]+indices2d[mask_lower, 1]+1)+indices2d[mask_lower, 0]).astype(int)
+		indices[~mask_lower] = self.num_bins - (1/2*((self.nx-indices2d[~mask_lower, 0]-1) + (self.ny-indices2d[~mask_lower, 1]-1)) * ((self.nx-indices2d[~mask_lower, 0]-1) + (self.ny-indices2d[~mask_lower, 1]-1) + 1) + (self.nx-indices2d[~mask_lower, 0])).astype(int)
+		return indices
+
+		# old method
+		# indices2d = self.indices2d(F, bbox).T
+		# indices_diag = (1/2*(indices2d[0] + indices2d[1])*(indices2d[0]+indices2d[1]+1)+indices2d[0]).astype(int)
 		# at this stage the diagonals are clipped, so we get something like
 		# 6  11 17 24
 		# 3  7  12 18
 		# 1  4  8  13
 		# 0  2  5  9
 		# -> we need to deduplicate and rename
-		_, idx_inverse = np.unique(indices_diag, return_inverse=True)
-		indices_diag = np.arange(self.nx*self.ny)[idx_inverse]
-		return indices_diag
+		# # NOTE : this doesn't work when not all the points are sampled
+		# _, idx_inverse = np.unique(indices_diag, return_inverse=True)
+		# indices_diag = np.arange(self.nx*self.ny)[idx_inverse]
+		# return indices_diag
+
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		# TODO
+		raise NotImplementedError()
 
 
-class FarMapping(BinMapping):
+class RecursiveFarMapping(BinMapping):
 	def __init__(self, nrec: int):
 		"""
 		Parameters
@@ -399,6 +417,10 @@ class FarMapping(BinMapping):
 			return indices
 
 		return _indices(F, bbox, n=self.nrec)
+
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		# TODO
+		raise NotImplementedError()
 
 
 class LinearMapping(Mapping):
