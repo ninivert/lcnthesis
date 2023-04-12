@@ -66,6 +66,9 @@ class Box:
 		"""Given points in [0,1]², scale and translate back to points inside the bbox"""
 		return points * np.array([self.xspan, self.yspan]) + np.array([self.xmin, self.ymin])
 
+	def normalize(self, points: np.ndarray) -> np.ndarray:
+		return (points - np.array([self.xmin, self.ymin])) / np.array([self.xspan, self.yspan])
+
 	@staticmethod
 	def new_bbox(points: np.ndarray) -> 'Box':
 		"""Construct a ``Box`` that bounds given ``points``
