@@ -64,7 +64,7 @@ class Box:
 
 	def scale(self, points: np.ndarray) -> np.ndarray:
 		"""Given points in [0,1]², scale and translate back to points inside the bbox"""
-		return points * np.array([self.xspan, self.yspan]) + np.array([self.xmin, self.xmax])
+		return points * np.array([self.xspan, self.yspan]) + np.array([self.xmin, self.ymin])
 
 	@staticmethod
 	def new_bbox(points: np.ndarray) -> 'Box':
@@ -152,23 +152,18 @@ class BinMapping(Mapping):
 		"""
 		return self.inverse_from_indices((alpha*self.num_bins).astype(int), bbox)
 
-	def inverse_from_indices(self, indices: np.ndarray, bbox: Box = Box()) -> np.ndarray:
+	def inverse_from_indices(self, indices: np.ndarray, bbox: Box = Box(), centered: bool = True) -> np.ndarray:
 		"""Compute point in 2D corresponding to the bins in 1D"""
-		return self.inverse_from_indices2d(self.indices_to_indices2d(indices), bbox)
+		return self.inverse_from_indices2d(self.indices_to_indices2d(indices), bbox=bbox, centered=centered)
 
-	def inverse_from_indices2d(self, indices2d: np.ndarray, bbox: Box = Box()) -> np.ndarray:
-		return bbox.scale(indices2d / indices2d.max(axis=0))
+	def inverse_from_indices2d(self, indices2d: np.ndarray, bbox: Box = Box(), centered: bool = True) -> np.ndarray:
+		F = indices2d / np.array([self.nx, self.ny])
+		if centered: F += np.array([1/(2*self.nx), 1/(2*self.ny)])  # center the 2D bins
+		F = bbox.scale(F)
+		return F
 
-		# F = np.zeros((len(coords), 2))
-		# for n in range(self.n):
-		# 	offsets = np.array([[0.0, 0.0], [1/2**(n+1), 0.0], [1/2**(n+1), 1/2**(n+1)], [0.0, 1/2**(n+1)]])
-		# 	F += offsets[coords[:, n]-1]
-		# if centered:
-		# 	F += np.array([2**(-self.n)/2, 2**(-self.n)/2])  # center the 2D bins
-		# if bbox is not None:
-		# 	F[:, 0] = (F[:, 0]-0.5)*(bbox.xmax - bbox.xmin)
-		# 	F[:, 1] = (F[:, 1]-0.5)*(bbox.ymax - bbox.ymin)
-		# return F
+	def inverse_samples(self, bbox: Box = Box(), centered: bool = True) -> np.ndarray:
+		return self.inverse_from_indices(np.arange(self.num_bins, dtype=int), bbox=bbox, centered=centered)
 
 	@property
 	def num_bins(self) -> int:
@@ -225,8 +220,14 @@ class RecursiveLocalMapping(BinMapping):
 		return (coords-1) @ np.logspace(self.nrec-1, 0, num=self.nrec, base=4, dtype=int)
 
 	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
-		# TODO
-		raise NotImplementedError()
+		j_coords = self.indices_to_j_coords(indices)
+		indices2d = np.zeros((len(indices), 2), dtype=int)
+
+		for n in range(self.nrec):
+			offsets = np.array([[0, 0], [2**(self.nrec-n-1), 0], [2**(self.nrec-n-1), 2**(self.nrec-n-1)], [0, 2**(self.nrec-n-1)]])
+			indices2d += offsets[j_coords[:, n]-1]
+
+		return indices2d
 
 	def j_coords(self, F: np.ndarray, box: Box | None = None, n: int | None = None) -> np.ndarray:
 		"""Generates coordinates (j1, ..., jn) for the recursive quadrant mapping box -> [0,1]
@@ -297,10 +298,10 @@ class RecursiveLocalMapping(BinMapping):
 
 	def indices_to_j_coords(self, indices: np.ndarray) -> np.ndarray:
 		"""Convert indices obtained from ``mapping_index`` to the corresponding quadrant coordinates"""
-		C = np.zeros((len(indices), self.n), dtype=int)
+		C = np.zeros((len(indices), self.nrec), dtype=int)
 		vals = indices.copy()
 
-		for n in reversed(range(0, self.n)):
+		for n in reversed(range(0, self.nrec)):
 			C[:, n] = vals % 4
 			vals -= C[:, n]
 			vals >>= 0x2
