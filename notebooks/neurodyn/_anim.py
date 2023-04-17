@@ -77,13 +77,18 @@ def animate2d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1,
 
 	# 2d plotting
 
-	contour = axes['b'].tricontourf(rnn.F[:, 0], rnn.F[:, 1], activity[:, idt], levels=np.linspace(0, 1, 20+1), cmap='RdBu_r')
-	cbar = fig.colorbar(contour, ax=axes['b'], label='Activity $A = \\phi(h_i)$ [Hz]')
-	sc = axes['b'].scatter(
-		rnn.F[:Nmax, 0], rnn.F[:Nmax, 1], s=5,
-		facecolors=[ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax, idt]) ], edgecolor=None, alpha=0.6,
-		zorder=1000  # we need this, otherwise the new contours get drawn on top of the scatterpoints
-	)
+	# contour + scatter
+	# contour = axes['b'].tricontourf(rnn.F[:, 0], rnn.F[:, 1], activity[:, idt], levels=np.linspace(0, 1, 20+1), cmap='RdBu_r')
+	# cbar = fig.colorbar(contour, ax=axes['b'], label='Activity $A = \\phi(h_i)$ [Hz]')
+	# sc = axes['b'].scatter(
+	# 	rnn.F[:Nmax, 0], rnn.F[:Nmax, 1], s=5,
+	# 	facecolors=[ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax, idt]) ], edgecolor=None, alpha=0.6,
+	# 	zorder=1000  # we need this, otherwise the new contours get drawn on top of the scatterpoints
+	# )
+	# scatter only
+	contour = None
+	sc = axes['b'].scatter(rnn.F[:Nmax, 0], rnn.F[:Nmax, 1], c=activity[:Nmax, idt], cmap='RdBu_r', s=5, edgecolor=None, vmin=0, vmax=1, zorder=1000)
+	cbar = fig.colorbar(sc, ax=axes['b'], label='Activity $A = \\phi(h_i)$ [Hz]')
 
 	axes['b'].set_title(f'$(\\xi^0_i, \\xi^1_i)$ embedding contour plot\nand {Nmax} scattered neurons', fontsize='medium')
 	axes['b'].set_xlabel('$\\xi^0_i$')
@@ -127,11 +132,11 @@ def animate2d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1,
 
 	with tqdm(total=ceil(len(res.t)/time_stride)+1) as pbar:
 		def update(idt: int):
-
 			# update the contour
-			for artist in things['contour'].collections:
-				artist.remove()
-			things['contour'] = axes['b'].tricontourf(rnn.F[:, 0], rnn.F[:, 1], activity[:, idt], levels=np.linspace(0, 1, 20+1), cmap='RdBu_r')
+			if things['contour'] is not None:
+				for artist in things['contour'].collections:
+					artist.remove()
+				things['contour'] = axes['b'].tricontourf(rnn.F[:, 0], rnn.F[:, 1], activity[:, idt], levels=np.linspace(0, 1, 20+1), cmap='RdBu_r')
 			
 			# update the surface
 			things['surf'].remove()
@@ -142,7 +147,8 @@ def animate2d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1,
 			things['line'].set_xdata([res.t[idt], res.t[idt]])
 
 			# update the scatter
-			things['sc'].set_facecolors([ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax, idt]) ])
+			# things['sc'].set_facecolors([ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax, idt]) ])
+			things['sc'].set_array(activity[:Nmax, idt])
 
 			pbar.update(1)
 
