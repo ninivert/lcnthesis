@@ -87,14 +87,20 @@ def plot_2D_embedding_contour(
 
 def plot_2D_embedding_scatter(
 	rnn: LowRankRNN, activity: np.ndarray, Nmax: int = 1500,
-	figax: tuple[Figure, Axes] | None = None
+	figax: tuple[Figure, Axes] | None = None,
+	lightness: float | None = None,
+	**kwargs
 ) -> tuple[tuple[Figure, Axes], collections.PathCollection]:
 	fig, ax = _unwrap_figax(figax)
 
 	cmap = mpl.colormaps['RdBu_r']
+	if lightness is not None:
+		c = [ scale_lightness(c[:3], lightness) for c in cmap(activity[:Nmax]) ]
+	else:
+		c = cmap(activity[:Nmax])
 	sc = ax.scatter(
 		rnn.F[:Nmax, 0], rnn.F[:Nmax, 1], s=5,
-		facecolors=[ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax]) ], edgecolor=None, alpha=0.6,
+		c=c, edgecolor=None, **kwargs,
 		zorder=1000  # we need this, otherwise the new contours get drawn on top of the scatterpoints
 	)
 
