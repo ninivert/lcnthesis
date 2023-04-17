@@ -19,8 +19,6 @@ class LaggingFunction:
 		A call with a (t, h_new) pair will override the stored (t, h) pair
 		"""
 
-		# TODO : when we call with a t < max(self.ts), delete the upper entries (reset history !)
-
 		# OLD : does not sort !
 		# the problem is that scipy.integrate.solve_ivp can call with t going backwards
 		# or the same t as before (which is why we do the if statement)
@@ -31,20 +29,14 @@ class LaggingFunction:
 		# print('h0 log : ', [h[0] for h in self.hs])
 		# print('t log :  ', self.ts)
 
-		# find the index at which to insert/update
+		# find the index at which to cut
+		# this is needed because the solve_ivp can reject steps and refine guesses
 		idx_insert = bisect.bisect_left(self.ts, t)
-
-		if t not in self.ts:
-			# exact comparison of floats, since solve_ivp calls twice with same t
-			self.ts.insert(idx_insert, t)
-			self.hs.insert(idx_insert, h.copy())
-			# print(f'inserted {t=} at index {idx_insert=}')
-
-		else:
-			# update the guess for h
-			# this is needed because the solve_ivp can reject steps and refine guesses
-			self.hs[idx_insert] = h.copy()
-			# print(f'updating entry at index {idx_insert}')
+		# when we call with a t < max(self.ts), delete the upper entries (reset history !)
+		del self.ts[idx_insert:]
+		del self.hs[idx_insert:]
+		self.ts.append(t)
+		self.hs.append(h.copy())
 
 		# find the location of t-delta
 		t_minus_delta = t - self.delta
