@@ -1,0 +1,69 @@
+# presentation 2023-04-20 notes
+
+## neural field recap
+
+what is a neural field equation
+   what is the connectivity kernel
+	(interaction depends on the locality in space)
+   works for rate and poisson neurons
+
+## low rank RNNs converge to neural field equations
+
+- Jii=0 term can be ignored at large N
+- random gaussian patterns
+- ϕ~ is just renormalized ϕ
+- h=0 and h=ξ are fixed points
+
+note : more general formulation exists
+- instead of gaussian, can be any pdf
+- F(xi) and G(xi) can be any function
+-> ask Louis !
+
+the reason we use low-rank RNNs, is because they are computationally cheap to simulate
+
+## demo p=1
+
+phi=linear : the overlap != 1 is due to finite-N effects
+
+sigmoid seems to converge better than linear
+
+files : embedding_d=1_h0=0_phi=*.mp4
+
+## demo p=2
+
+not perfectly along one dimension due to finite-N effects
+
+## mapping [0,1]² to [0,1]
+
+with linear mappings, when the tangent is aligned with the overlap vector, we get a nice sigmoid in the image
+
+note : we get similar results using PCA
+
+##  a bijective fractal mapping
+
+the field is h~xi0+xi1
+
+## can we write a neural field equation in an even lower dimension
+
+so a mapping does exist, and it can be bijective
+
+can we still write a neural field equation ?
+
+## numerical aspects of simulating fractal mappings
+
+classically, w(a,b) is continuous
+in our case, might be discontinuous (fractal mapping)
+
+two possibilities to generate J_αβ :
+1. random sampling (<=> large discrete RNN) OR 2. direct sampling
+
+we effectively simulate 4^nrec "fractal neurons"
+
+## the reshape mapping
+
+the field is h~xi0+xi1
+
+## are dynamics in [0,1] are the same as in Rᵖ ?
+
+we didn't go larger because it's expensive to compute the downsampling (need to go to 2nrec, then downsample to nrec to have 4**nrec neurons)
+i need to optimize the code further, and explore if it's possible to downsample better
