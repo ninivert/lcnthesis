@@ -6,3 +6,4 @@ from ._lagging import *
 from ._mapping import *
 from ._plot import *
 from ._anim import *
+from ._utils import *

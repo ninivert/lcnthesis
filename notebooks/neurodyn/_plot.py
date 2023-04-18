@@ -133,7 +133,7 @@ def plot_2D_to_1D_mapping(
 
 
 def add_headers(
-	fig,
+	fig=None, axes=None,
 	*,
 	row_headers=None,
 	col_headers=None,
@@ -145,10 +145,16 @@ def add_headers(
 	# Stolen from : https://stackoverflow.com/questions/25812255/row-and-column-headers-in-matplotlibs-subplots
 	# Based on https://stackoverflow.com/a/25814386
 
-	axes = fig.get_axes()
+	if fig is None and axes is None:
+		raise RuntimeError('fig or axes must be specified')
+
+	if axes is None:
+		axes = fig.get_axes()
 
 	for ax in axes:
 		sbs = ax.get_subplotspec()
+		if isinstance(sbs, mpl.gridspec.SubplotSpec):
+			sbs = sbs.get_topmost_subplotspec()
 		
 		# Putting headers on cols
 		if (col_headers is not None) and (sbs is not None) and sbs.is_first_row():

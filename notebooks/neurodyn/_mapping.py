@@ -345,6 +345,9 @@ class RecursiveLocalMapping(BinMapping):
 		# C += 1
 		# return C
 
+	def __str__(self) -> str:
+		return f'RecursiveLocalMapping{{nrec={self.nrec}}}'
+
 
 class ReshapeMapping(BinMapping):
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
@@ -352,6 +355,9 @@ class ReshapeMapping(BinMapping):
 
 	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
 		return np.vstack(np.unravel_index(indices, shape=(self.nx, self.ny))).T
+
+	def __str__(self) -> str:
+		return f'ReshapeMapping{{nx={self.nx}, ny={self.ny}}}'
 
 
 class DiagonalMapping(BinMapping):
@@ -380,6 +386,9 @@ class DiagonalMapping(BinMapping):
 	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
 		# TODO
 		raise NotImplementedError()
+
+	def __str__(self) -> str:
+		return f'DiagonalMapping{{nx={self.nx}, ny={self.ny}}}'
 
 
 class RecursiveFarMapping(BinMapping):
@@ -426,6 +435,9 @@ class RecursiveFarMapping(BinMapping):
 		# TODO
 		raise NotImplementedError()
 
+	def __str__(self) -> str:
+		return f'RecursiveFarMapping{{nrec={self.nrec}}}'
+
 
 class LinearMapping(Mapping):
 	def __init__(self, tangent: np.ndarray):
@@ -440,3 +452,6 @@ class LinearMapping(Mapping):
 
 	def __call__(self, F: np.ndarray) -> np.ndarray:
 		return F @ self.tangent
+
+	def __str__(self) -> str:
+		return f'LinearMapping{{tangent={self.tangent}}}'

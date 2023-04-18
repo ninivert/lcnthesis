@@ -26,18 +26,18 @@ def animate1d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1,
 
 	# neuron index
 
-	axes['a'].set_title('1D embedding based on neuron index')
+	axes['a'].set_title('Unordered neuron activity')
 	sc_idx = axes['a'].scatter(idx_mapping, activity[:, idt], c='k', alpha=0.4, s=3, ec=None)
 	axes['a'].set_xlabel('neuron index $i$')
-	axes['a'].set_ylabel('Activity $A = \\phi(h_i)$ [Hz]')
+	axes['a'].set_ylabel('Activity $\\phi(h(\\xi_{i,0}))$ [Hz]')
 	axes['a'].set_ylim((0,1))
 
 	# neuron embedding
 
-	axes['b'].set_title('1D embedding based on neuron pattern $\\xi_i^0$')
+	axes['b'].set_title('Neural activity in the 1D embedding')
 	sc_emb = axes['b'].scatter(rnn.F[:Nmax, 0], activity[:, idt], c='k', alpha=0.2, s=3, ec=None)
-	axes['b'].set_xlabel('neuron embedding $\\xi_i^0$')
-	axes['b'].set_ylabel('Activity $A = \\phi(h_i)$ [Hz]')
+	axes['b'].set_xlabel('neuron embedding $\\xi_{i,0}$')
+	axes['b'].set_ylabel('Activity $\\phi(h(\\xi_{i,0}))$ [Hz]')
 	axes['b'].set_ylim((0,1))
 
 	# trajectory
