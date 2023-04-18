@@ -27,6 +27,18 @@ Some fixed points :
 - $h_i = \xi_{\mu,i} \quad \forall \mu = 1,\cdots,p$
 - $h_i=0$
 
+## Delayed and rolled RNN
+
+$$
+\dot h_i(t) = -h_i(t) + \sum_{j=1}^{N} \frac 1N \sum_{\mu=1}^p \xi_{\mu+1,i} \tilde \phi(\xi_{\mu,j}) \phi(h_j(t - \delta))
+$$
+
+## General formulation
+
+$$
+J_{ij} = \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
+$$
+
 # Neural field equation in $\mathbb R^p$
 
 Neurons are at position $\vec z = (z_1, \cdots, z_p) \in \mathbb{R}^p$, distributed according to the distribution $\frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p z_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} z_1 \cdots \mathrm d z_p = \rho(\mathrm d \vec z)$
@@ -160,7 +172,7 @@ $$
 Defining a matrix $Z_{\mu,\alpha} = \vec z(\alpha)_\mu$, we can write down a numerical PDF $\tilde \rho(Z_{1,\alpha},\cdots,Z_{p,\alpha}) = \tilde \rho(Z_{:,\alpha}) = \frac{\rho(Z_{:,\alpha})}{\sum_\beta \rho(Z_{:,\beta})}$ and the following patterns to simulate the embedded $[0,1]$ neural field as a low-rank RNN.
 
 $$
-F_{\mu,\alpha} = Z_{\mu,\alpha}, \quad G_{\mu,\alpha} = \tilde\phi(Z_{\mu,\alpha}) \cdot \tilde \rho(Z_{:,\alpha})
+\tilde F_{\mu,\alpha} = Z_{\mu,\alpha}, \quad \tilde G_{\mu,\alpha} = \tilde\phi(Z_{\mu,\alpha}), \quad \tilde J_{\alpha,\beta}=\tilde \rho(Z_{:,\beta}) \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta}
 $$
 
 Doing this is equivalent to the formulation of the binned connectivity matrix.
