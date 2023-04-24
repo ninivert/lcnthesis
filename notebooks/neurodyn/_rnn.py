@@ -1,5 +1,6 @@
 """Simulate rate networks"""
 
+from scipy import stats
 import scipy.integrate
 import numpy as np
 from typing import Callable, Union, Self
@@ -146,6 +147,47 @@ class LowRankRNNParams(RNNParams):
 			G[:, mu] = (phi(z) - a) / c
 
 		return cls(F=F, G=G, phi=phi, **kwargs)
+
+	@classmethod
+	def new_mapped_valentin(cls: Self, phi: Callable[[np.ndarray], np.ndarray], mapping_cls: BinMapping, nrec: int, random_state: int = 42, **kwargs) -> Self:
+		"""Generate the low-rank RNN corresponding to the 1D mapping of the 2D gaussian space.
+
+		The fractal is generated with ``2*nrec`` samples, then downsampled to ``N=4**nrec`` fractal segments.
+
+		Parameters
+		----------
+		p : int
+			rank of the connectivity
+		N : int
+			number of neurons
+		phi : Callable[[np.ndarray], np.ndarray]
+			activation function
+		random_state : int, optional
+			random seed to be used for the sampling, by default 42
+		**kwargs :
+			additionnal arguments to be passed to ``LowRankRNNParams.__init__``
+
+		Returns
+		-------
+		LowRankRNNParams
+		"""
+		
+		nfrac = 2*nrec
+		mapping = mapping_cls.new_nrec(nfrac)
+
+		z0 = np.random.default_rng(random_state).normal(loc=0, scale=1, size=1_000_000)
+		phi_z0 = phi(z0)
+		a = np.mean(phi_z0)
+		c = np.var(phi_z0)
+
+		Z = stats.norm.ppf(mapping.inverse_samples())
+		F = Z
+		G = (phi(Z) - a) / c
+
+		F_avg = F.reshape((2**nfrac, 2**nfrac, 2)).mean(axis=1)
+		G_avg = G.reshape((2**nfrac, 2**nfrac, 2)).mean(axis=1)
+		
+		return cls(F=F_avg, G=G_avg, phi=phi, **kwargs)
 
 
 @dataclass

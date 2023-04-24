@@ -1,5 +1,6 @@
 """Compute mappings from R² -> R"""
 
+from typing import Self
 import numpy as np
 from scipy import stats
 from dataclasses import dataclass
@@ -12,6 +13,7 @@ __all__ = [
 	'ReshapeMapping',
 	'DiagonalMapping',
 	'RecursiveFarMapping',
+	'ZMapping',
 	'LinearMapping',
 ]
 
@@ -123,6 +125,10 @@ class BinMapping(Mapping):
 		self.nx = nx
 		self.ny = ny
 
+	@staticmethod
+	def new_nrec(nrec: int) -> 'BinMapping':
+		raise NotImplementedError()
+
 	def __call__(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		return self.indices(F, bbox) / self.num_bins
 
@@ -166,7 +172,7 @@ class BinMapping(Mapping):
 		return F
 
 	def inverse_samples(self, bbox: Box = Box(), centered: bool = True) -> np.ndarray:
-		return self.inverse_from_indices(np.arange(self.num_bins, dtype=int), bbox=bbox, centered=centered)
+		return self.inverse_from_indices(np.arange(self.num_bins, dtype='uint64'), bbox=bbox, centered=centered)
 
 	@property
 	def num_bins(self) -> int:
@@ -215,6 +221,10 @@ class RecursiveLocalMapping(BinMapping):
 		"""
 		super().__init__(2**nrec, 2**nrec)
 		self.nrec = nrec
+
+	@staticmethod
+	def new_nrec(nrec: int) -> 'RecursiveLocalMapping':
+		return RecursiveLocalMapping(nrec=nrec)
 
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		if bbox is None:
@@ -301,7 +311,7 @@ class RecursiveLocalMapping(BinMapping):
 
 	def indices_to_j_coords(self, indices: np.ndarray) -> np.ndarray:
 		"""Convert indices obtained from ``mapping_index`` to the corresponding quadrant coordinates"""
-		C = np.zeros((len(indices), self.nrec), dtype=int)
+		C = np.zeros((len(indices), self.nrec), dtype='uint64')
 		vals = indices.copy()
 
 		for n in reversed(range(0, self.nrec)):
@@ -350,6 +360,10 @@ class RecursiveLocalMapping(BinMapping):
 
 
 class ReshapeMapping(BinMapping):
+	@staticmethod
+	def new_nrec(nrec: int) -> 'ReshapeMapping':
+		return ReshapeMapping(nx=2**nrec, ny=2**nrec)
+
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		return np.ravel_multi_index(self.indices2d(F, bbox).T, dims=(self.nx, self.ny))
 
@@ -361,6 +375,10 @@ class ReshapeMapping(BinMapping):
 
 
 class DiagonalMapping(BinMapping):
+	@staticmethod
+	def new_nrec(nrec: int) -> 'DiagonalMapping':
+		return DiagonalMapping(nx=2**nrec, ny=2**nrec)
+
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		indices2d = self.indices2d(F, bbox)
 		indices = np.zeros(len(indices2d), dtype=int)
@@ -391,6 +409,57 @@ class DiagonalMapping(BinMapping):
 		return f'DiagonalMapping{{nx={self.nx}, ny={self.ny}}}'
 
 
+class ZMapping(BinMapping):
+	def __init__(self, nrec: int):
+		"""
+		Parameters
+		----------
+		nrec : int
+			number of recursions for the recursive quadrant split
+		"""
+		super().__init__(2**nrec, 2**nrec)
+		self.nrec = nrec
+
+	@staticmethod
+	def new_nrec(nrec: int) -> 'ZMapping':
+		return ZMapping(nrec=nrec)
+
+	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
+		indices2d = self.indices2d(F, bbox)
+		return ZMapping.part1by1_64(indices2d[:, 0]) | (ZMapping.part1by1_64(indices2d[:, 1]) << 1)
+
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		indices2d = np.zeros((len(indices), 2), dtype='uint64')
+		indices2d[:, 0] = ZMapping.unpart1by1_64(indices)
+		indices2d[:, 1] = ZMapping.unpart1by1_64(indices >> 1)
+		return indices2d
+
+	@staticmethod
+	def unpart1by1_64(n: int) -> int:
+		# https://github.com/smatsumt/pyzorder/blob/master/pyzorder/pymorton.py#L72
+		n = n & 0x5555555555555555                # binary: 101010101010101010101010101010101010101010101010101010101010101, len: 63
+		n = (n ^ (n >> 1))  & 0x3333333333333333  # binary: 11001100110011001100110011001100110011001100110011001100110011,  len: 62
+		n = (n ^ (n >> 2))  & 0x0f0f0f0f0f0f0f0f  # binary: 111100001111000011110000111100001111000011110000111100001111,    len: 60
+		n = (n ^ (n >> 4))  & 0x00ff00ff00ff00ff  # binary: 11111111000000001111111100000000111111110000000011111111,        len: 56
+		n = (n ^ (n >> 8))  & 0x0000ffff0000ffff  # binary: 1111111111111111000000001111111111111111,                        len: 40
+		n = (n ^ (n >> 16)) & 0x00000000ffffffff  # binary: 11111111111111111111111111111111,                                len: 32
+		return n
+
+	@staticmethod
+	def part1by1_64(n: int) -> int:
+		# https://github.com/smatsumt/pyzorder/blob/master/pyzorder/pymorton.py#L50
+		n = n & 0x00000000ffffffff                # binary: 11111111111111111111111111111111,                                len: 32
+		n = (n | (n << 16)) & 0x0000FFFF0000FFFF  # binary: 1111111111111111000000001111111111111111,                        len: 40
+		n = (n | (n << 8))  & 0x00FF00FF00FF00FF  # binary: 11111111000000001111111100000000111111110000000011111111,        len: 56
+		n = (n | (n << 4))  & 0x0F0F0F0F0F0F0F0F  # binary: 111100001111000011110000111100001111000011110000111100001111,    len: 60
+		n = (n | (n << 2))  & 0x3333333333333333  # binary: 11001100110011001100110011001100110011001100110011001100110011,  len: 62
+		n = (n | (n << 1))  & 0x5555555555555555  # binary: 101010101010101010101010101010101010101010101010101010101010101, len: 63
+		return n
+
+	def __str__(self) -> str:
+		return f'ZMapping{{nrec={self.nrec}}}'
+
+
 class RecursiveFarMapping(BinMapping):
 	def __init__(self, nrec: int):
 		"""
@@ -401,6 +470,10 @@ class RecursiveFarMapping(BinMapping):
 		"""
 		super().__init__(2**nrec, 2**nrec)
 		self.nrec = nrec
+
+	@staticmethod
+	def new_nrec(nrec: int) -> 'RecursiveFarMapping':
+		return RecursiveFarMapping(nrec=nrec)
 
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		if bbox is None:
