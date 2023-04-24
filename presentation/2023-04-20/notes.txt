@@ -23,6 +23,7 @@ the reason we use low-rank RNNs, is because they are computationally cheap to si
 
 ## demo p=1
 
+-> skip linear to save time
 phi=linear : the overlap != 1 is due to finite-N effects
 
 sigmoid seems to converge better than linear
@@ -33,11 +34,15 @@ files : embedding_d=1_h0=0_phi=*.mp4
 
 not perfectly along one dimension due to finite-N effects
 
+-> skip explanation of oscillations that die down
+
 ## mapping [0,1]² to [0,1]
 
 with linear mappings, when the tangent is aligned with the overlap vector, we get a nice sigmoid in the image
 
 note : we get similar results using PCA
+
+-> skip linear animation
 
 ##  a bijective fractal mapping
 

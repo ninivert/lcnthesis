@@ -177,7 +177,7 @@ def add_headers(
 				xytext=(-ax.yaxis.labelpad - row_pad, 0),
 				xycoords=ax.yaxis.label,
 				textcoords="offset points",
-				ha="right",
+				ha="center",
 				va="center",
 				rotation=rotate_row_headers * 90,
 				**text_kwargs,
