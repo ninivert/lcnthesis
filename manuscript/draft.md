@@ -65,6 +65,18 @@ Some fixed points :
 - $h(\vec z) = z_\mu \quad \mu=1,\cdots,p$
 - $h(\vec z) = 0$
 
+
+## Uniform sampling
+
+Defining the change of variables $u_\mu=\mathrm{CDF}(y_\mu), v_\mu=\mathrm{CDF}(z_\mu)$, the neural field becomes
+
+$$
+\partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u, \quad
+w_U(\vec v, \vec u) = w(\mathrm{CDF}^{-1}(\vec v), \mathrm{CDF}^{-1}(\vec u)), \quad h_U(t, \vec v) = h(t, \mathrm{CDF}^{-1}(\vec v))
+$$
+
+We now have a neural field equation on a unit (hyper)cube, and uniform sampling.
+
 ## $p$-dimensional closed system
 
 The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\langle f, g \rangle = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
