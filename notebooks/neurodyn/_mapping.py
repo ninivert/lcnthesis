@@ -171,8 +171,36 @@ class BinMapping(Mapping):
 		F = bbox.scale(F)
 		return F
 
-	def inverse_samples(self, bbox: Box = Box(), centered: bool = True) -> np.ndarray:
-		return self.inverse_from_indices(np.arange(self.num_bins, dtype='uint64'), bbox=bbox, centered=centered)
+	def inverse_samples(self, bbox: Box = Box(), centered: bool = True, use_inverse: bool = True) -> np.ndarray:
+		"""Generate samples in 2D, ordered according to the mapping in 1D
+
+		Parameters
+		----------
+		bbox : Box, optional
+			bounding box for the samples in 2D, by default Box()
+		centered : bool, optional
+			if true, the samples are at the centers of each 2D bin, else on the upper left, by default True
+		use_inverse : bool, optional
+			use the inverse mapping implementation, by default True.
+			if True, the mapping needs to implement ``indices_to_indices2d``.
+			if False, a grid of points is generated in 2D, and the mapping is used to order the points.
+
+		Returns
+		-------
+		np.ndarray of shape (self.num_bins, 2)
+			samples in 2D, ordered according to the mapping in 1D
+		"""
+		if use_inverse:
+			return self.inverse_from_indices(np.arange(self.num_bins, dtype='uint64'), bbox=bbox, centered=centered)
+		else:
+			# generate a grid of points
+			xx, yy = np.meshgrid(np.linspace(0, 1-1/self.nx, self.nx), np.linspace(0, 1-1/self.ny, self.ny))
+			F = np.vstack((xx.flatten(), yy.flatten())).T
+			if centered: F += np.array([1/(2*self.nx), 1/(2*self.ny)])
+			F = bbox.scale(F)
+			# apply the mapping of 2D to 1D
+			F = F[np.argsort(self.indices(F, bbox=bbox))]
+			return F
 
 	@property
 	def num_bins(self) -> int:
@@ -230,14 +258,14 @@ class RecursiveLocalMapping(BinMapping):
 		if bbox is None:
 			bbox = Box.new_bbox(F)
 		coords = self.j_coords(F, bbox, self.nrec)
-		return (coords-1) @ np.logspace(self.nrec-1, 0, num=self.nrec, base=4, dtype=int)
+		return ((coords-1) @ np.logspace(self.nrec-1, 0, num=self.nrec, base=4, dtype=int)).astype('uint64')
 
 	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
 		j_coords = self.indices_to_j_coords(indices)
-		indices2d = np.zeros((len(indices), 2), dtype=int)
+		indices2d = np.zeros((len(indices), 2), dtype='uint64')
 
 		for n in range(self.nrec):
-			offsets = np.array([[0, 0], [2**(self.nrec-n-1), 0], [2**(self.nrec-n-1), 2**(self.nrec-n-1)], [0, 2**(self.nrec-n-1)]])
+			offsets = np.array([[0, 0], [2**(self.nrec-n-1), 0], [2**(self.nrec-n-1), 2**(self.nrec-n-1)], [0, 2**(self.nrec-n-1)]], dtype='uint64')
 			indices2d += offsets[j_coords[:, n]-1]
 
 		return indices2d
@@ -486,8 +514,8 @@ class RecursiveFarMapping(BinMapping):
 
 			mask1 = (box1.xmin <= F[:, 0]) & (F[:, 0] <  box1.xmax) & (box1.ymin <= F[:, 1]) & (F[:, 1] <  box1.ymax)
 			mask2 = (box2.xmin <= F[:, 0]) & (F[:, 0] <= box2.xmax) & (box2.ymin <= F[:, 1]) & (F[:, 1] <  box2.ymax)
-			mask3 = (box3.xmin <= F[:, 0]) & (F[:, 0] <= box3.xmax) & (box3.ymin <= F[:, 1]) & (F[:, 1] <= box3.ymax)
-			mask4 = (box4.xmin <= F[:, 0]) & (F[:, 0] <  box4.xmax) & (box4.ymin <= F[:, 1]) & (F[:, 1] <= box4.ymax)
+			mask3 = (box3.xmin <= F[:, 0]) & (F[:, 0] < box3.xmax) & (box3.ymin <= F[:, 1]) & (F[:, 1] <= box3.ymax)
+			mask4 = (box4.xmin <= F[:, 0]) & (F[:, 0] <=  box4.xmax) & (box4.ymin <= F[:, 1]) & (F[:, 1] <= box4.ymax)
 
 			if n == 1:
 				indices[mask1] = offset+0*stride
