@@ -6,12 +6,14 @@ import numpy as np
 from typing import Callable, Union, Self
 from tqdm import tqdm
 from dataclasses import dataclass, field
+import dataclasses
 from abc import abstractmethod
 import hashlib
 import pickle
 import os
 import itertools
 import logging
+import copy
 from pathlib import Path
 from ._lagging import LaggingFunction
 from ._mapping import BinMapping
@@ -149,19 +151,17 @@ class LowRankRNNParams(RNNParams):
 		return cls(F=F, G=G, phi=phi, **kwargs)
 
 	@classmethod
-	def new_mapped_valentin(cls: Self, phi: Callable[[np.ndarray], np.ndarray], mapping_cls: BinMapping, nrec: int, random_state: int = 42, **kwargs) -> Self:
+	def new_sampled_valentin(cls: Self, phi: Callable[[np.ndarray], np.ndarray], mapping_samples: np.ndarray, random_state: int = 42, **kwargs) -> Self:
 		"""Generate the low-rank RNN corresponding to the 1D mapping of the 2D gaussian space.
 
-		The fractal is generated with ``2*nrec`` samples, then downsampled to ``N=4**nrec`` fractal segments.
+		The patterns are sampled in the [0,1]² gaussian CDF space (and mapped back to the original R² gaussian space using the PPF).
 
 		Parameters
 		----------
-		p : int
-			rank of the connectivity
-		N : int
-			number of neurons
 		phi : Callable[[np.ndarray], np.ndarray]
 			activation function
+		mapping_samples : np.ndarray of shape (4**nrec, 2)
+			mapping samples, e.g. obtained from ``ZMapping(nrec=2).inverse_samples()``
 		random_state : int, optional
 			random seed to be used for the sampling, by default 42
 		**kwargs :
@@ -171,23 +171,27 @@ class LowRankRNNParams(RNNParams):
 		-------
 		LowRankRNNParams
 		"""
-		
-		nfrac = 2*nrec
-		mapping = mapping_cls.new_nrec(nfrac)
 
 		z0 = np.random.default_rng(random_state).normal(loc=0, scale=1, size=1_000_000)
 		phi_z0 = phi(z0)
 		a = np.mean(phi_z0)
 		c = np.var(phi_z0)
 
-		Z = stats.norm.ppf(mapping.inverse_samples())
+		Z = stats.norm.ppf(mapping_samples)
 		F = Z
 		G = (phi(Z) - a) / c
-
-		F_avg = F.reshape((2**nfrac, 2**nfrac, 2)).mean(axis=1)
-		G_avg = G.reshape((2**nfrac, 2**nfrac, 2)).mean(axis=1)
 		
-		return cls(F=F_avg, G=G_avg, phi=phi, **kwargs)
+		return cls(F=F, G=G, phi=phi, **kwargs)
+
+	def downsampled(self: Self) -> Self:
+		"""Downsample the patterns generated from a fractal mapping.
+		This takes ``N=4**nrec`` fractal neurons down to ``N=2**nrec=4**(nrec//2)`` fractal neurons.
+		The object returned is a full copy of the current object, with ``F`` and ``G`` fields modified"""
+		nrec = int(np.emath.logn(4, len(self.F)))
+		d = copy.deepcopy(dataclasses.asdict(self))  # better do a deepcopy to save us trouble... and make it double
+		d['F'] = self.F.reshape((2**nrec, 2**nrec, 2)).mean(axis=1)
+		d['G'] = self.G.reshape((2**nrec, 2**nrec, 2)).mean(axis=1)
+		return self.__class__(**d)
 
 
 @dataclass
@@ -311,6 +315,10 @@ class LowRankRNN(RNN):
 	def new_valentin(*args, **kwargs) -> 'LowRankRNN':
 		return LowRankRNN(LowRankRNNParams.new_valentin(*args, **kwargs))
 
+	@staticmethod
+	def new_sampled_valentin(*args, **kwargs) -> 'LowRankRNN':
+		return LowRankRNN(LowRankRNNParams.new_sampled_valentin(*args, **kwargs))
+
 
 class LowRankCyclingRNN(LowRankRNN):
 	"""RNN with low-rank connectivity, cycling through patterns"""
@@ -349,6 +357,10 @@ class LowRankCyclingRNN(LowRankRNN):
 	@staticmethod
 	def new_valentin(*args, **kwargs) -> 'LowRankCyclingRNN':
 		return LowRankCyclingRNN(LowRankCyclingRNNParams.new_valentin(*args, **kwargs))
+
+	@staticmethod
+	def new_sampled_valentin(*args, **kwargs) -> 'LowRankCyclingRNN':
+		return LowRankCyclingRNN(LowRankCyclingRNNParams.new_sampled_valentin(*args, **kwargs))
 
 
 class BinMappedRNN(RNN):

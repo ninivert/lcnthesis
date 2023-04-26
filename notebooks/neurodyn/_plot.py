@@ -93,7 +93,7 @@ def plot_2D_embedding_scatter(
 ) -> tuple[tuple[Figure, Axes], collections.PathCollection]:
 	fig, ax = _unwrap_figax(figax)
 
-	cmap = mpl.colormaps['RdBu_r']
+	cmap = mpl.colormaps['coolwarm']
 	if lightness is not None:
 		c = [ scale_lightness(c[:3], lightness) for c in cmap(activity[:Nmax]) ]
 	else:
