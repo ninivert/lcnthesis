@@ -10,6 +10,7 @@ from ._overlap import overlap
 
 __all__ = [
 	'plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist',
+	'plot_overlap_phase2D',
 	'plot_2D_embedding_contour', 'plot_2D_embedding_scatter',
 	'plot_2D_to_1D_mapping',
 	'add_headers', 'scale_lightness'
@@ -40,7 +41,7 @@ def plot_overlap_trajectory(rnn: LowRankRNN, res: Result, figax: tuple[Figure, A
 	fig, ax = _unwrap_figax(figax)
 
 	ax.set_xlabel('Time $t$ [s]')
-	ax.set_ylabel('Overlap $m^{{\\mu}}$')
+	ax.set_ylabel('Overlap $m_{{\\mu}}$')
 	ax.set_title('Overlap trajectory')
 	m = overlap(rnn, res.h)
 
@@ -52,6 +53,23 @@ def plot_overlap_trajectory(rnn: LowRankRNN, res: Result, figax: tuple[Figure, A
 
 	return fig, ax
 
+
+def plot_overlap_phase2D(rnn: LowRankRNN, res: Result, point_start: bool = True, point_end: bool = True, lim01: bool = True, figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
+	fig, ax = _unwrap_figax(figax)
+
+	ax.set_xlabel('Overlap $m_0(t)$')
+	ax.set_ylabel('Overlap $m_1(t)$')
+	ax.set_title('Latent trajectory')
+	ax.set_aspect('equal')
+	m = overlap(rnn, res.h)
+	line, = ax.plot(m[0], m[1], **kwargs)
+	if point_start: ax.plot(m[0, 0], m[1, 0], 'o', color=line.get_color(), **kwargs)
+	if point_end: ax.plot(m[0, -1], m[1, -1], 'x', color=line.get_color(), **kwargs)
+	if lim01:
+		ax.set_xlim((0,1))
+		ax.set_ylim((0,1))
+
+	return fig, ax
 
 def plot_dh_hist(rnn: LowRankRNN, figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
 	fig, ax = _unwrap_figax(figax)

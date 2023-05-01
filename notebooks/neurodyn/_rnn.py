@@ -183,11 +183,11 @@ class LowRankRNNParams(RNNParams):
 		
 		return cls(F=F, G=G, phi=phi, **kwargs)
 
-	def downsampled(self: Self) -> Self:
+	def downsampled(self: Self, nrec: int | None = None) -> Self:
 		"""Downsample the patterns generated from a fractal mapping.
 		This takes ``N=4**nrec`` fractal neurons down to ``N=2**nrec=4**(nrec//2)`` fractal neurons.
 		The object returned is a full copy of the current object, with ``F`` and ``G`` fields modified"""
-		nrec = int(np.emath.logn(4, len(self.F)))
+		if nrec is None: nrec = int(np.emath.logn(4, len(self.F)))
 		d = copy.deepcopy(dataclasses.asdict(self))  # better do a deepcopy to save us trouble... and make it double
 		d['F'] = self.F.reshape((2**nrec, 2**nrec, 2)).mean(axis=1)
 		d['G'] = self.G.reshape((2**nrec, 2**nrec, 2)).mean(axis=1)

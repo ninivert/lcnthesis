@@ -175,13 +175,19 @@ $$
 
 ## Numerical aspects
 
-Numerically, we want to simulate an integral equation. To do this, take a finite number of iterations $n$, and make an integral-to-sum approximation. We define $\vec z(\alpha) = S(\alpha)$ the 2D point corresponding to the mapping $\alpha$. (details : we need a bounding box to map back).
+### Sampling the neural field equation
+
+Numerically, we want to simulate an integral equation. To do this, take a finite number of iterations $n$, and make an integral-to-sum approximation. We sample the $[0,1]^p$ space with $N=4^n$ samples. The reason we sample $[0,1]^p$ is because the CDF takes care of mapping back to $\mathbb R^p$, and we can simply sample uniformly.
 
 $$
-\int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu \rightarrow \sum_{\beta} w(\vec z(\alpha), \vec y(\beta)) \rho(\vec y(\beta)) \phi(H_\beta(t))
+\int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u \rightarrow \sum_{j=1}^N w_U(\vec u_i, \vec u_j) \phi(h_U(t, \vec u_j))
 $$
 
-Defining a matrix $Z_{\mu,\alpha} = \vec z(\alpha)_\mu$, we can write down a numerical PDF $\tilde \rho(Z_{1,\alpha},\cdots,Z_{p,\alpha}) = \tilde \rho(Z_{:,\alpha}) = \frac{\rho(Z_{:,\alpha})}{\sum_\beta \rho(Z_{:,\beta})}$ and the following patterns to simulate the embedded $[0,1]$ neural field as a low-rank RNN.
+$i$ and $j$ correspond to populations, with positions $\vec u_i$ and $\vec u_j$ respectively. These positions are the uniform grid placed in $[0,1]^p$
+
+### Connectivity matrix inside the mapping
+
+We define $\vec z(\alpha) = S(\alpha)$ the 2D point corresponding to the mapping $\alpha$. (details : we need a bounding box to map back). Defining a matrix $Z_{\mu,\alpha} = \vec z(\alpha)_\mu$, we can write down a numerical PDF $\tilde \rho(Z_{1,\alpha},\cdots,Z_{p,\alpha}) = \tilde \rho(Z_{:,\alpha}) = \frac{\rho(Z_{:,\alpha})}{\sum_\beta \rho(Z_{:,\beta})}$ and the following patterns to simulate the embedded $[0,1]$ neural field as a low-rank RNN.
 
 $$
 \tilde F_{\mu,\alpha} = Z_{\mu,\alpha}, \quad \tilde G_{\mu,\alpha} = \tilde\phi(Z_{\mu,\alpha}), \quad \tilde J_{\alpha,\beta}=\tilde \rho(Z_{:,\beta}) \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta}
