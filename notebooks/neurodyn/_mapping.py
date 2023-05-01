@@ -14,6 +14,7 @@ __all__ = [
 	'DiagonalMapping',
 	'RecursiveFarMapping',
 	'ZMapping',
+	'RandomMapping',
 	'LinearMapping',
 ]
 
@@ -240,6 +241,8 @@ class BinMapping(Mapping):
 
 
 class RecursiveLocalMapping(BinMapping):
+	"""Implements the measurable bijection from R² -> [0,1]. See https://arxiv.org/abs/1602.00800"""
+
 	def __init__(self, nrec: int):
 		"""
 		Parameters
@@ -387,6 +390,7 @@ class RecursiveLocalMapping(BinMapping):
 		return f'RecursiveLocalMapping{{nrec={self.nrec}}}'
 
 
+# TODO : rename to ColumnMapping
 class ReshapeMapping(BinMapping):
 	@staticmethod
 	def new_nrec(nrec: int) -> 'ReshapeMapping':
@@ -403,6 +407,8 @@ class ReshapeMapping(BinMapping):
 
 
 class DiagonalMapping(BinMapping):
+	"""Implements [Cantor mapping](https://en.wikipedia.org/wiki/Pairing_function)"""
+
 	@staticmethod
 	def new_nrec(nrec: int) -> 'DiagonalMapping':
 		return DiagonalMapping(nx=2**nrec, ny=2**nrec)
@@ -438,6 +444,8 @@ class DiagonalMapping(BinMapping):
 
 
 class ZMapping(BinMapping):
+	"""Implements [Z-order curve](https://en.wikipedia.org/wiki/Z-order_curve)"""
+
 	def __init__(self, nrec: int):
 		"""
 		Parameters
@@ -538,6 +546,42 @@ class RecursiveFarMapping(BinMapping):
 
 	def __str__(self) -> str:
 		return f'RecursiveFarMapping{{nrec={self.nrec}}}'
+
+
+class RandomMapping(BinMapping):
+	"""Randomly maps 2D bins to 1D bins
+	
+	Since 2D bins have some implicit ordering (given by a reshape), we do
+
+	```txt
+	   ravel          permutation
+	2D ----------> 1D ------------+
+	↑                             ↓
+	+------------- 1D <---------- 1D
+	       unravel        argsort
+	```
+	"""
+
+	def __init__(self, nx: int, ny: int, random_seed: int = 42):
+		super().__init__(nx, ny)
+		self.random_seed = random_seed
+		self.permutation = np.random.default_rng(random_seed).permutation(np.arange(self.num_bins))
+		self.permutation_inverse = np.argsort(self.permutation)
+
+	@staticmethod
+	def new_nrec(nrec: int) -> 'RandomMapping':
+		return RandomMapping(2**nrec, 2**nrec)
+	
+	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
+		indices = np.ravel_multi_index(self.indices2d(F, bbox).T, dims=(self.nx, self.ny))
+		return indices[self.permutation]
+
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		indices2d = np.vstack(np.unravel_index(indices, shape=(self.nx, self.ny))).T
+		return indices2d[self.permutation_inverse]
+
+	def __str__(self) -> str:
+		return f'RandomMapping{{nx={self.nx}, ny={self.ny}, random_seed={self.random_seed}}}'
 
 
 class LinearMapping(Mapping):
