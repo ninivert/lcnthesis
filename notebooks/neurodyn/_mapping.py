@@ -390,8 +390,9 @@ class RecursiveLocalMapping(BinMapping):
 		return f'RecursiveLocalMapping{{nrec={self.nrec}}}'
 
 
-# TODO : rename to ColumnMapping
 class ReshapeMapping(BinMapping):
+	"""Implements mapping column-by-column (reshape operation)"""
+
 	@staticmethod
 	def new_nrec(nrec: int) -> 'ReshapeMapping':
 		return ReshapeMapping(nx=2**nrec, ny=2**nrec)
@@ -409,14 +410,19 @@ class ReshapeMapping(BinMapping):
 class DiagonalMapping(BinMapping):
 	"""Implements [Cantor mapping](https://en.wikipedia.org/wiki/Pairing_function)"""
 
+	def __init__(self, nxy: int):
+		super().__init__(nxy, nxy)
+		assert self.nx == self.ny
+		self.nxy = nxy
+
 	@staticmethod
 	def new_nrec(nrec: int) -> 'DiagonalMapping':
-		return DiagonalMapping(nx=2**nrec, ny=2**nrec)
+		return DiagonalMapping(nxy=2**nrec)
 
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		indices2d = self.indices2d(F, bbox)
 		indices = np.zeros(len(indices2d), dtype=int)
-		mask_lower = (indices2d[:, 0] < self.ny - indices2d[:, 1])
+		mask_lower = (indices2d[:, 0] + indices2d[:, 1] < self.nxy)
 		indices[mask_lower] = (1/2*(indices2d[mask_lower, 0] + indices2d[mask_lower, 1])*(indices2d[mask_lower, 0]+indices2d[mask_lower, 1]+1)+indices2d[mask_lower, 0]).astype(int)
 		indices[~mask_lower] = self.num_bins - (1/2*((self.nx-indices2d[~mask_lower, 0]-1) + (self.ny-indices2d[~mask_lower, 1]-1)) * ((self.nx-indices2d[~mask_lower, 0]-1) + (self.ny-indices2d[~mask_lower, 1]-1) + 1) + (self.nx-indices2d[~mask_lower, 0])).astype(int)
 		return indices
@@ -436,8 +442,20 @@ class DiagonalMapping(BinMapping):
 		# return indices_diag
 
 	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
-		# TODO
-		raise NotImplementedError()
+		# https://en.wikipedia.org/wiki/Pairing_function#Inverting_the_Cantor_pairing_function
+		def inv(indices):
+			w = np.floor((np.sqrt(8*indices+1)-1)/2)
+			t = (w**2 + w)/2
+			y = indices - t
+			indices2d = np.zeros((len(indices), 2), dtype='uint64')
+			indices2d[:, 0] = y
+			indices2d[:, 1] = w - y
+			return indices2d
+		mask_lower = indices < self.nxy*(self.nxy+1)//2
+		indices2d = np.zeros((len(indices), 2), dtype='uint64')
+		indices2d[mask_lower] = inv(indices[mask_lower])
+		indices2d[~mask_lower] = np.array([self.nx-1, self.ny-1])[None, :] - inv(self.num_bins - indices[~mask_lower] - 1)
+		return indices2d
 
 	def __str__(self) -> str:
 		return f'DiagonalMapping{{nx={self.nx}, ny={self.ny}}}'
