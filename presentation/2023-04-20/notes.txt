@@ -64,6 +64,8 @@ two possibilities to generate J_αβ :
 
 we effectively simulate 4^nrec "fractal neurons"
 
+a-posteriori note : compact support is not needed if we sample the CDF in [0,1]²
+
 ## the reshape mapping
 
 the field is h~xi0+xi1
