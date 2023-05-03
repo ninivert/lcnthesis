@@ -12,6 +12,7 @@ __all__ = [
 	'RecursiveLocalMapping',
 	'ReshapeMapping',
 	'DiagonalMapping',
+	'SzudzikMapping',
 	'RecursiveFarMapping',
 	'ZMapping',
 	'RandomMapping',
@@ -241,7 +242,10 @@ class BinMapping(Mapping):
 
 
 class RecursiveLocalMapping(BinMapping):
-	"""Implements the measurable bijection from R² -> [0,1]. See https://arxiv.org/abs/1602.00800"""
+	"""Implements the mapping [0,1]² -> [0,1] from https://arxiv.org/abs/1602.00800
+	
+	This mapping converges to a measurable bijection [0,1]² -> [0,1].
+	"""
 
 	def __init__(self, nrec: int):
 		"""
@@ -391,7 +395,10 @@ class RecursiveLocalMapping(BinMapping):
 
 
 class ReshapeMapping(BinMapping):
-	"""Implements mapping column-by-column (reshape operation)"""
+	"""Implements mapping column-by-column (reshape operation)
+	
+	This mapping converges to a projection on x.
+	"""
 
 	@staticmethod
 	def new_nrec(nrec: int) -> 'ReshapeMapping':
@@ -408,7 +415,10 @@ class ReshapeMapping(BinMapping):
 
 
 class DiagonalMapping(BinMapping):
-	"""Implements [Cantor mapping](https://en.wikipedia.org/wiki/Pairing_function)"""
+	"""Implements [Cantor mapping](https://en.wikipedia.org/wiki/Pairing_function)
+	
+	This mapping converges to a projection on a line with normal (1, 1).
+	"""
 
 	def __init__(self, nxy: int):
 		super().__init__(nxy, nxy)
@@ -459,6 +469,39 @@ class DiagonalMapping(BinMapping):
 
 	def __str__(self) -> str:
 		return f'DiagonalMapping{{nx={self.nx}, ny={self.ny}}}'
+
+
+class SzudzikMapping(BinMapping):
+	"""Implements [Szudzik's "Elegant pairing function"](http://szudzik.com/ElegantPairing.pdf).
+	
+	This mapping converges to a projection on x if x >= y else a projection on y.
+	"""
+
+	def __init__(self, nxy: int):
+		super().__init__(nxy, nxy)
+		assert self.nx == self.ny
+		self.nxy = nxy
+
+	@staticmethod
+	def new_nrec(nrec: int) -> 'SzudzikMapping':
+		return SzudzikMapping(nxy=2**nrec)
+
+	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
+		indices2d = self.indices2d(F, bbox)
+		return np.where(
+			indices2d[:, 0] != indices2d.max(axis=1),
+			indices2d[:, 0] + indices2d[:, 1]**2,
+			indices2d[:, 0]**2 + indices2d[:, 0] + indices2d[:, 1]
+		)
+
+	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
+		sqrt = np.sqrt(indices)
+		fsqrt = np.floor(sqrt)
+		return np.where(
+			(indices - fsqrt**2 < fsqrt)[:, None],
+			np.vstack((indices - fsqrt**2, fsqrt)).T,
+			np.vstack((fsqrt, indices - fsqrt**2 - fsqrt)).T,
+		)
 
 
 class ZMapping(BinMapping):
