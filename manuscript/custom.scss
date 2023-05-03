@@ -1,0 +1,10 @@
+/*-- scss:defaults --*/
+// $light: #f8ead3 !default;
+$body-bg: #f8ead3 !default;
+$primary: #613583 !default;
+$link-color: #a51d2d !default;
+@import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
+$font-family-monospace: 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$headings-font-family: $font-family-monospace;
+
+/*-- scss:rules --*/

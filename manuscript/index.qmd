@@ -1,0 +1,5 @@
+# Abstract {.unnumbered}
+
+The literature around the study of neural field dynamics is centered around the convergence of discrete neural networks to a smooth continuum in some $p$-dimensional space (@Bressloff_2012, @schmutz2023convergence).
+    
+In this thesis, we show that this dimensionality is arbitrary, and demonstrate examples of equivalent dynamics emerging from neural fields in different dimensions. We derive method to reduce dimensionality of any neural field by employing fractal mappings, and study properties that these must satisfy.

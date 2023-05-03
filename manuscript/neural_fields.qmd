@@ -1,0 +1,5 @@
+# Neural fields
+
+Something about neural fields and our low-rank model.
+
+![](figures/neural_field_discrete.png)

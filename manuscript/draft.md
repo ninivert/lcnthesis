@@ -1,3 +1,5 @@
+# Draft
+
 # RNN equation with $\tau=1, R=1, I_\textrm {ext}(t) = 0$
 
 $N$ neurons, each with potential $h_i(t), i = 1,\cdots, N$ evolve according to

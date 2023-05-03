@@ -1,0 +1,35 @@
+project:
+  type: book
+  output-dir: ../docs
+  preview: 
+    port: 4200
+
+book:
+  title: "Embeddings of neural field dynamics : simulations and fractal mappings"
+  author: "Nicole Vadot"
+  date: last-modified
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - neural_fields.qmd
+    - dynamics_1d.qmd
+    - draft.md
+    - references.qmd
+  repo-url: https://github.com/ninivert/lcnthesis
+  downloads: [pdf, epub]
+  language: en
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      light: [flatly, custom.scss]
+      dark: darkly
+  epub: default
+  pdf:
+    documentclass: scrreprt
+    include-in-header: 
+      text: |
+        \usepackage{makeidx}
+        \makeindex

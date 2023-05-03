@@ -1,0 +1,32 @@
+# Introduction
+
+
+
+Rp smooth, dynamics work
+-> [0,1], do the dynamics work ?
+there are non-continuous embeddings, so neural field disc.
+is not continuous -> does it break the dynamics ?
+                  -> are dynamics well-defined in [0,1] ?
+                     [cite Spatiotemporal dynamics of continuum neural fields : in litterature
+					   the kernel is always continuous. ]
+				  -> here the "field" is nowhere continuous (fractal), but is it still well-defined
+				  -> numerical answers
+
+why low-rank ? -> it is easy to simulate, we just use it to illustrate our examples @schmutz2023convergence
+
+do not ask this question "can we write a neural field ?" 
+but rather this       -> "what neural field can we write given a regularity ?"
+
+here we have the first example of two equivalent dynamics. one with high regularity and dimension.,
+the other with low regularity and dim.
+
+
+why are we doing this ?
+dimensionality of activity = rank(connectivity)
+normally, we would think that if we can write a neural field equation, then the embedding space if of dimension rank(connectivity).
+-> but we have shown that is not the case ! with the correct mapping, we can write a neural field in 1D, even though the dimensionality of the activity is 2D !
+-> not even a tradeoff. IDEA : smooth function in 1D. when we map back to 2D using recusive local, the mapped space is everywhere discontinuous, but (TEST THIS !!) the dynamics are the same. -> THE DIMENSION OF THE EMBEDDING IS UNRELATED TO THE DIMENSION OF THE ACTIVITY. Rather, we should ask in which dimension/embedding the connectivity kernel is going to have a nice expression (e.g. continuous etc)
+
+@pham2016existence
+
+![connectivity](figures/connectivity_binning.png)

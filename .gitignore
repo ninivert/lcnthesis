@@ -1,6 +1,8 @@
 # do not redistribute the PDFs
 literature/*.pdf
 
+# do not publish yet
+docs
 
 
 
