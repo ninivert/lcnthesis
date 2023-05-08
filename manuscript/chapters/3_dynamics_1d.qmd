@@ -1,0 +1,25 @@
+# Mapping $\mathbb R^2$ to $[0,1]$ and resulting dynamics in $[0,1]$ {#sec-mapping}
+
+## Which types of mappings
+
+peano vs cantor mappings
+
+linear projections don't work ofc
+
+## Sequence of mappings and their limit
+
+intuition for reshape, and the fractals
+
+expose different types of mapping
+
+## Numerically implementing mappings to $[0,1]$
+
+how to we actually simulate the mappings in one-dimension
+
+go into detail on how numerically S is a reordering of the bins
+
+## Simulating the $[0,1]$ neural field
+
+how we numerically implemement a simulation on a fractal
+
+averaging of 2^n neurons

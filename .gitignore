@@ -1,8 +1,11 @@
 # do not redistribute the PDFs
-literature/*.pdf
+literature/*
+pictures
 
 # do not publish yet
 docs
+
+manuscript/Embeddings-of-neural-field-dynamics---simulations-and-fractal-mappings.tex
 
 
 

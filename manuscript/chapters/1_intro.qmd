@@ -1,0 +1,113 @@
+# Introduction
+
+::: hidden
+{{< include ../macros.tex >}}
+:::
+
+## Networks of rate neurons
+
+Networks of rate neurons model the time evolution of the potential $h_i(t) \,[\textrm{V}]$ associated to $N$ individual neurons labeled $i\in\{1,\cdots,N\}$. In their most general form, a connectivity matrix $J_{ij}$ describes the amplitude of the recurrent currents $I^\text{rec}_{ij} = J_{ij} \phi(h_j(t)) \,[\textrm{A}]$ emitted by neuron $j$ and received by neuron $i$. The (monotonically increasing) function $\phi(h)$ has units of $\textrm{Hz}$, and describes the spike firing rate of a given neuron as a function of its potential. In the absence of recurrent currents, the potential of each neuron decays exponentially with time constant $\tau \,[\textrm{s}]$. Neurons can also receive external currents $I^\text{ext}_i(t) \,[\textrm{A}]$. Conversion of current to voltage happens through the resistivity factor $R_i \,[\textrm{Ohm}]$. @eq-rnn writes out the full equation a rate neural network.
+
+$$
+\tau \dot h_i(t) = \underbrace{-h_i(t)}_{\text{exponential decay}} + R_i \sum_{j=1}^{N} \underbrace{J_{ij} \phi(h_j(t))}_{I^\text{rec}_i(t)} + R_i I^{\text{ext}}_i(t)
+$$ {#eq-rnn}
+
+This model can intuitively be seen as the long time limit of a network of spiking neurons, in which neurons emit current spikes (modeled as $\delta$-functions) at some time-variable rate $\phi(h_i(t))$. The convergence is formally proven in @schmutz2023convergence.
+
+In the following, we set $\tau=1$ and $R_i=1$ for all neurons $i$, since these just correspond to rescaling time and currents. Additionally, we consider $I^\text{ext}_i(t)=0$ to simplify the model.
+
+## Convergence to a neural field equation
+
+Neural field equations emerge from the structure of rate neural networks as the number of neurons $N$ becomes large. Positions $\vec \xi_i \in \Rp$ are attributed to each neuron, and define the *embedding space*. If the embedding is well-chosen, then as $N \rightarrow \infty$ neurons close in the embedding space tend to have similar potentials $h_i(t)$, such that these tend to a continuum $h(t, \vec z)$, where $\vec z \in \Rp$.
+
+![Every neuron in a rate neural network has a position in the $p$-dimensional embedding space](figures/neural_field_discrete.png)
+
+We write down the neural field equation @eq-nf, in which $\rho(\vec z)$ measures the density of neurons inside the embedding space. The connectivity kernel $w(\vec z, \vec y)$ can be seen as the "infinite $N$ limit" of the connectivity matrix $J_{ij}$, in the sense that $w(\vec z, \vec y)$ describes the influence of the neuron population in the box at $[\vec y, \vec y + \d \vec y]$ on the neuron population $[\vec z, \vec z + \d \vec z]$.
+
+$$
+\partial_t h(t, \vec z) = -h(t, \vec z) + \int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y)
+$$ {#eq-nf}
+
+![The connectivity kernel defines the influence between neural densities in the embedding space](figures/connectivity_kernel.png)
+
+In the litterature, the embedding space is often thought of as being closely related to the physical positions of the neurons @Bressloff2012. Rigorous proofs of convergence are still an active area of study @chevallier2018mean and are not the subject of this report.
+
+The results we present here should hold for any neural field, but for the sake of argument we shall consider a low-rank rate neural network, for which there are informal proofs of convergence to a neural field equation  @schmutz2023convergence \[TODO : reformulate this\]. Low-rank neural networks hold their name from the rank of their connectivity matrix, defined in @eq-lrj.
+
+$$
+J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
+$$ {#eq-lrj}
+
+In the case that $\vec F_i = (F_{1,i},\cdots,F_{p,i}) \in \Rp$ sample from some $p$-dimensional distribution $\rho$, the vectors $\vec F_i$ define a "natural embedding" of neuron $i$ in $\Rp$. When the number of neurons increases, the numeric density of neurons in the embedding approaches the actual probability distribution $\rho$, and we can intuitively see the convergence towards a connectivity kernel $w(\vec z, \vec y) = \sum_{\mu=1}^p z_\mu y_\mu$.
+
+## A one-dimensional neural field
+
+The paper @jabin2022meanfield provides some motivation for the existence of an equivalent neural field in one dimension. Their main result is that under some boundedness assumptions of the connectivity, the limiting equation describing the dynamics of the system incorporates only an integral over $[0,1]$. In our low-rank case, the weights scale as $J_{ij} \sim \frac 1N$, and so we can expect that it should be possible to perform a change of variables from $\Rp$ to $[0,1]$.
+
+The idea is that we define a measurable mapping $S : \Rp \mapsto [0,1]$ and a measure $\mu : [0,1] \mapsto \mathbb{R}^+$ on $([0,1], \mathcal B([0,1]))$, such that we can write the change of variables in the integral :
+
+$$
+\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = \int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
+$$
+
+Informally, we would like to define the one-dimensional field $\tilde h(\alpha, t) = h(S^{-1}(\alpha), t)$, connectivity $\tilde w(\alpha, \beta) = w(S^{-1}(\alpha), S^{-1}(\beta))$ and density $\tilde \rho(\alpha) = \rho(S^{-1}(\alpha))$, so that we can write the neural field in the $[0,1]$ embedding :
+
+$$
+\partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{\mathbb{R}^p} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \tilde \rho(\mathrm d \beta)
+$$ {#eq-nf1d}
+
+This change of variable seems counter-intuitive : how is it possible to map a higher dimension to a lower dimension without losing information ? And even if mathematically such a change of variables is possible, is it actually feasible to simulate it numerically ?
+
+## Numerical simulations of neural fields
+
+The goal of this report is to not only give an intuition on the mappings between $[0,1]$ and $\Rp$ embedding spaces, but also show that the mathematical construction works numerically.
+
+We distinguish two types of numerical simulations for the neural field in @eq-nf : 
+
+1. A neuron-based simulation of $N$ neurons. Each neuron samples the probability distribution $\rho(z_1, \cdots, z_p)$ independantly. This case then just reduces to simulating the network of rate neurons, which follows @eq-rnn. In other words, we are simulating the full network of rate neurons, and the simulation converges to the true mathematical neural field equation as $N$ becomes large.
+
+2. A discretization-based simulation. In the $\Rp$ space, we discretize each dimension, forming a grid of $p$-dimensional bins. Each bin effectively corresponds to an infinite population of neurons, which are approximated to be the same (this is a mean-field approximation). This works because by continuity of the field, neurons which are close in $\Rp$ also have similar potentials. As we increase the number of bins, the simulation becomes more precise and the dynamics approach that of the true mathematical neural field.
+
+With this in mind, we can try to understand why simulating a neural field in $[0,1]$ might be difficult. Suppose we take bins in the $\Rp$ space, and map each bin to a random position in $[0,1]$. Intuively, this won't work (in the sense that the dynamics in $[0,1]$ will not be the same as the dynamics in $\Rp$), because the hypothesis of continuity is not longer true : the mapping is random, so the nearby populations in $[0,1]$ will no longer have similar potentials, and the error of the mean-field approximation will no longer vanish as we take increasingly many bins.
+
+\[TODO : an illustration for this\]
+
+In some sense, we would like to find a mapping that converses "locality" : populations that are close in $\Rp$ should also be close in $[0,1]$, or at least there shouldn't be "too many large discontinuities". @sec-mapping is dedicated to the discussion of these mappings, and gives various numerical demonstrations of the resulting dynamics.
+
+<!-- 
+
+neurons in some Rp space
+N -> infty
+spatial structure
+	=> close neurons -> similar potential
+	=> continuum of neurons
+	=> neural field
+
+"natural embedding" (here in Rp) is NOT UNIQUE
+
+we show : 
+* we can embed in a space of lower dimension.
+* not just a math abstraction (solution of the 1d neural field is well-defined)
+* not only well-defined, but actually works numerically. we assert the dynamics in [0,1] are the same
+
+[how do we actually "convince ourselves" that is works numerically ?
+-> little intro on "discretizing a neural field", either by sampling the PDF, or by discretization
+-> particle (=neurons)-based simulation vs grid (=bins)/density (TODO)-based simulation
+(with the discretization approach we already have the "infinite number of neurons" approximation inside each bin)
+
+def sampling : tirer au sort un neurone selon la pdf
+def discretization : discretize pdf regularly, "bins"
+]
+
+
+introduce "RandomMapping", to show why this mapping is not trivial
+
+why it doesnt work : even in a little bin, we will have many "wildly different neurons", in the sense scattered far away in 2D
+
+
+
+what we want in [0,1] : as bins become smaller, the "populations inside the bin" have more and more similar potentials. in the random case, never happens.
+if in 2D, they are close, then they have the same potential. close in 2D ?=> close in 1D -> "locality" (how do formulate a mapping which has this property ?) (something close to an "isometric mapping", distances are kind of conserved)
+
+(we show we can afford "some" discontinuity)
+ -->

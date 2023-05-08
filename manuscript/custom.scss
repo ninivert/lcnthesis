@@ -1,6 +1,19 @@
 /*-- scss:defaults --*/
-// $light: #f8ead3 !default;
-$body-bg: #f8ead3 !default;
+$white:    #fefcfa !default;
+$light:    #f8ead3 !default;
+$gray-100: #dfd2bd !default;
+$gray-200: #c6bba8 !default;
+$gray-300: #ada393 !default;
+$gray-400: #948c7e !default;
+$gray-500: #7c7569 !default;
+$gray-600: #635d54 !default;
+$gray-700: #4a463f !default;
+$gray-800: #312e2a !default;
+$gray-900: #181715 !default;
+$black:    #000000 !default;
+$dark:     $gray-700 !default;
+
+$body-bg: $light !default;
 $primary: #613583 !default;
 $link-color: #a51d2d !default;
 @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);

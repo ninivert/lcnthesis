@@ -1,0 +1,26 @@
+# A simple model for a neural field in $\mathbb R^2$
+
+## Building up a neural field in $\mathbb R^2$
+
+p=1 then p=2, show simulations
+
+## Characterizing dynamics
+
+introduce overlap, and in our case the low-rank model the kappa
+
+overlaps as an approximation of the "dynamics" (latent space), in the case phi=linear
+
+warning : we need absolutely to distinguish the latent and the embedding space
+
+## A cycling neural field
+
+why ? dynamics are more interesting
+
+1. delayed neural field
+2. rolled neural field
+
+show what the analytical kappa is
+
+introduce both, derive kappa again
+
+simulate cycling in p=2

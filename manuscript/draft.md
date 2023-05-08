@@ -45,7 +45,7 @@ $$
 
 Neurons are at position $\vec z = (z_1, \cdots, z_p) \in \mathbb{R}^p$, distributed according to the distribution $\frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p z_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} z_1 \cdots \mathrm d z_p = \rho(\mathrm d \vec z)$
 
-The RNN potential becomes $h_t(\vec z)$ and evolves according to
+The RNN potential becomes $h(t, \vec z)$ and evolves according to
 
 $$
 \begin{aligned}

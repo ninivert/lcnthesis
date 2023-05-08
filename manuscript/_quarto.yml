@@ -8,18 +8,27 @@ book:
   title: "Embeddings of neural field dynamics : simulations and fractal mappings"
   author: "Nicole Vadot"
   date: last-modified
+  abstract: |
+    The literature around the study of neural field dynamics is centered around the convergence of networks of neurons to a smooth continuum in some $p$-dimensional space [@Bressloff2012]. Historically, the positions of the neurons in this "embedding space" has been interpreted as being closely related to physical positions in the cortex [@Wilson1973;@Amari1977;@Yishai1995].
+    <!-- Recent developments in imaging techniques \cite{Demas2021} allow the study of thousands of neurons discriminated by their physical positions. -->
+
+    Recent results in graph theory @jabin2022meanfield motivate the question of whether this "natural embedding" is unique, and what conditions must be imposed on the neural fields in order to obtain converge to smooth dynamics.
+
+    In this thesis, we show that the dimension of neural embeddings is arbitrary, and demonstrate examples of numerically equivalent dynamics emerging from neural fields in different dimensions. We derive methods to reduce dimensionality of any neural field by employing fractal mappings, and study properties that these must satisfy.
   chapters:
     - index.qmd
-    - intro.qmd
-    - neural_fields.qmd
-    - dynamics_1d.qmd
-    - draft.md
+    - chapters/1_intro.qmd
+    - chapters/2_neural_fields.qmd
+    - chapters/3_dynamics_1d.qmd
+    - chapters/4_mappings.qmd
+    - chapters/5_conclusion.qmd
     - references.qmd
   repo-url: https://github.com/ninivert/lcnthesis
   downloads: [pdf, epub]
   language: en
 
 bibliography: references.bib
+csl: ieee-with-url.csl
 
 format:
   html:
@@ -29,7 +38,13 @@ format:
   epub: default
   pdf:
     documentclass: scrreprt
+    classoption: abstract
+    papersize: a4
+    keep-tex: true
+    link-citations: true
+    colorlinks: true
     include-in-header: 
-      text: |
-        \usepackage{makeidx}
-        \makeindex
+      - text: |
+          \usepackage{makeidx}
+          \makeindex
+      - file: macros.tex
