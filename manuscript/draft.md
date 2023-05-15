@@ -1,5 +1,3 @@
-# Draft
-
 # RNN equation with $\tau=1, R=1, I_\textrm {ext}(t) = 0$
 
 $N$ neurons, each with potential $h_i(t), i = 1,\cdots, N$ evolve according to
@@ -196,3 +194,62 @@ $$
 $$
 
 Doing this is equivalent to the formulation of the binned connectivity matrix.
+
+# Analytical expression of some mappings
+
+We consider $(x,y) \in [0,1]²$. Given $n \in \mathbb N$, we write a (truncated) binary expansion of $x$ as (and similarly for $y$)
+
+$$
+b^x_k = \mathrm{Ind}\left\{2^{k-1}x - \lfloor2^{k-1}x\rfloor \geq \frac{1}{2}\right\}, \text{ such that } x= \sum_{k=1}^{n} b^x_k 2^{-k} = 0.b^x_1b^x_2\cdots b^x_{n}
+$$
+
+## Z-mapping
+
+Also called Z-order curve, Morton mapping. It conserves locality 2D -> 1D.
+
+$$
+z = Z(x,y) = 0.b^x_1 b^y_1 b^x_2 b^y_2 \cdots b^x_n b^y_n = \sum_{k=1}^{n} b^x_k 2^{1-2k} + b^y_k 2^{-2k}
+$$
+
+Its inverse is :
+
+$$
+\begin{align*}
+x = Z^{-1}_x(z) &= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
+y = Z^{-1}_y(z) &= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}
+\end{align*}
+$$
+
+## Column mapping
+
+Also called "Reshape mapping" in the code. It converges to a projection on the $x$-axis
+
+$$
+z = C(x,y) = 0.b^x_1 b^x_2 \cdots b^x_n b^y_1 b^y_2 \cdots b^y_n
+$$
+
+Its inverse is :
+
+$$
+\begin{align*}
+x = C^{-1}_x(z) &= 0.b_1 b_2 \cdots b_n = \sum_{k=1}^n b_{k} 2^{-k} \\
+y = C^{-1}_y(z) &= 0.b_{n+1} b_{n+2} \cdots b_{2n} = \sum_{k=1}^n b_{n+k} 2^{-k}
+\end{align*}
+$$
+
+## Anti-Z mapping
+
+Also called in code "Far mapping" (initially I didn't see the link with the Z-order curve), because it destroys locality 2D -> 1D.
+
+$$
+z = A(x,y) = 0.b^x_n b^y_n b^x_{n-1} b^y_{n-1} \cdots b^x_1 b^y_1 = \sum_{k=1}^{n} b^x_{n+1-k} 2^{1-2k} + b^y_{n+1-k} 2^{-2k}
+$$
+
+Its inverse is :
+
+$$
+\begin{align*}
+x = A^{-1}_x(z) &= 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \sum_{k=1}^n b_{2(n-k)-1} 2^{-k} \\
+y = A^{-1}_y(z) &= 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}
+\end{align*}
+$$
