@@ -579,12 +579,12 @@ class RecursiveFarMapping(BinMapping):
 		def _indices(F: np.ndarray, bbox: Box, n: int, offset: int = 0, stride: int = 1) -> np.ndarray:
 			indices = np.zeros(len(F), dtype=int)
 
-			box1, box2, box4, box3 = bbox.split_quadrants()  # NOTE : reordering of the boxes
+			box1, box3, box4, box2 = bbox.split_quadrants()  # NOTE : reordering of the boxes
 
 			mask1 = (box1.xmin <= F[:, 0]) & (F[:, 0] <  box1.xmax) & (box1.ymin <= F[:, 1]) & (F[:, 1] <  box1.ymax)
-			mask2 = (box2.xmin <= F[:, 0]) & (F[:, 0] <= box2.xmax) & (box2.ymin <= F[:, 1]) & (F[:, 1] <  box2.ymax)
-			mask3 = (box3.xmin <= F[:, 0]) & (F[:, 0] < box3.xmax) & (box3.ymin <= F[:, 1]) & (F[:, 1] <= box3.ymax)
-			mask4 = (box4.xmin <= F[:, 0]) & (F[:, 0] <=  box4.xmax) & (box4.ymin <= F[:, 1]) & (F[:, 1] <= box4.ymax)
+			mask2 = (box2.xmin <= F[:, 0]) & (F[:, 0] < box2.xmax) & (box2.ymin <= F[:, 1]) & (F[:, 1] <=  box2.ymax)
+			mask3 = (box3.xmin < F[:, 0]) & (F[:, 0] <= box3.xmax) & (box3.ymin <= F[:, 1]) & (F[:, 1] < box3.ymax)
+			mask4 = (box4.xmin < F[:, 0]) & (F[:, 0] <=  box4.xmax) & (box4.ymin <= F[:, 1]) & (F[:, 1] <= box4.ymax)
 
 			if n == 1:
 				indices[mask1] = offset+0*stride
