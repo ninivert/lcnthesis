@@ -1,0 +1,47 @@
+# Locality and numerical convergence
+
+## Analytical equivalence of the dynamics
+
+composition of functions
+
+bijectivity (actually injection in one sense)
+
+## Locality
+
+the notion of infinite number of discontinuities, but the size counts too
+
+plot distance 2D vs distance 1D
+* "close to the line y=sqrt2 x" (but fractals dont get arbitrarily close)
+* "size of the discontinuities"
+* L1 distance
+
+“resilient to some discontinuity”
+the notion of infinite number of discontinuities, but the size counts too
+
+Total variation vs bining variation
+
+histogram of discontinuities ?
+
+$$
+\frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{z,z' \in \{\frac{k}{4^n} | k= 1, \cdots, 2^n\}} |f^n_1(\tfrac{i-1}{2^n}+z) - f^n_1(\tfrac{i-1}{2^n}+z')| + |f^n_2(\tfrac{i-1}{2^n}+z) - f^n_2(\tfrac{i-1}{2^n}+z')|
+$$
+
+plot the bins in the 2D scatter, so we can see what we are doing.
+
+it is different to TV, TV is projecting all the jumps
+
+## Numerical feasibility
+
+failed notions of discontinuity
+
+locality might be a side-effect from bijections
+
+measure for V
+
+proof that numerical convergence
+
+## Details
+
+ironing out details : here we considered 2d -> 1d, but possible to repeat the application of the mapping so that Rp -> Rp-1 -> .. -> 1d
+
+also should work with any neural field, here low-rank cycling was just for the purpose of demonstration

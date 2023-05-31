@@ -1,6 +1,6 @@
 # Introduction
 
-::: hidden
+::: {.content-hidden}
 {{< include ../macros.tex >}}
 :::
 
@@ -12,7 +12,7 @@ $$
 \tau \dot h_i(t) = \underbrace{-h_i(t)}_{\text{exponential decay}} + R_i \sum_{j=1}^{N} \underbrace{J_{ij} \phi(h_j(t))}_{I^\text{rec}_i(t)} + R_i I^{\text{ext}}_i(t)
 $$ {#eq-rnn}
 
-This model can intuitively be seen as the long time limit of a network of spiking neurons, in which neurons emit current spikes (modeled as $\delta$-functions) at some time-variable rate $\phi(h_i(t))$. The convergence is formally proven in @schmutz2023convergence.
+This model can intuitively be seen as the $N \rightarrow \infty$ limit of a network of spiking neurons, in which neurons emit current spikes (modeled as $\delta$-functions) at some time-variable rate $\phi(h_i(t))$. The convergence is formally proven in @schmutz2023convergence.
 
 In the following, we set $\tau=1$ and $R_i=1$ for all neurons $i$, since these just correspond to rescaling time and currents. Additionally, we consider $I^\text{ext}_i(t)=0$ to simplify the model.
 
@@ -38,7 +38,7 @@ $$
 J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
 $$ {#eq-lrj}
 
-In the case that $\vec F_i = (F_{1,i},\cdots,F_{p,i}) \in \Rp$ sample from some $p$-dimensional distribution $\rho$, the vectors $\vec F_i$ define a "natural embedding" of neuron $i$ in $\Rp$. When the number of neurons increases, the numeric density of neurons in the embedding approaches the actual probability distribution $\rho$, and we can intuitively see the convergence towards a connectivity kernel $w(\vec z, \vec y) = \sum_{\mu=1}^p z_\mu y_\mu$.
+In the case that $\vec F_i = (F_{1,i},\cdots,F_{p,i}) \in \Rp$ sample from some $p$-dimensional distribution $\rho$, the vectors $\vec F_i$ define a "natural embedding" of neuron $i$ in $\Rp$. When the number of neurons increases, the numeric density of neurons in the embedding approaches the actual probability distribution $\rho$, and we can intuitively see the convergence towards a connectivity kernel $w(\vec z, \vec y) = \sum_{\mu=1}^p z_\mu g_\mu(y_\mu)$.
 
 ## A one-dimensional neural field
 
@@ -53,7 +53,7 @@ $$
 Informally, we would like to define the one-dimensional field $\tilde h(\alpha, t) = h(S^{-1}(\alpha), t)$, connectivity $\tilde w(\alpha, \beta) = w(S^{-1}(\alpha), S^{-1}(\beta))$ and density $\tilde \rho(\alpha) = \rho(S^{-1}(\alpha))$, so that we can write the neural field in the $[0,1]$ embedding :
 
 $$
-\partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{\mathbb{R}^p} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \tilde \rho(\mathrm d \beta)
+\partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \tilde \rho(\mathrm d \beta)
 $$ {#eq-nf1d}
 
 This change of variable seems counter-intuitive : how is it possible to map a higher dimension to a lower dimension without losing information ? And even if mathematically such a change of variables is possible, is it actually feasible to simulate it numerically ?
@@ -68,11 +68,11 @@ We distinguish two types of numerical simulations for the neural field in @eq-nf
 
 2. A discretization-based simulation. In the $\Rp$ space, we discretize each dimension, forming a grid of $p$-dimensional bins. Each bin effectively corresponds to an infinite population of neurons, which are approximated to be the same (this is a mean-field approximation). This works because by continuity of the field, neurons which are close in $\Rp$ also have similar potentials. As we increase the number of bins, the simulation becomes more precise and the dynamics approach that of the true mathematical neural field.
 
-With this in mind, we can try to understand why simulating a neural field in $[0,1]$ might be difficult. Suppose we take bins in the $\Rp$ space, and map each bin to a random position in $[0,1]$. Intuively, this won't work (in the sense that the dynamics in $[0,1]$ will not be the same as the dynamics in $\Rp$), because the hypothesis of continuity is not longer true : the mapping is random, so the nearby populations in $[0,1]$ will no longer have similar potentials, and the error of the mean-field approximation will no longer vanish as we take increasingly many bins.
+With this in mind, we can try to understand why simulating a neural field in $[0,1]$ might be difficult. Suppose we take bins in the $\Rp$ space, and map each bin to a random position in $[0,1]$. Intuitively, this won't work (in the sense that the dynamics in $[0,1]$ will not be the same as the dynamics in $\Rp$), because the hypothesis of continuity is not longer true : the mapping is random, so the nearby populations in $[0,1]$ will no longer have similar potentials, and the error of the mean-field approximation will no longer vanish as we take increasingly many bins.
 
 \[TODO : an illustration for this\]
 
-In some sense, we would like to find a mapping that converses "locality" : populations that are close in $\Rp$ should also be close in $[0,1]$, or at least there shouldn't be "too many large discontinuities". @sec-mapping is dedicated to the discussion of these mappings, and gives various numerical demonstrations of the resulting dynamics.
+In some sense, we would like to find a mapping that conserves "locality" : populations that are close in $\Rp$ should also be close in $[0,1]$, or at least there shouldn't be "too many large discontinuities". @sec-mapping is dedicated to the discussion of these mappings, and gives various numerical demonstrations of the resulting dynamics.
 
 <!-- 
 

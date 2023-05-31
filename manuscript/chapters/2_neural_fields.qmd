@@ -1,16 +1,104 @@
-# A simple model for a neural field in $\mathbb R^2$
+# A simple model for a neural field in 2D
 
-## Building up a neural field in $\mathbb R^2$
+## Networks of neurons to neural fields
 
-p=1 then p=2, show simulations
+no external current, 
+
+general low-rank neural fields, F and G notation
+
+$$
+J_{ij} = \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
+$$
+
+show how the embedding becomes smooth
+
+study of fixed points
+
+- $h_i = \xi_{\mu,i} \quad \forall \mu = 1,\cdots,p$ (stable)
+- $h_i=0$ (unstable)
+
+the fixed points also become more and more stable as N->oo (study of stability with eigenvalues)
+
+## Building up to a neural field in $\mathbb R^2$
+
+Introduce the neural field in 1D, then 2D
+
+Neurons are at position $\vec z = (z_1, \cdots, z_p) \in \mathbb{R}^p$, distributed according to the distribution $\frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p z_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} z_1 \cdots \mathrm d z_p = \rho(\mathrm d \vec z)$
+
+The RNN potential becomes $h(t, \vec z)$ and evolves according to
+
+$$
+\begin{aligned}
+\partial_t h(t, \vec z) &= -h(t, \vec z) + \int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y),
+\quad
+w(\vec z, \vec y) = \sum_{\mu=1}^p \tilde \phi (y_\mu) z_\mu \\
+&= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
+\end{aligned}
+$$
+
+study of fixed points (and convergence of the fixed points)
+
+simulation strategies : grid and sampling
 
 ## Characterizing dynamics
 
+### Overlap variables
+
+networks of neurons : 
+
+$$
+m_\mu(t) = \frac 1N \sum_{i=1}^N \tilde \phi(\xi_{\mu,i}) \phi(h_i(t))
+$$
+
+neural field :
+
+$$
+m_\mu(t) = \int_{\mathbb R^p} \tilde \phi(y_\mu) \phi(h(t,\vec y)) \rho(\mathrm d \vec y)
+$$
+
+### Low-rank neural fields as $p$-dimensional closed systems
+
 introduce overlap, and in our case the low-rank model the kappa
 
-overlaps as an approximation of the "dynamics" (latent space), in the case phi=linear
+overlaps as an approximation of the “dynamics” (latent space), in the case phi=linear
+
+The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\langle f, g \rangle = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
+
+We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
+$$
+
+with initial conditions
+
+$$
+\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
+$$
+
+and the orthogonal component evolves according to
+
+$$
+h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
+\quad
+h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
+$$
+
+### Dynamics in the overlap latent space
 
 warning : we need absolutely to distinguish the latent and the embedding space
+
+Relation between $p$-dimensional closed system and neural field equation in $\mathbb R^p$
+
+$$
+\begin{aligned}
+\partial_t h(t, \vec z) &= \partial_t h^\perp(t, \vec z) + \sum_{\mu=1}^p z_\mu \dot \kappa_\mu(t) \\
+&= -h^\perp(t, \vec z) - \sum_{\mu=1}^p z_\mu \kappa_\mu(t) + \sum_{\mu=1}^p z_\mu m_\mu(t) \\
+&= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
+\end{aligned}
+$$
+
+we use the latent space to assert dynamics are the same
 
 ## A cycling neural field
 
@@ -24,3 +112,5 @@ show what the analytical kappa is
 introduce both, derive kappa again
 
 simulate cycling in p=2
+
+recurrent current picture

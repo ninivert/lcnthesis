@@ -1,0 +1,144 @@
+# Mapping the neural field in 2D to a 1D embedding
+
+## Simple example : population dynamics
+
+the case of population dynamics can easily be embedded in 1D
+
+## Neural field in $[0,1]$
+
+Define a measurable mapping $S : \mathbb{R}^p \rightarrow [0, 1]$.
+
+Let $\mu : [0,1] \rightarrow [0, \infty]$ be a measure on $([0,1], \mathcal B([0,1]))$.
+
+Then we can write
+
+$$
+\partial_t h(t, \vec z) = -h(t, \vec z) + \int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
+$$
+
+## From $\R^2$ to $[0,1]^2$
+
+Defining the change of variables $u_\mu=\mathrm{CDF}(y_\mu), v_\mu=\mathrm{CDF}(z_\mu)$, the neural field becomes
+
+$$
+\partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u, \quad
+w_U(\vec v, \vec u) = w(\mathrm{CDF}^{-1}(\vec v), \mathrm{CDF}^{-1}(\vec u)), \quad h_U(t, \vec v) = h(t, \mathrm{CDF}^{-1}(\vec v))
+$$
+
+We now have a neural field equation on a unit (hyper)cube, and uniform sampling.
+
+## Mappings of $[0,1]^2$ to $[0,1]$
+
+### Types of mappings
+
+peano vs cantor mappings
+
+linear projections don’t work ofc
+
+We consider $(x,y) \in [0,1]²$. Given $n \in \mathbb N$, we write a (truncated) binary expansion of $x$ as (and similarly for $y$)
+
+$$
+b^x_k = \mathrm{Ind}\left\{2^{k-1}x - \lfloor2^{k-1}x\rfloor \geq \frac{1}{2}\right\}, \text{ such that } x= \sum_{k=1}^{n} b^x_k 2^{-k} = 0.b^x_1b^x_2\cdots b^x_{n}
+$$
+
+#### Z-mapping
+
+Also called Z-order curve, Morton mapping. It conserves locality 2D -> 1D.
+
+$$
+z = Z(x,y) = 0.b^x_1 b^y_1 b^x_2 b^y_2 \cdots b^x_n b^y_n = \sum_{k=1}^{n} b^x_k 2^{1-2k} + b^y_k 2^{-2k}
+$$
+
+Its inverse is :
+
+$$
+\begin{aligned}
+x = Z^{-1}_x(z) &= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
+y = Z^{-1}_y(z) &= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}
+\end{aligned}
+$$
+
+#### Column mapping
+
+Also called "Reshape mapping" in the code. It converges to a projection on the $x$-axis
+
+$$
+z = C(x,y) = 0.b^x_1 b^x_2 \cdots b^x_n b^y_1 b^y_2 \cdots b^y_n
+$$
+
+Its inverse is :
+
+$$
+\begin{aligned}
+x = C^{-1}_x(z) &= 0.b_1 b_2 \cdots b_n = \sum_{k=1}^n b_{k} 2^{-k} \\
+y = C^{-1}_y(z) &= 0.b_{n+1} b_{n+2} \cdots b_{2n} = \sum_{k=1}^n b_{n+k} 2^{-k}
+\end{aligned}
+$$
+
+#### Anti-Z mapping
+
+Also called in code "Far mapping" (initially I didn't see the link with the Z-order curve), because it destroys locality 2D -> 1D.
+
+$$
+z = A(x,y) = 0.b^x_n b^y_n b^x_{n-1} b^y_{n-1} \cdots b^x_1 b^y_1 = \sum_{k=1}^{n} b^x_{n+1-k} 2^{1-2k} + b^y_{n+1-k} 2^{-2k}
+$$
+
+Its inverse is :
+
+$$
+\begin{aligned}
+x = A^{-1}_x(z) &= 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \sum_{k=1}^n b_{2(n-k)-1} 2^{-k} \\
+y = A^{-1}_y(z) &= 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}
+\end{aligned}
+$$
+
+it does not converve
+
+TODO : 3D vis of the mappings
+
+### Sequence of mappings and their limit
+
+intuition for reshape, and the fractals
+
+expose different types of mapping
+
+argue over binary expansion
+
+### Numerical implementation
+
+how to we actually simulate the mappings in one-dimension
+
+how to we actually simulate the mappings in one-dimension
+
+go into detail on how numerically S is a reordering of the bins
+
+we use the fact we have a compact set onto another [0,1]² -> [0,1], so we can write a binary expansion of (x, y) -> z.
+x has n bits, y has n bits, z has 2n bits.
+an arbitrary mapping can then be written as a recombination of the bits of x and y (and any other constant) into 2n bits
+this is good because with floating point we lose precision, here we work with integers (~ fixed point precision), so the implementations of the mappings are exact.
+
+the locality of 2D -> 1D is not important (i.e neurons can be repeated in 1D without too much trouble). locality 1D -> 2D is much more important (a neuron in 1D must refer to only one (not multiple) neurons in 2D)
+
+## Reinterpretation of simulation strategies
+
+### Bin averaging samples
+
+give an intuition, show the figure and some simulations to show that it works
+
+### Direct remapping of the grid
+
+We define $\vec z(\alpha) = S(\alpha)$ the 2D point corresponding to the mapping $\alpha$. (details : we need a bounding box to map back). Defining a matrix $Z_{\mu,\alpha} = \vec z(\alpha)_\mu$, we can write down a numerical PDF $\tilde \rho(Z_{1,\alpha},\cdots,Z_{p,\alpha}) = \tilde \rho(Z_{:,\alpha}) = \frac{\rho(Z_{:,\alpha})}{\sum_\beta \rho(Z_{:,\beta})}$ and the following patterns to simulate the embedded $[0,1]$ neural field as a low-rank RNN.
+
+$$
+\tilde F_{\mu,\alpha} = Z_{\mu,\alpha}, \quad \tilde G_{\mu,\alpha} = \tilde\phi(Z_{\mu,\alpha}), \quad \tilde J_{\alpha,\beta}=\tilde \rho(Z_{:,\beta}) \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta}
+$$
+
+Doing this is equivalent to the formulation of the binned connectivity matrix.
+
+## Numerical simulations of the neural field in $[0,1]$
+
+how we numerically implemement a simulation on a fractal
+
+averaging of 2ˆn neurons
+
+see sampling.ipynb
