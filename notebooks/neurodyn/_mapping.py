@@ -10,10 +10,10 @@ __all__ = [
 	'Box',
 	'Mapping', 'BinMapping',
 	'RecursiveLocalMapping',
-	'ReshapeMapping',
+	'ReshapeMapping', 'ColumnMapping',  # alias
 	'DiagonalMapping',
 	'SzudzikMapping',
-	'RecursiveFarMapping',
+	'RecursiveFarMapping', 'AntiZMapping',  # alias
 	'ZMapping',
 	'RandomMapping',
 	'LinearMapping',
@@ -413,6 +413,8 @@ class ReshapeMapping(BinMapping):
 	def __str__(self) -> str:
 		return f'ReshapeMapping{{nx={self.nx}, ny={self.ny}}}'
 
+ColumnMapping = ReshapeMapping
+
 
 class DiagonalMapping(BinMapping):
 	"""Implements [Cantor mapping](https://en.wikipedia.org/wiki/Pairing_function)
@@ -607,6 +609,8 @@ class RecursiveFarMapping(BinMapping):
 
 	def __str__(self) -> str:
 		return f'RecursiveFarMapping{{nrec={self.nrec}}}'
+
+AntiZMapping = RecursiveFarMapping
 
 
 class RandomMapping(BinMapping):

@@ -6,6 +6,7 @@ from pathlib import Path
 from math import ceil
 from ._rnn import LowRankRNN, Result
 from ._plot import plot_overlap_trajectory, scale_lightness
+from ._overlap import overlap
 
 __all__ = ['animate1d', 'animate2d']
 
@@ -65,7 +66,7 @@ def animate1d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1,
 		plt.close()
 
 
-def animate2d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1, Nmax = 1500):
+def animate2d_old(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1, Nmax = 1500):
 	idt = 0
 	activity = rnn.phi(res.h)
 	cmap = mpl.colormaps['RdBu_r']
@@ -149,6 +150,73 @@ def animate2d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1,
 			# update the scatter
 			# things['sc'].set_facecolors([ scale_lightness(c[:3], 0.7) for c in cmap(activity[:Nmax, idt]) ])
 			things['sc'].set_array(activity[:Nmax, idt])
+
+			pbar.update(1)
+
+		ani = animation.FuncAnimation(fig, update, frames=range(0, len(res.t), time_stride))
+		ani.save(outpath, writer='ffmpeg', fps=15)
+
+		plt.close()
+
+
+def animate2d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1, Nmax = 1500):
+	idt = 0
+	activity = rnn.phi(res.h)
+	cmap = mpl.colormaps['RdBu_r']
+
+	fig, axes = plt.subplots(ncols=2, figsize=(9, 4), layout='constrained')
+
+	# 2d plotting
+
+	axes[1].set_xlabel('Overlap $m_0(t)$')
+	axes[1].set_ylabel('Overlap $m_1(t)$')
+	axes[1].set_title('Latent trajectory')
+	axes[1].set_aspect('equal')
+	axes[1].set_xlim((0,1))
+	axes[1].set_ylim((0,1))
+	from matplotlib_tufte import breathe
+	breathe(axes[1])
+
+	m = overlap(rnn, res.h)
+	phaseline, = axes[1].plot(m[0, :1], m[1, :1])
+	phasepos, = axes[1].plot(m[0, 0], m[1, 0], marker='o', color='tab:orange')
+
+	# 3d plotting
+
+	ss = axes[0].get_subplotspec()
+	axes[0].remove()
+	axes[0] = fig.add_subplot(ss, projection='3d')  # replace by 3D axis
+
+	# note : when we plot the bins, we have [y, x] indexing, so we need to invert the x and y arguments here
+	bins = stats.binned_statistic_2d(rnn.F[:, 1], rnn.F[:, 0], activity[:, idt], statistic='mean', bins=30, range=((-4, 4), (-4, 4)))
+	xx, yy = np.meshgrid(midpoints(bins.x_edge), midpoints(bins.y_edge))
+	surf = axes[0].plot_surface(xx, yy, bins.statistic, cmap='RdBu_r', vmin=0, vmax=1)
+
+	axes[0].set_zlim((0, 1))
+	axes[0].set_xlim((-4, 4))
+	axes[0].set_ylim((-4, 4))
+	axes[0].set_xlabel('$\\xi^0_i$')
+	axes[0].set_ylabel('$\\xi^1_i$')
+	axes[0].set_zlabel('Activity $A = \\phi(h_i)$ [Hz]')
+	axes[0].view_init(azim=180+45)
+	axes[0].set_title('$(\\xi^0_i, \\xi^1_i)$ embedding surface plot', fontsize='medium')
+
+	# we need a container to hold references
+	things = {
+		'phaseline': phaseline, 'phasepos': phasepos,
+		'surf': surf,
+	}
+
+	with tqdm(total=ceil(len(res.t)/time_stride)+1) as pbar:
+		def update(idt: int):
+			# update the surface
+			things['surf'].remove()
+			bins = stats.binned_statistic_2d(rnn.F[:, 1], rnn.F[:, 0], activity[:, idt], statistic='mean', bins=30, range=((-4, 4), (-4, 4)))
+			things['surf'] = axes[0].plot_surface(xx, yy, bins.statistic, cmap='RdBu_r', vmin=0, vmax=1)
+
+			# update the phase trajectory
+			things['phaseline'].set_data(m[0, :idt+1], m[1, :idt+1])
+			things['phasepos'].set_data(m[0, idt], m[1, idt])
 
 			pbar.update(1)
 
