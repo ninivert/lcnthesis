@@ -1,6 +1,6 @@
 # Appendix
 
-::: {.content-hidden}
+::: content-hidden
 {{< include ../macros.tex >}}
 :::
 
@@ -12,17 +12,17 @@ $$
 \dot h_i(t) = -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^N F_{\mu i} G_{\mu j} \phi(h_j(t))
 $$
 
-The low-rank vectors are in general obtained by sampling a distribution $\vec{\xi} = (\xi_1, \cdots, \xi_p) \sim \rho$. Every neuron $i$ samples this distribution independantly, and low-rank vectors are obtained by passing the samples through functions $f_\mu(\vec{\xi})$ and $g_\mu(\vec{\xi})$.
+The low-rank vectors are in general obtained by sampling a distribution $\vec{z} = (z_1, \cdots, z_p) \sim \rho$. Every neuron $i$ samples this distribution independently, and low-rank vectors are obtained by passing the samples through functions $f_\mu(\vec{z})$ and $g_\mu(\vec{z})$.
 
-We note that in the main text, the distribution is a multivariate normal with unit covariance and zero mean, such that it factors out as $\rho(\xi_1, \cdots, \xi_p) = \prod_{\mu=1}^p \mathcal{N}(\xi_\mu)$. Furthermore, the functions are component-wise $f_\mu(\xi_1, \cdots, \xi_p) = \xi_\mu$ and $g_\mu(\xi_1, \cdots, \xi_p) = \tilde \phi(\xi_\mu) = \frac{\phi(\xi_\mu) - \avg{\phi(\xi_\mu)}}{\mathrm{Var}[\phi(\xi_\mu)]}$.
+We note that in the main text, the distribution is a multivariate normal with unit covariance and zero mean, such that it factors out as $\rho(z_1, \cdots, z_p) = \prod_{\mu=1}^p \mathcal{N}(z_\mu)$. Furthermore, the functions are component-wise $f_\mu(z_1, \cdots, z_p) = z_\mu$ and $g_\mu(z_1, \cdots, z_p) = \tilde \phi(z_\mu) = \frac{\phi(z_\mu) - \avg{\phi(z_\mu)}}{\mathrm{Var}[\phi(z_\mu)]}$.
 
 $$
-F_{\mu i} = f_\mu(\xi_{1 i}, \cdots, \xi_{p i}), \, G_{\mu i} = g_\mu(\xi_{1 i}, \cdots, \xi_{p i})
+F_{\mu i} = f_\mu(z_{1 i}, \cdots, z_{p i}), \, G_{\mu i} = g_\mu(z_{1 i}, \cdots, z_{p i})
 $$
 
 ### Derivation of fixed points
 
-In order to find the fixed points, one has to solve in general $\dot h_i(t) = 0$ for all $i = 1, \cdots, N$. Because of the nonlinearity $\phi(h_j(t))$, this is difficult, but we can guess the fixed points $h^\star_i$ and verify them by substituting into the equation that $\dot h_i(t) = 0$.
+In order to find the fixed points, one has to solve in general $\dot h_i(t) = 0$ for all $i = 1, \cdots, N$. Because of the non-linearity $\phi(h_j(t))$, this is difficult, but we can guess the fixed points $h^\star_i$ and verify them by substituting into the equation that $\dot h_i(t) = 0$.
 
 #### Zero fixed point
 
@@ -35,87 +35,248 @@ $$
 &= \frac{\phi(0)}{N} \sum_{\mu=1}^p \sum_{j \neq i}^N F_{\mu i} G_{\mu j} + \underbrace{\frac{\phi(0)}{N} \sum_{\mu=1}^p F_{\mu i} G_{\mu i}}_{\bO(\frac 1N)} \\
 &= \phi(0) \sum_{\mu=1}^p \frac 1N \sum_{j \neq i}^N F_{\mu i} G_{\mu j} + \bO(\tfrac 1N) \\
 &= \phi(0) \sum_{\mu=1}^p F_{\mu i} \frac{N-1}{N} \frac{1}{N-1} \sum_{j \neq i}^N G_{\mu j} + \bO(\tfrac 1N) \\
-&\stackrel{N \gg 1}{\approx} \phi(0) \sum_{\mu=1}^p F_{\mu i} \avg{g_\mu(\vec{\xi})}
+&\stackrel{N \gg 1}{\approx} \phi(0) \sum_{\mu=1}^p F_{\mu i} \avg{g_\mu(\vec{z})}
 \end{aligned}
 $$
-
-<!-- TODO : fixme. the F_i should not be in the integral -->
 
 To write the last line, we make a slight abuse of notation in order to avoid notation problems when taking the $N \to \infty$ limit of $F_{\mu i}$.
 
 In the case of the network studied in this work, the find that
 
 $$
-\avg{g_\mu(\vec{\xi})} = \avg{\tilde \phi(\xi_\mu)} = \avg{\frac{\phi(\xi_\mu) - \avg{\phi(\xi_\mu)}}{\mathrm{Var}[\phi(\xi_\mu)]}} = 0
+\avg{g_\mu(\vec{z})} = \avg{\tilde \phi(z_\mu)} = \avg{\frac{\phi(z_\mu) - \avg{\phi(z_\mu)}}{\mathrm{Var}[\phi(z_\mu)]}} = 0
 $$
 
 Thus, $h_i^\star=0$ is a fixed point in the limit $N \to \infty$.
 
 #### Pattern fixed point
 
-Another set of fixed points is $h^\star_i = F_{\nu i}$ for all $\nu = 1, \cdots, p$. We refer to these as the "patterns" in the context of learning the network "rembers" (converges to) these vectors. We verify the fixed point similarly as before.
+Another set of fixed points is $h^\star_i = F_{\nu i}$ for all $\nu = 1, \cdots, p$. We refer to these as the "patterns" in the context of learning the network "remembers" (converges to) these vectors. We verify the fixed point similarly as before.
 
 $$
 \begin{aligned}
 \dot h_i(t) &= -F_{\nu i} + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^N F_{\mu i} G_{\mu j} \phi(F_{\nu j}) \\
 &= -F_{\nu i} + \frac 1N \sum_{\mu=1}^p \sum_{j \neq i}^N F_{\mu i} G_{\mu j} \phi(F_{\nu j}) + \bO(\tfrac 1N) \\
 &= -F_{\nu i} + \frac 1N \sum_{j \neq i}^N F_{\nu i} G_{\nu j} \phi(F_{\nu j}) + \frac 1N \sum_{\mu \neq \nu}^p \sum_{j \neq i}^N F_{\mu i} G_{\mu j} \phi(F_{\nu j}) + \bO(\tfrac 1N) \\
-&\stackrel{N \gg 1}{\approx} -F_{\nu i} + F_{\nu i} \avg{g_\nu(\vec{\xi_j}) \phi(\xi_{\nu j})} + \sum_{\mu \neq \nu}^p F_{\mu i} \avg{g_\mu(\vec{\xi_j}) \phi(\xi_{\nu j})}
+&\stackrel{N \gg 1}{\approx} -F_{\nu i} + F_{\nu i} \avg{g_\nu(\vec{z_j}) \phi(z_{\nu j})} + \sum_{\mu \neq \nu}^p F_{\mu i} \avg{g_\mu(\vec{z_j}) \phi(z_{\nu j})}
 \end{aligned}
 $$
 
-The term $\avg{g_\mu(\vec{\xi_j}) \phi(\xi_{\nu j})}$ vanishes in the case of a factorizable distribution and when the functions $g_\mu$ are component-wise.
+The term $\avg{g_\mu(\vec{z_j}) \phi(z_{\nu j})}$ vanishes in the case of a factorizable distribution and when the functions $g_\mu$ are component-wise.
 
 $$
 \begin{aligned}
-\avg{g_\mu(\vec{\xi_j}) \phi(\xi_{\nu j})} &= 
-\int_{\Rp} g_\mu(\xi_1, \cdots, \xi_p) \phi(\xi_\nu) \rho(\d \vec{\xi}) \\
-&= \int_{\Rp} g_\mu(\xi_\mu) \phi(\xi_\nu) \prod_{\gamma=1}^p \rho_\gamma(\d \xi_\gamma) \\
-&= \int_{\R} g_\mu(\xi_\mu) \rho_\mu(\d \xi_\mu) \int_{\R} \phi(\xi_\nu) \rho_\nu(\d \xi_\nu) \\
-&= \avg{g_\mu(\xi_\mu)} \avg{\phi(\xi_\nu)}
+\avg{g_\mu(\vec{z_j}) \phi(z_{\nu j})} &= 
+\int_{\Rp} g_\mu(z_1, \cdots, z_p) \phi(z_\nu) \rho(\d \vec{z}) \\
+&= \int_{\Rp} g_\mu(z_\mu) \phi(z_\nu) \prod_{\gamma=1}^p \rho_\gamma(\d z_\gamma) \\
+&= \int_{\R} g_\mu(z_\mu) \rho_\mu(\d z_\mu) \int_{\R} \phi(z_\nu) \rho_\nu(\d z_\nu) \\
+&= \avg{g_\mu(z_\mu)} \avg{\phi(z_\nu)}
 \end{aligned}
 $$
 
-As established in the previous section, in the case of the network studied in this work, $\avg{g_\mu(\xi_\mu)} = 0$.
+As established in the previous section, in the case of the network studied in this work, $\avg{g_\mu(z_\mu)} = 0$.
 
-The term $\avg{g_\nu(\vec{\xi_j}) \phi(\xi_{\nu j})}$ is more difficult, but we can prove that in our case it equals one.
+The term $\avg{g_\nu(\vec{z_j}) \phi(z_{\nu j})}$ is more difficult, but we can prove that in our case it equals one.
 
 $$
 \begin{aligned}
-\avg{g_\nu(\vec{\xi_j}) \phi(\xi_{\nu j})} &=
-\avg{\frac{\phi(\xi_{\mu j}) - \avg{\phi(\xi_{\mu j})}}{\mathrm{Var}[\phi(\xi_{\mu j})]} \phi(\xi_{\mu j})} \\
-&= \avg{\frac{\phi(\xi)^2 - \avg{\phi(\xi)} \phi(\xi) }{\mathrm{Var}[\phi(\xi)]}} \\
-&= \frac{\avg{\phi(\xi)^2} - \avg{\avg{\phi(\xi)} \phi(\xi)} }{\mathrm{Var}[\phi(\xi)]} \\
-&= \frac{\avg{\phi(\xi)^2} - \avg{\phi(\xi)}^2}{\mathrm{Var}[\phi(\xi)]} \\
-&= \frac{\mathrm{Var}[\phi(\xi)]}{\mathrm{Var}[\phi(\xi)]} \\
+\avg{g_\nu(\vec{z_j}) \phi(z_{\nu j})} &=
+\avg{\frac{\phi(z_{\mu j}) - \avg{\phi(z_{\mu j})}}{\mathrm{Var}[\phi(z_{\mu j})]} \phi(z_{\mu j})} \\
+&= \avg{\frac{\phi(z)^2 - \avg{\phi(z)} \phi(z) }{\mathrm{Var}[\phi(z)]}} \\
+&= \frac{\avg{\phi(z)^2} - \avg{\avg{\phi(z)} \phi(z)} }{\mathrm{Var}[\phi(z)]} \\
+&= \frac{\avg{\phi(z)^2} - \avg{\phi(z)}^2}{\mathrm{Var}[\phi(z)]} \\
+&= \frac{\mathrm{Var}[\phi(z)]}{\mathrm{Var}[\phi(z)]} \\
 &= 1
 \end{aligned}
 $$
 
-Therefore, the set of $h_i^\star = F_{\nu i}$ for all $\nu = 1, \cdots, p$ are fixed points in the limit of large $N$, under the assumptions that the distribution is factorizable, the functions $g_\mu$ are component-wise, and $\avg{g_\nu(\xi) \phi(\xi)}=1$, which is the case in the setup of this work.
+Therefore, the set of $h_i^\star = F_{\nu i}$ for all $\nu = 1, \cdots, p$ are fixed points in the limit of large $N$, under the assumptions that the distribution is factorizable, the functions $g_\mu$ are component-wise, and $\avg{g_\nu(z) \phi(z)}=1$, which is the case in the setup of this work.
 
 ### Fixed points of the neural field
 
 The derivation of the fixed points for the neural field equation follows the same arguments as the fixed points in the network of neurons.
 
-As $N \to \infty$, the fixed points $h_i^\star$ become functions $h^\star(\xi_1, \cdots, \xi_p)$ on the $\Rp$ space :
+As $N \to \infty$, the fixed points $h_i^\star$ become functions $h^\star(z_1, \cdots, z_p)$ on the $\Rp$ space :
 
-* $h_i^\star = 0 \to h^\star(\xi_1, \cdots, \xi_p) = 0$
-* $h_i^\star = F_{\nu i} = \xi_{\nu i} \to h^\star(\xi_1, \cdots, \xi_p) = \xi_\nu$ for all $\nu = 1, \cdots, p$
+-   $h_i^\star = 0 \to h^\star(z_1, \cdots, z_p) = 0$
+-   $h_i^\star = F_{\nu i} = z_{\nu i} \to h^\star(z_1, \cdots, z_p) = z_\nu$ for all $\nu = 1, \cdots, p$
 
-<!-- TODO : add derivation for neural field ? -->
+[TODO : add derivation for neural field ?]
 
 ### Stability of the fixed points
 
-<!-- TODO -->
+We now study the stability of the fixed points. In the original equation, we substitute $h_i(t) = h_i^\star + \delta_i(t)$, where $\delta_i(t)$ is a small perturbation.
 
-## Behavior of $\kappa_\mu(t)$ in the cyclic network
+$$
+\begin{aligned}
+\dot h_i(t) &= \dot \delta_i(t) \\
+&= -(h_i^\star + \delta_i(t)) + \sum_{j=1}^N J_{ij} \phi(h_j^\star + \delta_j(t)) \\
+&= -(h_i^\star + \delta_i(t)) + \sum_{j=1}^N J_{ij} (\phi(h_j^\star) + \partial \phi(h_j^\star) \delta_j(t) + \bO(\delta_j(t)^2)) \\
+&= \underbrace{-h_i^\star + \sum_{j=1}^N J_{ij} \phi(h_j^\star)}_\text{$=0$ by definition of the fixed point} - \delta_i(t) + \sum_{j=1}^N J_{ij} \partial \phi(h_j^\star) \delta_j(t) + \bO(\norm{\vec\delta(t)}^2) \\
+&= - \delta_i(t) + \sum_{j=1}^N J_{ij} \partial \phi(h_j^\star) \delta_j(t) + \bO(\norm{\vec\delta(t)}^2) \\
+&= \sum_{j=1}^N (\underbrace{-\mathrm{Id}_{ij} + \underbrace{J_{ij} \partial \phi(h_j^\star)}_{J_{ij}^\prime}}_{K_{ij}}) \delta_j(t) + \bO(\norm{\vec\delta(t)}^2)
+\end{aligned}
+$$
 
-kappa in the delayed, rolled and cyclic network
+In matrix notation $\vec\delta(t) = (\delta_1(t), \cdots, \delta_N(t))$, this becomes
 
-relation to overlaps
+$$
+\begin{aligned}
+&\dot{\vec\delta}(t) = K \vec\delta(t) \\
+\implies &\vec\delta(t) = \mathrm{exp}(Kt) \vec\delta(0)
+\end{aligned}
+$$
+
+The fixed point is stable if $\vec\delta(t) \to 0$ as $t \to \infty$, in other words if all the eigenvalues of $K$ are negative.
+
+Before we study the spectrum of $K$, we cite the following result : if $\lambda$ is an eigenvalue of $A$, then $\lambda-1$ is an eigenvalue of $A-\mathrm{Id}$. This follows simply from the equation for the eigenvalues $\lambda_i$ and eigenvectors $\vec{v_i}$ of $A$. If $A \vec{v_i} = \lambda_i \vec{v_i}$, then $(A-\mathrm{Id})\vec{v_i}=\lambda_i \vec{v_i} - \vec{v_i} = (\lambda_i - 1)\vec{v_i}$. Therefore to study $K$ it suffices to study the eigenvalues of $J^\prime$.
+
+Since $J^\prime$ is low-rank, its image is spanned by the vectors $\{\vec{F_\nu} = (F_{\nu 1}, \cdots, F_{\nu N}) | \nu=1,\cdots,p\}$, which motivates the Ansatz of eigenvectors $\vec{v_\nu} = \vec{F_\nu}$ in the $N \to \infty$ limit.
+
+$$
+\begin{aligned}
+(J^\prime \vec{F_\nu})_i &= \frac 1N \sum_{\mu=1}^p \sum_{j=1}^N F_{\mu i} \underbrace{G_{\mu j} \partial \phi(h_j^\star)}_{G^\prime_{\mu j}} F_{\nu j} \\
+&= \frac 1N \sum_{\mu \neq \nu}^p \sum_{j=1}^N F_{\mu i} G^\prime_{\mu j} F_{\nu j} + \frac 1N \sum_{j=1}^N F_{\nu i} G^\prime_{\nu j} F_{\nu j} \\
+&\stackrel{N \gg 1}{\approx} \sum_{\mu \neq \nu}^p F_{\mu i} \avg{g^\prime_\mu(\vec{z}) f_\nu(\vec{z})} + F_{\nu i} \avg{g^\prime_\nu(\vec{z}) f_\nu(\vec{z})}
+\end{aligned}
+$$
+
+We study each term separately. Additionally (and similarly as before), we make the assumption that the functions $g_\mu$ and the functions $f_\mu$ are component-wise, and that the distribution $\rho$ factorises.
+
+$$
+\begin{aligned}
+\avg{g^\prime_\mu(\vec{z}) f_\nu(\vec{z})} &=
+\int_{\Rp} g^\prime_\mu(\vec z) f_\nu(\vec z) \rho(\d \vec z) \\
+&= \int_{\R} \int_{\R} g^\prime_\mu(z_\mu) f_\nu(z_\nu) \rho_\mu(\d z_\mu) \rho_\nu(\d z_\nu) \\
+&= \int_{\R} g^\prime_\mu(z_\mu) \rho_\mu(\d z_\mu) \int_{\R} f_\nu(z_\nu) \rho_\nu(\d z_\nu) \\
+&= \avg{g^\prime_\mu(z_\mu)} \avg{f_\nu(z_\nu)}
+\end{aligned}
+$$
+
+In our case, $\avg{f_\nu(z_\nu)} = \avg{z_\nu} = \int_{\R} z_\nu \mathcal{N}(\d z_\nu) = 0$ and so the term vanishes. Therefore, we are left with
+
+$$
+\begin{aligned}
+&(J^\prime \vec{F_\nu})_i \stackrel{N \gg 1}{\approx} F_{\nu i} \avg{g^\prime_\nu(z_\nu) f_\nu(z_\nu)} \\
+\implies &J^\prime \vec{F_\nu} = \avg{g^\prime_\nu(z_\nu) f_\nu(z_\nu)} \vec{F_\nu} \\
+\implies &K \vec{F_\nu} = (\underbrace{\avg{g^\prime_\nu(z_\nu) f_\nu(z_\nu)}-1}_\text{eigenvalue $\lambda_\nu$}) \vec{F_\nu} \\
+\end{aligned}
+$$
+
+The term $\avg{g^\prime_\nu(z_\nu) f_\nu(z_\nu)}$ does not vanish in general because of the coupling between the components. The integral is too complicated to be analytically solved, but we provide a numerical estimation in our case ($\rho(z_1, \cdots, z_p)=\prod_{\mu=1}^p\mathcal{N}(z_\mu)$, $f_\mu(z_\mu)=z_\mu$, $g_\mu(z_\mu)=\tilde\phi(z_\mu)$) and with fixed points $h_i^\star=0$ and $h_i^\star=F_{\nu i}$.
+
+$$
+\begin{aligned}
+\phi(h)&=\frac{1}{1+\mathrm{e}^{-h}} \\
+&\implies
+\begin{cases}
+h_i^\star=0 &\implies \lambda_\nu = \avg{\tilde\phi(z) \partial \phi(0) z} - 1 \approx 0.19061 \pm 0.00014 \\
+h_i^\star=F_{\nu i} &\implies \lambda_\nu = \avg{\tilde\phi(z) \partial \phi(z) z} - 1 \approx -0.28090 ± 0.00006
+\end{cases}
+\end{aligned}
+$$
+
+When $\phi$ is the logistic function, the pattern fixed points are stable, whereas the zero fixed point is unstable.
+
+We now consider a Taylor expansion of the rate function $\phi(h)$ up to order 3, and cite results obtained from symbolic computation and known moments of the gaussian distribution.
+
+$$
+\begin{aligned}
+	\phi(h)&= c_0 + c_1 h,\, c_0, c_1 \in \R^2 \\
+	&\implies
+	\lambda_\nu = \avg{\frac{z}{c_{1}} c_{1} z} - 1 = 0 \text{ for any fixed point}\\
+	\phi(h)&= c_0 + c_1 h + c_2 h^2,\, c_0, c_1, c_2 \in \R^3 \\
+	&\implies
+	\begin{cases}
+		h_i^\star=0 &\implies \begin{aligned}[t]
+			\lambda_\nu &= \avg{\frac{c_{1} z + c_{2} z^{2} - c_{2}}{c_{1}^{2} + 2 c_{2}^{2}} (c_1) z} - 1 \\
+			&= - \frac{2 c_{2}^{2}}{c_{1}^{2} + 2 c_{2}^{2}}
+		\end{aligned} \\
+		h_i^\star=F_{\nu i} &\implies \begin{aligned}[t]
+			\lambda_\nu &= \avg{\frac{c_{1} z + c_{2} z^{2} - c_{2}}{c_{1}^{2} + 2 c_{2}^{2}} (c_{1} + 2 c_{2} z) z} - 1 \\
+			&= \frac{2 c_{2}^{2}}{c_{1}^{2} + 2 c_{2}^{2}}
+		\end{aligned}
+	\end{cases} \\
+	\phi(h)&= c_0 + c_1 h + c_2 h^2 + c_3 h^3,\, c_0, c_1, c_2, c_3 \in \R^4 \\
+	&\implies
+	\begin{cases}
+		h_i^\star=0 &\implies \begin{aligned}[t]
+			\lambda_\nu &= \avg{\frac{c_{1} z + c_{2} z^{2} - c_{2} + c_{3} z^{3}}{c_{1}^{2} + 6 c_{1} c_{3} + 2 c_{2}^{2} + 15 c_{3}^{2}} (c_{1}) z} - 1 \\
+			&= \frac{- 3 c_{1} c_{3} - 2 c_{2}^{2} - 15 c_{3}^{2}}{c_{1}^{2} + 6 c_{1} c_{3} + 2 c_{2}^{2} + 15 c_{3}^{2}}
+		\end{aligned} \\
+		h_i^\star=F_{\nu i} &\implies \begin{aligned}[t]
+			\lambda_\nu &= \avg{\frac{c_{1} z + c_{2} z^{2} - c_{2} + c_{3} z^{3}}{c_{1}^{2} + 6 c_{1} c_{3} + 2 c_{2}^{2} + 15 c_{3}^{2}}
+			(c_{1} + 2 c_{2} z + 3 c_{3} z^{2}) z} - 1 \\
+			&= \frac{2 \cdot \left(3 c_{1} c_{3} + c_{2}^{2} + 15 c_{3}^{2}\right)}{c_{1}^{2} + 6 c_{1} c_{3} + 2 c_{2}^{2} + 15 c_{3}^{2}}
+		\end{aligned}
+	\end{cases}
+\end{aligned}
+$$
+
+What a mess ! We summarize the results from the Taylor expansion :
+
+* When $\phi$ is linear, we see that all the eigenvalues are zero, therefore the first order stability is unconclusive. Numerically, we see that when $\phi$ is linear, the convergence to the fixed points is very slow.
+* When $\phi$ is quadratic, the zero fixed point is stable, and the pattern fixed point is unstable, regardless of the sign of the coefficients.
+* When $\phi$ is cubic, the sign of the eigenvalues depends primarily on $c_3$ (negative $c_1$ breaks the assumption that $\phi$ must be monotonically increasing). The intuition is that we require $c_1$ to be large enough (in other words, the growth of the firing rate when $h$ becomes positive) and $c_3 < 0$ such that $3 c_1 c_3 + 15 c_3^2 < 0$.
+  The magnitude of the second order term $c_2$ only contributes to adding instability to the pattern fixed point, and stability to the zero fixed point, which leads to the conclusion it is best set to $c_2=0$ if we want the network to be stable at the pattern fixed points.
+
+[TODO FIG : might be nice to have a phase plot of $c_1, c_3$ and the value of the eigenvalue to illustrate the previous illustration]
+
+The study of the Taylor expansion therefore instructs us that stability is improved when $\phi$ grows rapidly around $h=0$, and that even powers (symmetries of $\phi$ around the y-axis) deteriorate the stability of the pattern fixed point. This helps us understand why the logistic function $\phi(h)=\frac{1}{1+\mathrm{e}^{-h}}=\tfrac 12 + \tfrac h4 - \tfrac{h^3}{48} + \bO(h^5)$ has good convergence properties : we have that $c_1$ is large enough, $c_3$ is negative, and $c_2$ is zero.
+
+We finish the study of eigenvalues by noting that in the $N \to \infty$ limit, the remaining $N-p$ eigenvalues of $J^\prime$ are zero. The corresponding eigenvectors span the orthogonal complement of the vectors $\vec{G^\prime_\nu} = (G^\prime_{\nu 1}, \cdots, G^\prime_{\nu N})$, formally $\vec{v} \in \mathrm{span}(\vec{G^\prime_1}, \cdots,\vec{G^\prime_p})^\perp$.
+
+In conclusion, the spectrum of $K$ is composed of $p$ eigenvalues $\lambda_\nu = \avg{g_\nu(z_\nu) f_\nu(z_\nu) \partial \phi(h^\star)}-1$, and $N-p$ eigenvalues $\lambda_\perp = -1$. For the network considered in this work, the interpretation of this is that components of the field aligned with the patterns $z_\nu$ converge to the fixed point, and the orthogonal components decay as $t \to \infty$. The fixed point $h_i^\star=0$ is therefore unstable, and the pattern fixed points $h_i^\star = z_{\nu i}$ are stable. We also note that since the normal distribution is centered around zero and symmetric, $h_i^\star = -z_{\nu i}$ are also stable fixed points.
+
+## Behaviour of $\kappa_\mu(t)$ in the cyclic neural field
+
+### Definitions of dynamics
+
+[TODO MATH : derivation of this ? from the general setting to our case]
+
+We recall the definition of the low-rank variables $\kappa_\mu(t)$.
+
+The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\avg{f, g} = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
+
+We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
+$$
+
+with initial conditions
+
+$$
+\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
+$$
+
+and the orthogonal component evolves according to
+
+$$
+h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
+\quad
+h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
+$$
+
+### Cyclic dynamics in the $p=2$ cyclic neural field
+
+[TODO MATH : derivation of delayed ?]
+
+[TODO MATH : derivation of cyclic ?]
+
+In the case of the cyclic neural field, the evolution equation for $\kappa_\nu(t)$ is modified, where $\delta$ is the delay, and with the convention $\mu+1 = 1$ if $\mu=p$.
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + m_{\mu+1}(t - \delta)
+$$
+
+### Relation to overlaps $m_\mu(t)$
+
+[TODO]
 
 ## "Mean patterns" in the binned connectivity
+
+[TODO]
 
 derivation of $\Jab$ and mean patterns
 

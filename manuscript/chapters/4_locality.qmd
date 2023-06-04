@@ -1,3 +1,7 @@
+::: {.content-hidden}
+{{< include ../macros.tex >}}
+:::
+
 # Locality and numerical convergence
 
 ## Analytical equivalence of the dynamics
@@ -6,7 +10,19 @@ composition of functions
 
 bijectivity (actually injection in one sense)
 
+TODO : write the proof of this
+
 ## Locality
+
+### Intuition behind the notion of locality
+
+![](figures/distance_2d_1d.png)
+
+localité :
+1. proche in 2D -> proche in 1D (OK projection (obv., x est proche), OK zorder, PAS random)
+2. proche in 1D -> proche in 2D (PAS projection, PAS random, OK zorder)
+
+[TODO EXPLAIN : explain this better. basically the thing is we AVERAGE in 1D, so this better be meaningful]
 
 the notion of infinite number of discontinuities, but the size counts too
 
@@ -15,33 +31,241 @@ plot distance 2D vs distance 1D
 * "size of the discontinuities"
 * L1 distance
 
-“resilient to some discontinuity”
-the notion of infinite number of discontinuities, but the size counts too
+"resilient to some discontinuity" the notion of infinite number of discontinuities, but the size counts too
 
-Total variation vs bining variation
+![histogram of discontinuities](figures/image_20230517_2.png)
 
-histogram of discontinuities ?
+### The total variation attempt
+
+Let $S^{-1} : \mathbb R \rightarrow \mathbb R^2$, let $|| \cdot ||$ be a norm in $\mathbb R^2$ (any norm is OK, since all equivalent (i.e. equal to a constant)). Here we use the $\ell^1$ norm (absolute value).
 
 $$
-\frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{z,z' \in \{\frac{k}{4^n} | k= 1, \cdots, 2^n\}} |f^n_1(\tfrac{i-1}{2^n}+z) - f^n_1(\tfrac{i-1}{2^n}+z')| + |f^n_2(\tfrac{i-1}{2^n}+z) - f^n_2(\tfrac{i-1}{2^n}+z')|
+\begin{aligned}
+\mathrm{TV}(S^{-1}) &= \sup_{P \in \mathcal P} \sum_{i=1}^{n_P} || S^{-1}(z_{i}) - S^{-1}(z_{i-1}) ||_1 \\
+&= \sup_{P \in \mathcal P} \sum_{i=1}^{n_P} | S^{-1}_1(z_i) - S^{-1}_1(z_{i-1})| + | f_2(z_i) - f_2(z_{i-1}) |
+\end{aligned}
 $$
 
-plot the bins in the 2D scatter, so we can see what we are doing.
+this basically just projects the discontinuities on x and y.
 
-it is different to TV, TV is projecting all the jumps
+in a way since you need to go to each point only once, so there is only so much you can do inside the $[0,1]^2$. the tiny jumps still add up, and all mappings seem to grow $TV$ in the same way
+
+![](figures/image_20230517.png)
+
+-> what we really are expression, is the fact that doing the averaging in 1D is not a big problem when the mapping is good. 
+
+### Mathematical formulation of average binned variation
+
+variation inside the bins, weak version
+
+$$
+\begin{aligned}
+V_n(S^{-1}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\delta,\delta' \in [0, \tfrac{1}{2^n}]^2} |S_1(\tfrac{i-1}{2^n}+\delta) - S_1(\tfrac{i-1}{2^n}+\delta')| + |S_2(\tfrac{i-1}{2^n}+\delta) - S_2(\tfrac{i-1}{2^n}+\delta')| \\
+&= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1
+\end{aligned}
+$$
+
+variation inside the bins, strong version. basically we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
+
+$$
+\begin{aligned}
+V_\delta(S^{-1}) &= \sup_{P_\delta \in \mathcal{P}_\delta} \delta \sum_{i=1}^{n_{P_\delta}} \sup_{\alpha, \alpha^\prime \in [\alpha_{i-1}, \alpha_{i}]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1 \\
+V &= \limsup_{\delta \to 0} V_\delta
+\end{aligned}
+$$
+
+evidently,
+
+$$
+0 \leq V_n \leq V_\delta
+$$
+
+[TODO FIG : show the range of each bin, how each bin contains $2^n$ smaller bins. plot the bins in the 2D scatter, so we can see what we are doing]
+
+[TODO MATH : the exact norm is not important. all norms are equivalent]
+
+[TODO NOTE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time"]
+
+### Average variation of mappings
+
+Numerical demonstration
+
+![](figures/v_num.png)
+
+In order to compute (a bound on) $V_n$ for some mappings, we consider the binary expansion of $\alpha$ and $\alpha^\prime$ which appear in the supremum. For clarity and to represent actual numerical implementations, we furthermore truncate the binary expansion to $2m$ bits (on most machines, $2m=64$ bits).
+
+$$
+\begin{aligned}
+\alpha &= 0. b_1 b_2 \cdots b_{2m-1} b_{2m}\\
+\alpha^\prime &= 0. b_1^\prime b_2^\prime \cdots b_{2m-1}^\prime b_{2m}^\prime \\
+\end{aligned}
+$$
+
+Furthermore, since $\alpha \in \left[\frac{i-1}{2^n}, \frac{i}{2^n} \right],\, i \in \{1, \cdots, 2^n\}$, we may express the first $n$ (where $n < 2m$) bits of $\alpha$ with the bits of $i=\sum_{k=0}^{n-1} i_k 2^k$ (we ignore $i=2^n$ for the sake of simplicity, which would introduce one more bit, $n+1$ in total).
+
+$$
+\begin{aligned}
+\alpha &= 0. i_{n-1} i_{n-2} \cdots i_1 i_0 b_n b_{n+1} \cdots b_{2m-1} b_{2m}\\
+\alpha^\prime &= 0. i_{n-1} i_{n-2} \cdots i_1 i_0 b^\prime_n b^\prime_{n+1} \cdots b^\prime_{2m-1} b^\prime_{2m}
+\end{aligned}
+$$
+
+#### Z-mapping
+
+Let us consider the Z-mapping, and the two terms compositing its inverse. In the case of $\alpha, \alpha^\prime$ above, we have if $n$ is even :
+
+$$
+\begin{aligned}
+Z^{-1}_1(\alpha) &= 0.\underbrace{i_{n-1} i_{n-3}}_\text{$n/2$ bits} \cdots i_1 b_n b_{n+2} \cdots b_{2m-1} \\
+Z^{-1}_2(\alpha) &= 0.\underbrace{i_{n-2} i_{n-4}}_\text{$n/2$ bits} \cdots i_0 b_{n+1} b_{n+3} \cdots b_{2m}
+\end{aligned}
+$$
+
+If $n$ is odd, we have :
+
+$$
+\begin{aligned}
+Z^{-1}_1(\alpha) &= 0.\underbrace{i_{n-1} i_{n-3}}_\text{$(n+1)/2$ bits} \cdots i_0 b_n b_{n+2} \cdots b_{2m-1} \\
+Z^{-1}_2(\alpha) &= 0.\underbrace{i_{n-2} i_{n-4}}_\text{$(n-1)/2$ bits} \cdots i_1 b_{n+1} b_{n+3} \cdots b_{2m}
+\end{aligned}
+$$
+
+We only consider even $n$ in the following, as the proof remains very similar.
+
+The core of the proof relies on the fact the first $n/2$ bits of the difference of the inverses cancel out when computing the average binned variation.
+
+$$
+\begin{aligned}
+|Z^{-1}_1(\alpha) - Z^{-1}_1(\alpha^\prime)| &= 0.0 \cdots 0 (b_n b_{n+2} \cdots b_{2m-1} - b^\prime_n b^\prime_{n+2} \cdots b^\prime_{2m-1}) \\
+&= 2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k-1} - b^\prime_{n+2k-1}) 2^{-k} \\
+&\leq 2^{-n/2} \\
+|Z^{-1}_2(\alpha) - Z^{-1}_2(\alpha^\prime)| &= 2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k} - b^\prime_{n+2k}) 2^{-k} \\
+&\leq 2^{-n/2}
+\end{aligned}
+$$
+
+Putting everything together, we get an upper bound for the average binned variation.
+
+$$
+V_n(Z^{-1}) \leq \frac{1}{2^n} \sum_{i=1}^{2^n} 2^{-n/2} + 2^{-n/2} = 2^{-n/2+1} \xrightarrow{n \to \infty} 0
+$$
+
+#### Column mapping
+
+We now consider the column mapping. Since here we consider finite-precision $\alpha$ and $\alpha^\prime$, the invere is well-defined and we have
+
+$$
+\begin{aligned}
+C^{-1}_1(\alpha) &= 0.i_{n-1} i_{n-2} \cdots i_1 i_0 b_n b_{n+1} \cdots b_m \\
+C^{-1}_2(\alpha) &= 0.b_{m+1} b_{m+2} \cdots b_{2m}
+\end{aligned}
+$$
+
+The first component can be bounded using the same trick from the previous proof :
+
+$$
+\begin{aligned}
+|C^{-1}_1(\alpha) - C^{-1}_1(\alpha^\prime)| &= 2^{-n} \sum_{k=1}^{m-n+1} (b_{n+k-1} - b^\prime_{n+k-1}) 2^{-k} \\
+&\leq 2^{-n}
+\end{aligned}
+$$
+
+However now problems arise when we compute the averge binned variation, since the second component is not well-behaved. In particular, since we take the $\sup_{\alpha,\alpha^\prime \in [\tfrac{i-1}{2^n},\tfrac{i}{2^n}]^2}$, we can pick the specific values such that $b_k=1$ and $b^\prime_k=0$ for all $k \in \{m+1, \cdots 2m\}$.
+
+$$
+\begin{aligned}
+|C^{-1}_2(\alpha) - C^{-1}_2(\alpha^\prime)| &= \sum_{k=m+1}^{2m} (b_k - b^\prime_k) 2^{-(k-m)} \\
+&= \sum_{k=m+1}^{2m} 2^{-(k-m)} \\
+&> \frac 12
+\end{aligned}
+$$
+
+Putting both together, we can write :
+
+$$
+\begin{aligned}
+V_n(C^{-1}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)| + |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)| \\
+&\geq \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)| + \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)| \\
+&\geq \frac 12 + \bO(2^{-n})
+\end{aligned}
+$$
+
+Therefore we have found a lower bound, which proves the average binned variation does not converge to zero (if it converges at all).
+
+$$
+V_n(C^{-1}) > \frac 12 \implies \lim_{n \to \infty} V_n > \frac 12
+$$
 
 ## Numerical feasibility
 
-failed notions of discontinuity
+numerically, we have finitely many bits, and cannot fully represent the fractal. we therefore need the finite approximations to be already good.
 
 locality might be a side-effect from bijections
 
-measure for V
+Before we make the proof of numerical feasibility.
 
-proof that numerical convergence
+In the evaluation of the evolution equation, the integral term in each coordinate $\alpha$ is problematic.
 
-## Details
+Let us define (recall) the numerical and analytical integral (we leave a $w_U(\cdot, \beta)$ as implicit function of the first argument $\alpha$). The intuition behind this proof of convergence is that the variation inside of each numerical bin vanishes as we increase the number of iterations $n$ (even though the structure becomes fractal !). The variation comes from the coarse-graining, where we go from $4^n$ to $2^n$ samples.
 
-ironing out details : here we considered 2d -> 1d, but possible to repeat the application of the mapping so that Rp -> Rp-1 -> .. -> 1d
+We define $\tilde h_i(t) = \tilde h(t, \tfrac{i-1}{2^n}) = \tilde h(t, \beta_i),\,\beta_i=\tfrac{i-1}{2^n},\,i\in\{1,\cdots,2^n\}$.
+
+$$
+\begin{aligned}
+\mathrm{NI}_n &= \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) \\
+\mathrm{AI} &= \int_{[0,1]} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta)
+\end{aligned}
+$$
+
+We wish to prove that $|\mathrm{NI}_n - \mathrm{AI}| \xrightarrow{n \to \infty} 0$ (implicitly : this is valid for all $\alpha \in [0,1]$).
+
+The first part of the proof involves splitting the integral on $[0,1]$ into $2^n$ integral over segments of length $2^{-n}$, and using the triangle inequality.
+
+$$
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \int_{0}^{1} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
+&= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \sum_{i=1}^{2^n} \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
+&= \left| \sum_{i=1}^{2^n} \frac{1}{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
+&\leq \sum_{i=1}^{2^n} \left| \frac{1}{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
+\end{aligned}
+$$
+
+We now want to prove that evaluating the integrand at $\beta_i = \tfrac{i-1}{2^n}$ gives a good approximation of the integral. Since $\int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \lambda \circ S^{-1}(\d \beta) = \tfrac{1}{2^n}$ [TODO MATH : is this true ?], we write
+
+$$
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &\leq \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \left[ \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \right] \lambda \circ S^{-1}(\d \beta) \right| \\
+&= \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \left[ w_U(\cdot, S^{-1}(\beta_i)) \phi(h_U(t, S^{-1}(\beta_i))) - w_U(\cdot, S^{-1}(\beta)) \phi(h_U(t, S^{-1}(\beta))) \right] \lambda \circ S^{-1}(\d \beta) \right|
+\end{aligned}
+$$
+
+The main source of variance inside the integrand is the term $S^{-1}$, since $w_U$ and $h_U$ are "nice" functions. We express this regularity by the added assumption that $w_U(\cdot, \vec z) h_U(t, \vec z)$ is Lipschitz in $\vec z$, with Lipschitz constant $L(\cdot)$, and $\norm{\cdot}$ the corresponding norm on $[0,1]^2$. 
+
+Once we have applied the Lipschitz property, we make use of our intuition of "locality" : points close in $[0,1]$ should be (on average) mapped to points close in $[0,1]^2$. Therefore, taking the sup inside each $2^{-n}$ segment does not introduce a too large error.
+
+[TODO MATH : prove that it is indeed Lipschitz. The main problem I've enountered with this is that these functions are $\textrm{regular function} \circ \textrm{CDF}^{-1}$, and the inverse CDF goes to infinity at 0 and 1].
+
+$$
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \lambda \circ S^{-1}(\d \beta) \right| \\
+&\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \lambda \circ S^{-1}(\d \beta^\prime) \right| \\
+&= L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \\
+&\leq L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} \norm{S^{-1}(\beta^\prime) - S^{-1}(\beta)} \\
+&= L(\cdot) V_n \\
+&\xrightarrow{n \to \infty} 0
+\end{aligned}
+$$
+
+We see that it is the notion of "locality" of the mapping $S$ that allowed us to write the convergence of the numerical integral to the analytical value. In doing so, we exploited the fact that the "variance" inside each small segment in $[0,1]$ is small on average, and that the errors vanish as we take finer and finer bins.
+
+## Generalizing to $[0,1]^p \mapsto [0,1]$
+
+ironing out details : here we considered $[0,1]^2 \mapsto [0,1]$, but the mappings can be generalized to any number of dimensions.
+
+Example for the Z-mapping. Let $\vec \alpha = (\alpha_1, \cdots, \alpha_p)$, and $\alpha_\mu = \sum_{k=1}^{n} b^\mu_k 2^{-k}$. Then 
+
+$$
+Z^n(\alpha_1, \cdots, \alpha_p) = \sum_{k=1}^{n} \sum_{\mu=1}^p b^{\mu}_k 2^{-(p(k-1)+\mu)}
+$$
 
 also should work with any neural field, here low-rank cycling was just for the purpose of demonstration

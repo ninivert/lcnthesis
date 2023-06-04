@@ -1,31 +1,57 @@
 # Mapping the neural field in 2D to a 1D embedding
 
+::: {.content-hidden}
+{{< include ../macros.tex >}}
+:::
+
 ## Simple example : population dynamics
+
+[TODO MOTIVATION : is this really useful ? the point i'm trying to make here is the embedding problem arises when you have an infinite number]
 
 the case of population dynamics can easily be embedded in 1D
 
+$$
+\begin{aligned}
+\rho(\vec z) &= \sum_{a \in P} p_{a} \delta(\vec{z_a} - \vec{z}) \\
+\text{normalization : } \int_{\Rp} \rho(\d \vec{z}) &= \sum_{a} p_a = 1
+\end{aligned}
+$$
+
+we can explicitly formulate the embedding with a new 1D PDF (arrange the populations on the line, their probability is their segment length)
+
+$$
+\gamma(\alpha) = \sum_{a \in P} p_a \mathbb{1}(C_{a-1} \leq \alpha < C_{a}),\, C_a=\sum_{b=1}^a p_b
+$$
+
+the connectivity matrix in the 1D model becomes
+
+$$
+J_{ab} = \sum_{\mu=1}^p f_\mu(\vec{z_a}) g_\mu(\vec{z_b})
+$$
+
+[TODO MATH : flesh this out]
+
+case 2 populations, we get the ising model (binary patterns)
+
+the point i try to make is that for discrete distributions (i can enumerate the populations), it is easy to embed in 1D. the problem comes when the distribution is continuous.
+
+this also helps give an intuition that effectively, when we do the binning in $[0,1]^2$, each bin represents a population
+
 ## Neural field in $[0,1]$
 
-Define a measurable mapping $S : \mathbb{R}^p \rightarrow [0, 1]$.
+Define a measurable and bijective mapping $S : \mathbb{R}^p \rightarrow [0, 1]$.
 
-Let $\mu : [0,1] \rightarrow [0, \infty]$ be a measure on $([0,1], \mathcal B([0,1]))$.
+Let $\lambda : [0,1]^2 \rightarrow [0, \infty]$ be a measure.
 
-Then we can write
-
-$$
-\partial_t h(t, \vec z) = -h(t, \vec z) + \int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
-$$
-
-## From $\R^2$ to $[0,1]^2$
-
-Defining the change of variables $u_\mu=\mathrm{CDF}(y_\mu), v_\mu=\mathrm{CDF}(z_\mu)$, the neural field becomes
+We define $\tilde h(t, \alpha) = h_U(t, S^{-1}(\alpha))$, $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$
 
 $$
-\partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u, \quad
-w_U(\vec v, \vec u) = w(\mathrm{CDF}^{-1}(\vec v), \mathrm{CDF}^{-1}(\vec u)), \quad h_U(t, \vec v) = h(t, \mathrm{CDF}^{-1}(\vec v))
+\partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \tilde\phi(h(t, \beta)) \lambda \circ S^{-1}(\d \beta)
 $$
 
-We now have a neural field equation on a unit (hyper)cube, and uniform sampling.
+![](figures/mappings_h1d_state.png)
+
+![](figures/mapping_recursive_quadrant.mp4)
 
 ## Mappings of $[0,1]^2$ to $[0,1]$
 
@@ -33,13 +59,19 @@ We now have a neural field equation on a unit (hyper)cube, and uniform sampling.
 
 peano vs cantor mappings
 
-linear projections don’t work ofc
+linear projections don’t work ofc.
+
+Note : why are not using the CDF to embed in 1D ? because it's not bijective !
 
 We consider $(x,y) \in [0,1]²$. Given $n \in \mathbb N$, we write a (truncated) binary expansion of $x$ as (and similarly for $y$)
 
 $$
 b^x_k = \mathrm{Ind}\left\{2^{k-1}x - \lfloor2^{k-1}x\rfloor \geq \frac{1}{2}\right\}, \text{ such that } x= \sum_{k=1}^{n} b^x_k 2^{-k} = 0.b^x_1b^x_2\cdots b^x_{n}
 $$
+
+![](figures/mapping_demo_indices.png)
+
+[TODO : do we mention the random mapping ?]
 
 #### Z-mapping
 
@@ -57,6 +89,8 @@ x = Z^{-1}_x(z) &= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
 y = Z^{-1}_y(z) &= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}
 \end{aligned}
 $$
+
+note that in other definitions (and in code) it is defined by $0.b^y_1 b^x_1 b^y_2 b^x_2 \cdots$. This difference is not fundamentally important though.
 
 #### Column mapping
 
@@ -102,15 +136,20 @@ intuition for reshape, and the fractals
 
 expose different types of mapping
 
-argue over binary expansion
+argue over binary expansion, and especially how the fact that 
+
+* it converges forces the least significant bits of $z_1$ and $z_2$ to go to the lsb of $\alpha$
+* it's a bijection means "both bits of x and y" need to be used in the expansion
 
 ### Numerical implementation
 
-how to we actually simulate the mappings in one-dimension
-
-how to we actually simulate the mappings in one-dimension
-
 go into detail on how numerically S is a reordering of the bins
+
+what we are doing in reality is assigning indices to squares of size $2^{-n} \times 2^{-n}$, and mapping them to indices representing segments of length $4^{-n}$
+
+[TODO FIG : drawing of the square-to-segment mapping, something like
+
+![Alt text](figures/Screenshot_2023-06-03_19-59-49.png)]
 
 we use the fact we have a compact set onto another [0,1]² -> [0,1], so we can write a binary expansion of (x, y) -> z.
 x has n bits, y has n bits, z has 2n bits.
@@ -119,26 +158,38 @@ this is good because with floating point we lose precision, here we work with in
 
 the locality of 2D -> 1D is not important (i.e neurons can be repeated in 1D without too much trouble). locality 1D -> 2D is much more important (a neuron in 1D must refer to only one (not multiple) neurons in 2D)
 
-## Reinterpretation of simulation strategies
-
-### Bin averaging samples
-
-give an intuition, show the figure and some simulations to show that it works
-
-### Direct remapping of the grid
-
-We define $\vec z(\alpha) = S(\alpha)$ the 2D point corresponding to the mapping $\alpha$. (details : we need a bounding box to map back). Defining a matrix $Z_{\mu,\alpha} = \vec z(\alpha)_\mu$, we can write down a numerical PDF $\tilde \rho(Z_{1,\alpha},\cdots,Z_{p,\alpha}) = \tilde \rho(Z_{:,\alpha}) = \frac{\rho(Z_{:,\alpha})}{\sum_\beta \rho(Z_{:,\beta})}$ and the following patterns to simulate the embedded $[0,1]$ neural field as a low-rank RNN.
-
-$$
-\tilde F_{\mu,\alpha} = Z_{\mu,\alpha}, \quad \tilde G_{\mu,\alpha} = \tilde\phi(Z_{\mu,\alpha}), \quad \tilde J_{\alpha,\beta}=\tilde \rho(Z_{:,\beta}) \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta}
-$$
-
-Doing this is equivalent to the formulation of the binned connectivity matrix.
-
-## Numerical simulations of the neural field in $[0,1]$
+## Coarse-graining the neural field in $[0,1]$
 
 how we numerically implemement a simulation on a fractal
 
-averaging of 2ˆn neurons
+In order to simulate the neural field numerically, we discretize by taking a grid of $4^n$ bins in the $[0,1]^2$ space.
 
-see sampling.ipynb
+$$
+\int_{[0,1]^2} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u \rightarrow \sum_{j=1}^N \underbrace{w_U(\vec u_i, \vec u_j)}_{J_{ij}} \phi(\underbrace{h_U(t, \vec u_j)}_{h_j(t)})
+$$
+
+Each bin therefore corresponds to a population (density) indexed by $i = \{1\cdots4^n\}$. Population $i$ interacts with other populations through the (numerically finite) connectivity $J_{ij}$.
+
+To simulate the neural field in $[0,1]$, we use the mapping $S(\vec u_i) \stackrel{\text{notation}}= S(i) = \alpha_i$ to embed the populations in 1D.
+
+One trivial mapping would be $S(i) = i / 4^n$, which is just ordering the populations in [0,1] in the same order they appear inside the bins. More elaborate mappings are simply *permutations* of the numerically binned populations set $\{1\cdots4^n\}$, and the resulting connectivity matrix is then given by $J_{S(i),S(j)}$ [^1].
+
+However, the connectivity matrix is invariant to permutations of neurons, and without further modification, the dynamics emerging from $J_{S(i),S(j)}$ are the same as the ones emerging from $J_{ij}$.
+
+In the same way that discretizing the smooth 2D field works *because of* the smoothness, we discretize the 1D field emerging from the mapping. If the mapping has "nice properties" (e.g. "locality"), this discretization should work in a similar manner.
+
+For this, we consider the $4^n$ mapped populations $\alpha_i$ to be the "mathematically exact" 1D field, and we "discretize" the 1D field by taking a grid of $2^n$ bins in $[0,1]$. In effect, we average bins of $2^n$ populations, in order to obtain $4^n/2^n = 2^n$ coarse-grained populations in $[0,1]$. We call this "downsampling" [^2].
+
+The main question is now, what conditions must be imposed on the mapping $S : [0,1]^2 \rightarrow [0,1]$ (numerically : a permutation), such that it is *resilient* to this downsampling, in other words that the dynamics obtained from the connectivity in 1D are the same as the dynamics in 2D [^3].
+
+In the following, this assertion is made by comparing the trajectories $(m_0(t),m_1(t))$ in phase space (also called latent space). If the mapping is "resilient", small differences between the trajectories vanish as $n \rightarrow \infty$ [^4].
+
+[^1] : I am glossing over the details of how we bin the grid of $4^n$ elements in $[0,1]^2$ space. Numerically, there is an order in which we enumerate each of the $4^n$ bins (the most obvious is column-wise enumeration, i.e. ``ReshapeMapping.inverse_samples()``). As described, this ordering is abitrary, and one should always consider the enumeration of the bins to be in random order.
+
+[^2] : The reason for which we take bins of size $2^n$, is because $2^n$ is the maximum size a bin can have which spans in only one direction in the 2D embedding. For instance, with the ``ReshapeMapping`` a column contains $2^n$ populations, all with the same $\xi_0$ position : visually the bin is vertical. With the ``DiagonalMapping``, the largest sequence of populations which "go in the same direction" (TODO : clarify this) is of size $2^n$, and spans the diagonal (1,0)->(0,1). Intuitively, this averaging can be seen as "destroying fast and large oscillations".
+
+[^3] : The connectivity $\tilde J_{\alpha\beta}$ in 1D can be obtained by computing the "average low-rank vectors". See ``draft.md`` for more details.
+
+[^4] : Each point in $(m_0,m_1)$ fully encodes the state of a linear low-rank RNN. We can prove (see my own handwritten notes) that $m_\mu(t) \approx \kappa_\mu(t)$ when $\phi(h)$ is close to linear. In our case, $\phi(h)$ is a sigmoid (I found a sigmoid has better convergence properties than a linear function), and can be considered linear as long as $-3 \lesssim h(t) \lesssim 3$.
+
+![](figures/coarsegraining.png)

@@ -1,25 +1,66 @@
 # A simple model for a neural field in 2D
 
+::: {.content-hidden}
+{{< include ../macros.tex >}}
+:::
+
 ## Networks of neurons to neural fields
 
-no external current, 
+### Case study : low-rank networks of neurons
 
-general low-rank neural fields, F and G notation
+start with the study of network of neurons, no external current
+
+[TODO MATH : show self-connections $\sim \frac 1N$, so we ignore them]
+
+general setting of low-rank networks
 
 $$
-J_{ij} = \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
+\begin{aligned}
+\dot h_i(t) = -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^N F_{\mu i} G_{\mu j} \phi(h_j(t)) \\
+F_{\mu i} = f_\mu(z_{1 i}, \cdots, z_{p i}),\, G_{\mu i} = g_\mu(z_{1 i}, \cdots, z_{p i}),\, \vec{z_i} \stackrel{\text{iid}}{\sim} \rho
+\end{aligned}
 $$
 
-show how the embedding becomes smooth
+interpretation : each neuron has a position $\vec{z_i} \in \Rp$. $J_{ij} = \frac 1N \sum_{\mu=1}^p = F_{\mu i} G_{\mu j}$ is the weight of recurrent currents.
+
+our setting is :
+
+$$
+\begin{aligned}
+f_\mu(z_1, \cdots, z_p) = z_\mu \\
+g_\mu(z_1, \cdots, z_p) = \tilde \phi(z_\mu) = \frac{\phi(z_\mu) - \avg{\phi(z_\mu)}}{\mathrm{Var}[\phi(z_\mu)]} \\
+\phi(z) = \frac{1}{1+\mathrm{e}^{-z}} \\
+\vec{z} = (z_1, \cdots, z_p) \sim \rho(z_1, \cdots, z_p) = \prod_{\mu=1}^p \mathcal{N}(z_\mu),\, \mathcal{N}(z) = \frac{1}{\sqrt{2 \pi}} \mathrm{e}^{-\frac 12 z^2} \\
+\end{aligned}
+$$
 
 study of fixed points
 
-- $h_i = \xi_{\mu,i} \quad \forall \mu = 1,\cdots,p$ (stable)
-- $h_i=0$ (unstable)
+* $h_i = z_{\mu,i} \quad \forall \mu = 1,\cdots,p$ (stable)
+* $h_i=0$ (unstable)
 
 the fixed points also become more and more stable as N->oo (study of stability with eigenvalues)
 
-## Building up to a neural field in $\mathbb R^2$
+talk about since $\lambda_\nu = \avg{g^\prime_\nu(z_\nu) f_\nu(z_\nu)}-1$, the sharper the gain, the more stable to fixed points (since the bump of $\delta \phi$ becomes more concentrated)
+
+[TODO FIG : draw a flow field of in the latent space]
+[TODO FIG : numerical eigenvalues plot]
+
+### Emergence of structure in the networks of neurons
+
+show simulations, first in $p=1$, then $p=2$.
+
+![simulation in 1D, p=1](figures/embedding_d=1_h0=0_phi=sigmoid.mp4)
+
+![simulation in 2D, p=2](figures/embedding_d=2_h0=0.mp4)
+
+[TODO FIG : scatterplot of the network, with animation]
+
+show it converges to the fixed points $z_1$ and $z_2$
+
+the structure of the scatterplot emerges naturally as a smooth manifold in $\R^2$
+
+### Direct simulation of the low-rank neural field
 
 Introduce the neural field in 1D, then 2D
 
@@ -31,14 +72,15 @@ $$
 \begin{aligned}
 \partial_t h(t, \vec z) &= -h(t, \vec z) + \int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y),
 \quad
-w(\vec z, \vec y) = \sum_{\mu=1}^p \tilde \phi (y_\mu) z_\mu \\
-&= -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
+w(\vec z, \vec y) = \sum_{\mu=1}^p \tilde \phi (y_\mu) z_\mu
 \end{aligned}
 $$
 
-study of fixed points (and convergence of the fixed points)
+repeat the fixed points are now the generalization, functions $h=z_1$ and $h=z_2$
 
 simulation strategies : grid and sampling
+
+[TODO : show the connectivity with grid sampling. mention that the problems with the compact support get adressed later in the next chapter, when we do $\R^2 \mapsto [0,1]^2$]
 
 ## Characterizing dynamics
 
@@ -56,33 +98,35 @@ $$
 m_\mu(t) = \int_{\mathbb R^p} \tilde \phi(y_\mu) \phi(h(t,\vec y)) \rho(\mathrm d \vec y)
 $$
 
+note that :
+
+$$
+\partial_t h(t, \vec z) = -h(t, \vec z) + \sum_{\mu=1}^p z_\mu m_\mu(t)
+$$
+
+[TODO : i'm not even sure that introducing the overlaps in necessary. we might just include them for completeness, and because they are relevant in papers on low-rank stuff]
+
 ### Low-rank neural fields as $p$-dimensional closed systems
 
-introduce overlap, and in our case the low-rank model the kappa
+introduce kappa, and in our case the low-rank model the kappa
 
-overlaps as an approximation of the “dynamics” (latent space), in the case phi=linear
-
-The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\langle f, g \rangle = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
-
-We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
+we define
 
 $$
-\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
+\kappa_\mu(t) = \avg{f_\mu, h(t, \cdot)} = \int_{\Rp} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
 $$
 
-with initial conditions
+with these definition, we have in our case
+$$
+\begin{aligned}
+\dot \kappa_\mu(t) &= -\kappa_\mu(t) + \int_{\Rp} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t) \\
+\kappa_\mu(0) &= \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
+\end{aligned}
+$$
 
-$$
-\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
-$$
+overlaps as an approximation of the “dynamics” (latent space), in the case $\phi=\mathrm{linear}$. since in our case $\phi$ is a sigmoid, it can be considered linear in the range $h \sim \pm 3$. we therefore use the computed overlaps as to show the latent space
 
-and the orthogonal component evolves according to
-
-$$
-h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
-\quad
-h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
-$$
+[TODO MATH : actually we could also juste compute the kappa as a function of time, and study that]
 
 ### Dynamics in the overlap latent space
 
@@ -104,13 +148,95 @@ we use the latent space to assert dynamics are the same
 
 why ? dynamics are more interesting
 
+we introduce $\delta$ the delay, and rolling $\mu+1$, with convention $p+1=1$
+
+$$
+\partial_t h(t, \vec z) = -h(t, \vec z) + \int_{\mathbb{R}^p} \sum_{\mu=1}^p \tilde \phi (y_\mu) z_{\mu+1} \phi(h(t - \delta, \vec y)) \rho(\mathrm d \vec y)
+$$
+
+note this is now a DDE instead of a PDE
+
 1. delayed neural field
 2. rolled neural field
 
-show what the analytical kappa is
+[TODO : is this useful ? I derived this because it shows we need both delay and rolling, but might be too much]
 
-introduce both, derive kappa again
+we can show that in this case
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + m_{\mu+1}(t - \delta)
+$$
+
+then in the case that $\phi=linear \implies \kappa_\mu = m_\mu$, and initial conditions $m_\mu(t<0) = m_\mu(0)$ (constant inititial condition), $m_1(0) = 1$ and $m_2(0) = 0$, we can solve the first "cycle" ($0 < t < \delta$) analytically :
+
+$$
+\begin{aligned}
+\kappa_1(t) &= \mathrm{e}^{-t} \\
+\kappa_2(t) &= 1 - \mathrm{e}^{-t} \\
+\end{aligned}
+$$
+
+then one can repeat this for the next cycles. basically each cycle is applying an exponential convolution filter
+
+[TODO MATH : the derivation of this, we have an exponential convolution filter]
+
+![](figures/kappa_cycling_p=2.tmp.png)
 
 simulate cycling in p=2
 
-recurrent current picture
+[TODO : might be good to show a simulation where we explicitly simulate $\kappa$ ? but the goal here is just to "prove" the cycling behavior]
+
+![](figures/embedding_d=2_h0=0_cycling_delta=6.mp4)
+
+![Intuition for the cycling behavior by plotting the recurrent currents](figures/cycling_recurrent.png)
+
+## From $\R^2$ to $[0,1]^2$
+
+Defining the change of variables $u_\mu=\mathrm{CDF}(y_\mu), v_\mu=\mathrm{CDF}(z_\mu)$, the neural field becomes
+
+$$
+\begin{aligned}
+& \partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u \\
+& \text{where } w_U(\vec v, \vec u) = w(\mathrm{CDF}^{-1}(\vec v), \mathrm{CDF}^{-1}(\vec u)), \, h_U(t, \vec v) = h(t, \mathrm{CDF}^{-1}(\vec v))
+\end{aligned}
+$$
+
+![normal distribution CDF](figures/1920px-Normal_Distribution_CDF.svg.png)
+
+We now have a neural field equation on a unit (hyper)cube, and uniform sampling.
+
+the problem of sampling all of $\R^2$ is now "hidden away" in the CDF, since it goes to $\pm \infty$ at 0 and 1.
+
+note : here we use the fact that the components are independant. therefore we can define the total as the product, i.e.
+
+$$
+\mathrm{CDF}(z_1, z_2) = \int_{-\infty}^{z_1} \rho_1(d y_1) \int_{-\infty}^{z_2} \rho_2(\d y_2) = v_1 v_2
+$$
+
+we would not be able to do this is the coordinates were coupled, then we could define still define the CDF, but we cannot factorize it into 2 different components
+
+![](figures/sampling_R2_01.png)
+
+[TODO : does this deserve its own section ? maybe mention it later, we can give a picture of the "isolines" of the 2D gaussian CDF]
+
+## Numerical simulation of neural fields
+
+### Direct sampling
+
+we simulate the network of neurons
+
+### Bin averaging samples
+
+![](figures/sampling_R2_nogrid_kernel.png)
+
+### Grid over $[0,1]^2$
+
+We define $\vec z(\alpha) = S(\alpha)$ the 2D point corresponding to the mapping $\alpha$. (details : we need a bounding box to map back). Defining a matrix $Z_{\mu,\alpha} = \vec z(\alpha)_\mu$, we can write down a numerical PDF $\tilde \rho(Z_{1,\alpha},\cdots,Z_{p,\alpha}) = \tilde \rho(Z_{:,\alpha}) = \frac{\rho(Z_{:,\alpha})}{\sum_\beta \rho(Z_{:,\beta})}$ and the following patterns to simulate the embedded $[0,1]$ neural field as a low-rank RNN.
+
+$$
+\tilde F_{\mu,\alpha} = Z_{\mu,\alpha}, \quad \tilde G_{\mu,\alpha} = \tilde\phi(Z_{\mu,\alpha}), \quad \tilde J_{\alpha,\beta}=\tilde \rho(Z_{:,\beta}) \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta}
+$$
+
+Doing this is equivalent to the formulation of the binned connectivity matrix.
+
+![](figures/sampling_R2_01_kernel.png)
