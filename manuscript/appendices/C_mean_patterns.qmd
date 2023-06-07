@@ -1,0 +1,47 @@
+# "Mean patterns" in the binned connectivity
+
+[TODO]
+
+derivation of $\Jab$ and mean patterns
+
+For finite number of recursive quadrant iterations $n$, we can do a "mean-field approximation" inside each of the $4^n$ segments. Let $\alpha = \{i_1,\cdots,i_{|\alpha|}\}$ be the multi-index corresponding to all neurons of which the embedding in $\mathbb R^p$ gets mapped to the segment $\alpha$ in $[0,1]$. Let $H_\alpha(t) = \frac 1 {|\alpha|} \sum_{i \in \alpha} h_i(t)$ be the (mean) RNN potential of the segment $\alpha$. The connectivity matrix $\tilde J_{\alpha,\beta}$ satisfies
+
+$$
+\dot H_\alpha(t) = -H_\alpha(t) + \sum_{\beta \in \text{segments of length } 4^{-n}} \tilde J_{\alpha,\beta} \phi(H_\beta(t))
+$$
+
+By substituting the original $h_i(t)$, we find the correct rescaling is given by
+
+$$
+\tilde J_{\alpha,\beta} = \frac 1 {|\alpha|} \sum_{i \in \alpha} \sum_{j \in \beta} J_{ij}
+$$
+
+In the low-rank case, we have
+
+$$
+J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
+$$
+
+We can define the "mean pattern" inside each bin :
+
+$$
+\tilde F_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} F_{\mu,i}, \; \tilde G_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} G_{\mu,i}
+$$
+
+Then the connectivity matrix is given by, noting $N = \sum_{\alpha} |\alpha|$,
+
+$$
+\tilde J_{\alpha,\beta} = \frac{|\beta|}{\sum_{\beta'} |\beta'|} \left( \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} - \delta_{\alpha,\beta} \underbrace{\sum_{\mu=1}^p \sum_{i \in \alpha} \frac{F_{\mu,i}}{|\alpha|} \frac{G_{\mu,i}}{|\alpha|}}_{\gamma_{\alpha}} \right)
+$$
+
+Recurrent current is given by
+
+$$
+I^\text{rec}_\alpha(t) = \sum_\beta \tilde J_{\alpha,\beta} \phi(H_\beta(t)) = \frac{1}{\sum_{\beta'} |\beta'|} \left( \sum_\beta |\beta| \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} \phi(H_\beta(t)) - |\alpha| \tilde \gamma_\alpha \phi(H_\alpha(t)) \right)
+$$
+
+The overlaps can be computed as
+
+$$
+\tilde m_\mu(t) = \frac{1}{\sum_{\alpha} |\alpha|} \sum_\alpha |\alpha| G_{\mu,\alpha} \phi(H_\alpha(t))
+$$

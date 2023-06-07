@@ -1,162 +1,189 @@
-# Mapping the neural field in 2D to a 1D embedding
+# Mapping neural fields to lower-dimensional embeddings {#sec-mappings}
 
 ::: {.content-hidden}
 {{< include ../macros.tex >}}
 :::
 
-## Simple example : population dynamics
+## Population dynamics : an introductory example of a 1D embedding
 
-[TODO MOTIVATION : is this really useful ? the point i'm trying to make here is the embedding problem arises when you have an infinite number]
+the case of population dynamics can easily be embedded in 1D (this is the trivial case)
 
-the case of population dynamics can easily be embedded in 1D
-
-$$
-\begin{aligned}
+<!--
+$$\begin{aligned}
 \rho(\vec z) &= \sum_{a \in P} p_{a} \delta(\vec{z_a} - \vec{z}) \\
 \text{normalization : } \int_{\Rp} \rho(\d \vec{z}) &= \sum_{a} p_a = 1
-\end{aligned}
-$$
-
+\end{aligned}$$
 we can explicitly formulate the embedding with a new 1D PDF (arrange the populations on the line, their probability is their segment length)
-
-$$
-\gamma(\alpha) = \sum_{a \in P} p_a \mathbb{1}(C_{a-1} \leq \alpha < C_{a}),\, C_a=\sum_{b=1}^a p_b
-$$
-
+$$\gamma(\alpha) = \sum_{a \in P} p_a \mathbb{1}(C_{a-1} \leq \alpha < C_{a}),\, C_a=\sum_{b=1}^a p_b$$
 the connectivity matrix in the 1D model becomes
-
-$$
-J_{ab} = \sum_{\mu=1}^p f_\mu(\vec{z_a}) g_\mu(\vec{z_b})
-$$
-
+$$J_{ab} = \sum_{\mu=1}^p f_\mu(\vec{z_a}) g_\mu(\vec{z_b})$$
 [TODO MATH : flesh this out]
+[TODOSIM : would this be interesting to simulate ?]
+case 2 populations, we get the ising model (binary patterns) -->
 
-case 2 populations, we get the ising model (binary patterns)
-
-the point i try to make is that for discrete distributions (i can enumerate the populations), it is easy to embed in 1D. the problem comes when the distribution is continuous.
+TODO : a nice drawing with motivation
 
 this also helps give an intuition that effectively, when we do the binning in $[0,1]^2$, each bin represents a population
 
-## Neural field in $[0,1]$
+the point i try to make is that for discrete distributions (i can enumerate the HOMOGENEOUS populations of neurons), it is easy to embed in 1D. the problem comes when the distribution is continuous -> we have an infinite amount of homogeneous populations.
 
-Define a measurable and bijective mapping $S : \mathbb{R}^p \rightarrow [0, 1]$.
+we know how to map finite populations to [0,1], we now need a mapping that is good when the number of populations tends to infty
+
+idea : we need a sequence of mappings ("permutations", this expresses J perm-invar) acting on a finite number of populations, that has a "well defined convergence"
+
+
+## Defining the neural field in $[0,1]$
+
+Define a measurable and bijective mapping $S : [0,1]^2 \rightarrow [0, 1]$.
 
 Let $\lambda : [0,1]^2 \rightarrow [0, \infty]$ be a measure.
 
-We define $\tilde h(t, \alpha) = h_U(t, S^{-1}(\alpha))$, $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$
+We define $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$ + intial condition
+
+<!-- $\tilde h(t, \alpha) = h_U(t, S^{-1}(\alpha))$ -->
 
 $$
-\partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \tilde\phi(h(t, \beta)) \lambda \circ S^{-1}(\d \beta)
+\partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta)
 $$
 
-![](figures/mappings_h1d_state.png)
-
-![](figures/mapping_recursive_quadrant.mp4)
+[TODO FIG : a nice drawing of this, also to give an intuition for $\lambda$]
 
 ## Mappings of $[0,1]^2$ to $[0,1]$
 
-### Types of mappings
+cite @kharazishvili_strange_2017 peano vs cantor mappings
 
-peano vs cantor mappings
+### Continuous mappings
 
 linear projections don’t work ofc.
 
 Note : why are not using the CDF to embed in 1D ? because it's not bijective !
 
-We consider $(x,y) \in [0,1]²$. Given $n \in \mathbb N$, we write a (truncated) binary expansion of $x$ as (and similarly for $y$)
+> there is no homeomorphism
+  (continuous bijective function)
+  between [0,1]² and [0,1]
+
+### Bijective mappings
+
+We consider $(v_1, v_2) \in [0,1]^2$. Given $n \in \mathbb N$, we write a (truncated) binary expansion of $v_1$ and $v_2$.
 
 $$
-b^x_k = \mathrm{Ind}\left\{2^{k-1}x - \lfloor2^{k-1}x\rfloor \geq \frac{1}{2}\right\}, \text{ such that } x= \sum_{k=1}^{n} b^x_k 2^{-k} = 0.b^x_1b^x_2\cdots b^x_{n}
+v_1=\sum_{l=1}^{n} b^1_l 2^{-l} = 0.b^1_1b^1_2\cdots b^1_{n} \iff b^1_l = \mathrm{Ind}\left\{2^{l-1}v_1 - \lfloor2^{l-1}v_1\rfloor \geq \frac{1}{2}\right\}
 $$
+
+The intuition behind this expansion is we take a segment, we split it in two, write 0 to go left, write one to go right, then recurse. Then combine the bits of $v_1$ and $v_2$ to get the position in the $[0,1]^2$ embedding.
+
+[TODO FIG : splitting the segment recursively locates the position of the component]
+
+We define the mapping $S^n$ that takes the $n$-bit truncations of $v_1$ and $v_2$ as input, and outputs a $2n$ bit truncation of $\alpha=S(v_1, v_2)$, where $S$ is the $n\to\infty$ limit of the sequence $S^n$.
+
+$$
+\begin{alignat}{2}
+S^n : &\{0, \tfrac{1}{2^n}, \cdots, 1-\tfrac{1}{2^n}\}^2 &&\mapsto \{0, \tfrac{1}{4^n}, \cdots, 1-\tfrac{1}{4^n}\} \\
+&(0.b^1_1 b^1_2 \cdots b^1_n, 0.b^2_1 b^2_2 \cdots b^2_n) &&\mapsto 0.b_1 b_2 \cdots b_{2n}
+\end{alignat}
+$$
+
+In general, each bit $b^k$ of the image would be a binary function of the $n$ bits of $v_1$ and the $n$ bits of $v_2$, implicitly $b_k = b_k(b^1_1, b^1_2, \cdots, b^1_n, b^2_1, b^2_2, \cdots, b^2_n)$.
+With this, we are able to formulate any mapping of $4^n$ distinct elements (here : squares of size $2^{-n} \times 2^{-n}$) onto $4^n$ elements (here : segments of length $4^{-n}$).
+
+The intuition behind the use of $2n$ bits for the image is that we take $2^n \times 2^n = 4^n$ squares in $[0,1]^2$ and map those to $4^n$ segments in $[0,1]$. In an informal way, we map $n+n$ bits onto $2n$ bits.
 
 ![](figures/mapping_demo_indices.png)
 
-[TODO : do we mention the random mapping ?]
+In the following, we will restrict ourselves to mappings where the functions $b_k(\{b^1_l\}_{l\in\{1,\cdots,n\}}, \{b^1_l\}_{l\in\{1,\cdots,n\}})$ are defined in such a way that each bit of the inputs is used once, and only once. Therefore, for each bit $k$ there is a function $b_k(b^{\mu_k}_{l_k})$ acting on only one bit. Since this function is a binary, the only allowed definitions are $b_k(b^{\mu_k}_{l_k}) = b^{\mu_k}_{l_k}$ (identity) or $b_k(b^{\mu_k}_{l_k}) = 1-b^{\mu_k}_{l_k}$ (inversion). We furthermore restrict the formulation by allowing only identity functions[^inversion_restriction].
 
-#### Z-mapping
+[^inversion_restriction]: This last restriction is not strictly necessary for the following, however it helps to have a simple model to build a good understanding of the problem
 
-Also called Z-order curve, Morton mapping. It conserves locality 2D -> 1D.
+All this mathematical formalism expresses, in essence, that the mapping $S^n$ is just a *reordering* of the input bits. The geometric view of this is that $S^n$ takes $4^n$ points embedded in $[0,1]^2$, and reorders them onto $4^n$ points in $[0,1]$. Therefore, there is a one-to-one mapping between the points on the square and the points on the segment, and the mapping $S^n$, with the restrictions is bijective.
 
-$$
-z = Z(x,y) = 0.b^x_1 b^y_1 b^x_2 b^y_2 \cdots b^x_n b^y_n = \sum_{k=1}^{n} b^x_k 2^{1-2k} + b^y_k 2^{-2k}
-$$
+[TODO FIG : mapping of points to segment]
 
-Its inverse is :
+These simplifications might seem too restrictive, however we will show in the rest of this thesis that this formulation is flexible enough to express mapping which have good properties such as "locality", all while being simple enough to help build an intuition.
 
-$$
-\begin{aligned}
-x = Z^{-1}_x(z) &= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
-y = Z^{-1}_y(z) &= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}
-\end{aligned}
-$$
+Random mapping. mentionned in the introduction. basically a random permutation of bits. not even stable formulation for fixed $n$.
 
-note that in other definitions (and in code) it is defined by $0.b^y_1 b^x_1 b^y_2 b^x_2 \cdots$. This difference is not fundamentally important though.
-
-#### Column mapping
-
-Also called "Reshape mapping" in the code. It converges to a projection on the $x$-axis
+Anti-Z mapping. Also called in code "Far mapping" (initially I didn't see the link with the Z-order curve), because it destroys locality 2D -> 1D.
 
 $$
-z = C(x,y) = 0.b^x_1 b^x_2 \cdots b^x_n b^y_1 b^y_2 \cdots b^y_n
+\alpha = A(v_1,v_2) = 0.b^1_n b^2_n b^1_{n-1} b^2_{n-1} \cdots b^1_1 b^2_1 = \sum_{k=1}^{n} b^1_{n+1-k} 2^{1-2k} + b^2_{n+1-k} 2^{-2k}
 $$
 
 Its inverse is :
 
 $$
 \begin{aligned}
-x = C^{-1}_x(z) &= 0.b_1 b_2 \cdots b_n = \sum_{k=1}^n b_{k} 2^{-k} \\
-y = C^{-1}_y(z) &= 0.b_{n+1} b_{n+2} \cdots b_{2n} = \sum_{k=1}^n b_{n+k} 2^{-k}
+v_1 = A^{-1}_1(\alpha) &= 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \sum_{k=1}^n b_{2(n-k)-1} 2^{-k} \\
+v_2 = A^{-1}_2(\alpha) &= 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}
 \end{aligned}
 $$
 
-#### Anti-Z mapping
+it does not converge
 
-Also called in code "Far mapping" (initially I didn't see the link with the Z-order curve), because it destroys locality 2D -> 1D.
+Column mapping. Also called "Reshape mapping" in the code. It converges to a projection on the $x$-axis
 
 $$
-z = A(x,y) = 0.b^x_n b^y_n b^x_{n-1} b^y_{n-1} \cdots b^x_1 b^y_1 = \sum_{k=1}^{n} b^x_{n+1-k} 2^{1-2k} + b^y_{n+1-k} 2^{-2k}
+\alpha = C(v_1,v_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n
 $$
 
 Its inverse is :
 
 $$
 \begin{aligned}
-x = A^{-1}_x(z) &= 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \sum_{k=1}^n b_{2(n-k)-1} 2^{-k} \\
-y = A^{-1}_y(z) &= 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}
+v_1 = C^{-1}_1(\alpha) &= 0.b_1 b_2 \cdots b_n = \sum_{k=1}^n b_{k} 2^{-k} \\
+v_2 = C^{-1}_2(\alpha) &= 0.b_{n+1} b_{n+2} \cdots b_{2n} = \sum_{k=1}^n b_{n+k} 2^{-k}
 \end{aligned}
 $$
 
-it does not converve
+Z-mapping. Also called Z-order curve, Morton mapping. It conserves locality 2D -> 1D.
 
-TODO : 3D vis of the mappings
+$$
+\alpha = Z(v_1,v_2) = 0.b^1_1 b^2_1 b^1_2 b^2_2 \cdots b^1_n b^2_n = \sum_{k=1}^{n} b^1_k 2^{1-2k} + b^2_k 2^{-2k}
+$$
+
+Its inverse is :
+
+$$
+\begin{aligned}
+v_1 = Z^{-1}_1(\alpha) &= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
+v_2 = Z^{-1}_2(\alpha) &= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}
+\end{aligned}
+$$
+
+note that in other definitions (and in code) it is defined by $0.b^2_1 b^1_1 b^2_2 b^1_2 \cdots$. This difference is not fundamentally important though.
+
+[TODO FIG : 3D vis of the mapping]
 
 ### Sequence of mappings and their limit
 
-intuition for reshape, and the fractals
+the sequence in [0,1] traces a path in [0,1]²
 
-expose different types of mapping
+intuition for column. 
 
-argue over binary expansion, and especially how the fact that 
+the limit of pointwise convergent mappings and measurable (which they are) is measurable.
 
-* it converges forces the least significant bits of $z_1$ and $z_2$ to go to the lsb of $\alpha$
-* it's a bijection means "both bits of x and y" need to be used in the expansion
+argue over binary expansion, and especially how the fact that it converges forces the least significant bits of $z_1$ and $z_2$ to go to the lsb of $\alpha$. this imposes some structure of what mappings are good
+
+z-mapping can in this context be seen as a "canonical representation" of the pointwise convergent, bijective, local mapping.
 
 ### Numerical implementation
 
-go into detail on how numerically S is a reordering of the bins
-
 what we are doing in reality is assigning indices to squares of size $2^{-n} \times 2^{-n}$, and mapping them to indices representing segments of length $4^{-n}$
 
-[TODO FIG : drawing of the square-to-segment mapping, something like
+[TODO FIG : finite n is population dynamics. drawing of the square-to-segment mapping, something like
 
 ![Alt text](figures/Screenshot_2023-06-03_19-59-49.png)]
 
 we use the fact we have a compact set onto another [0,1]² -> [0,1], so we can write a binary expansion of (x, y) -> z.
 x has n bits, y has n bits, z has 2n bits.
+
 an arbitrary mapping can then be written as a recombination of the bits of x and y (and any other constant) into 2n bits
 this is good because with floating point we lose precision, here we work with integers (~ fixed point precision), so the implementations of the mappings are exact.
 
 the locality of 2D -> 1D is not important (i.e neurons can be repeated in 1D without too much trouble). locality 1D -> 2D is much more important (a neuron in 1D must refer to only one (not multiple) neurons in 2D)
+
+![](figures/mappings_h1d_state.png)
+
+![simulation of 2D field, and mapping of the dynamics to the 1D field](figures/mapping_recursive_quadrant.mp4)
 
 ## Coarse-graining the neural field in $[0,1]$
 
@@ -184,12 +211,68 @@ The main question is now, what conditions must be imposed on the mapping $S : [0
 
 In the following, this assertion is made by comparing the trajectories $(m_0(t),m_1(t))$ in phase space (also called latent space). If the mapping is "resilient", small differences between the trajectories vanish as $n \rightarrow \infty$ [^4].
 
-[^1] : I am glossing over the details of how we bin the grid of $4^n$ elements in $[0,1]^2$ space. Numerically, there is an order in which we enumerate each of the $4^n$ bins (the most obvious is column-wise enumeration, i.e. ``ReshapeMapping.inverse_samples()``). As described, this ordering is abitrary, and one should always consider the enumeration of the bins to be in random order.
+[^1]: I am glossing over the details of how we bin the grid of $4^n$ elements in $[0,1]^2$ space. Numerically, there is an order in which we enumerate each of the $4^n$ bins (the most obvious is column-wise enumeration, i.e. ``ReshapeMapping.inverse_samples()``). As described, this ordering is abitrary, and one should always consider the enumeration of the bins to be in random order.
 
-[^2] : The reason for which we take bins of size $2^n$, is because $2^n$ is the maximum size a bin can have which spans in only one direction in the 2D embedding. For instance, with the ``ReshapeMapping`` a column contains $2^n$ populations, all with the same $\xi_0$ position : visually the bin is vertical. With the ``DiagonalMapping``, the largest sequence of populations which "go in the same direction" (TODO : clarify this) is of size $2^n$, and spans the diagonal (1,0)->(0,1). Intuitively, this averaging can be seen as "destroying fast and large oscillations".
+[^2]: The reason for which we take bins of size $2^n$, is because $2^n$ is the maximum size a bin can have which spans in only one direction in the 2D embedding. For instance, with the ``ReshapeMapping`` a column contains $2^n$ populations, all with the same $\xi_0$ position : visually the bin is vertical. With the ``DiagonalMapping``, the largest sequence of populations which "go in the same direction" (TODO : clarify this) is of size $2^n$, and spans the diagonal (1,0)->(0,1). Intuitively, this averaging can be seen as "destroying fast and large oscillations".
 
-[^3] : The connectivity $\tilde J_{\alpha\beta}$ in 1D can be obtained by computing the "average low-rank vectors". See ``draft.md`` for more details.
+[^3]: The connectivity $\tilde J_{\alpha\beta}$ in 1D can be obtained by computing the "average low-rank vectors". See ``draft.md`` for more details.
 
-[^4] : Each point in $(m_0,m_1)$ fully encodes the state of a linear low-rank RNN. We can prove (see my own handwritten notes) that $m_\mu(t) \approx \kappa_\mu(t)$ when $\phi(h)$ is close to linear. In our case, $\phi(h)$ is a sigmoid (I found a sigmoid has better convergence properties than a linear function), and can be considered linear as long as $-3 \lesssim h(t) \lesssim 3$.
+[^4]: Each point in $(m_0,m_1)$ fully encodes the state of a linear low-rank RNN. We can prove (see my own handwritten notes) that $m_\mu(t) \approx \kappa_\mu(t)$ when $\phi(h)$ is close to linear. In our case, $\phi(h)$ is a sigmoid (I found a sigmoid has better convergence properties than a linear function), and can be considered linear as long as $-3 \lesssim h(t) \lesssim 3$.
+
+### Reinterpretation of sampling and binning methods
+
+reintrpretation of the simulation methods
+
+average low-rank vectors
+
+derivation of $\Jab$ and mean patterns
+
+For finite number of recursive quadrant iterations $n$, we can do a "mean-field approximation" inside each of the $4^n$ segments. Let $\alpha = \{i_1,\cdots,i_{|\alpha|}\}$ be the multi-index corresponding to all neurons of which the embedding in $\mathbb R^p$ gets mapped to the segment $\alpha$ in $[0,1]$. Let $H_\alpha(t) = \frac 1 {|\alpha|} \sum_{i \in \alpha} h_i(t)$ be the (mean) RNN potential of the segment $\alpha$. The connectivity matrix $\tilde J_{\alpha,\beta}$ satisfies
+
+$$
+\dot H_\alpha(t) = -H_\alpha(t) + \sum_{\beta \in \text{segments of length } 4^{-n}} \tilde J_{\alpha,\beta} \phi(H_\beta(t))
+$$
+
+By substituting the original $h_i(t)$, we find the correct rescaling is given by
+
+$$
+\tilde J_{\alpha,\beta} = \frac 1 {|\alpha|} \sum_{i \in \alpha} \sum_{j \in \beta} J_{ij}
+$$
+
+In the low-rank case, we have
+
+$$
+J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
+$$
+
+We can define the "mean pattern" inside each bin :
+
+$$
+\tilde F_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} F_{\mu,i}, \; \tilde G_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} G_{\mu,i}
+$$
+
+Then the connectivity matrix is given by, noting $N = \sum_{\alpha} |\alpha|$,
+
+$$
+\tilde J_{\alpha,\beta} = \frac{|\beta|}{\sum_{\beta'} |\beta'|} \left( \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} - \delta_{\alpha,\beta} \underbrace{\sum_{\mu=1}^p \sum_{i \in \alpha} \frac{F_{\mu,i}}{|\alpha|} \frac{G_{\mu,i}}{|\alpha|}}_{\gamma_{\alpha}} \right)
+$$
+
+![](figures/sampling_R2_nogrid_kernel.png)
+
+Grid method : just do $\tilde w = w_U \circ S^{-1}$
+
+## Simulations of neural fields in 3D, 2D and 1D
+
+### Application of $S$ : from $[0,1]^2$ to $[0,1]$
 
 ![](figures/coarsegraining.png)
+
+### Iterative application of $S$ : from $[0,1]^3$ to $[0,1]$
+
+#### Continuity on one axis and fractal on the other : from $[0,1]^3$ to $[0,1]^2$
+
+#### From fractal to fractal : $[0,1]^2$ to $[0,1]$
+
+![Effective sampling points after averaging](figures/mapping_3d_2d_1d.png)
+
+![Equivalence of dynamics, from 3D to 2D to 1D](figures/embedding_3d_2d_1d.mp4)

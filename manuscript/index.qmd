@@ -1,3 +1,5 @@
-# Index {.unnumbered .hidden}
+::: {.content-hidden}
+# Home {.unnumbered}
+:::
 
-\[TODO : a nice illustration for this, maybe some cool animation ?\]
+[TODO : a nice illustration for this, maybe some cool animation ?]

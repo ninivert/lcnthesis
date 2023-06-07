@@ -434,3 +434,21 @@ Application of neural field equations \cite{Bre17}.
 Idea of cortical column \cite{Mou57,HubWie62}.
 
 Orientation selectivity \cite{BenBar95}.
+
+
+
+notes 2023-06-04
+----------------
+
+MAYBE :
+* implement hilbert curve ? should act the same
+* spiral : should be similar to projections. BUT we have locality 1D -> 2D
+
+DISCUSS : 
+* show the stability of the fixed points
+* show proof for convergence
+* mapping p=3 -> [0,1]³ -> [0,1]² -> [0,1]. then we end up with a fractal neural field in [0,1]², which can still be mapped to [0,1] ("is not clearly defined if we don’t specify the regularity (the “smoothness”) of the neural fields along the spatial dimensions").
+  in the spirit, the reason this works is because there is still some structure (although no continuity) in [0,1]². this shows that continuity is not a necessary condition, but we only need some "continuity in expectation", "regularity"
+  -> yes !
+* new abstract
+* go through the manuscript to see whether the structure is OK

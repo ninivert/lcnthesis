@@ -1,10 +1,8 @@
-# Appendix
-
 ::: content-hidden
 {{< include ../macros.tex >}}
 :::
 
-## Fixed point study in the network of neurons
+# Fixed point study in the network of neurons
 
 We recall the equation for the low-rank network of neurons :
 
@@ -20,11 +18,11 @@ $$
 F_{\mu i} = f_\mu(z_{1 i}, \cdots, z_{p i}), \, G_{\mu i} = g_\mu(z_{1 i}, \cdots, z_{p i})
 $$
 
-### Derivation of fixed points
+## Derivation of fixed points
 
 In order to find the fixed points, one has to solve in general $\dot h_i(t) = 0$ for all $i = 1, \cdots, N$. Because of the non-linearity $\phi(h_j(t))$, this is difficult, but we can guess the fixed points $h^\star_i$ and verify them by substituting into the equation that $\dot h_i(t) = 0$.
 
-#### Zero fixed point
+### Zero fixed point
 
 A trivial fixed point is $h^\star_i = 0$ for all $i$, which we prove to be a fixed point as $N \to \infty$.
 
@@ -49,7 +47,7 @@ $$
 
 Thus, $h_i^\star=0$ is a fixed point in the limit $N \to \infty$.
 
-#### Pattern fixed point
+### Pattern fixed point
 
 Another set of fixed points is $h^\star_i = F_{\nu i}$ for all $\nu = 1, \cdots, p$. We refer to these as the "patterns" in the context of learning the network "remembers" (converges to) these vectors. We verify the fixed point similarly as before.
 
@@ -92,7 +90,7 @@ $$
 
 Therefore, the set of $h_i^\star = F_{\nu i}$ for all $\nu = 1, \cdots, p$ are fixed points in the limit of large $N$, under the assumptions that the distribution is factorizable, the functions $g_\mu$ are component-wise, and $\avg{g_\nu(z) \phi(z)}=1$, which is the case in the setup of this work.
 
-### Fixed points of the neural field
+## Fixed points of the neural field
 
 The derivation of the fixed points for the neural field equation follows the same arguments as the fixed points in the network of neurons.
 
@@ -103,7 +101,7 @@ As $N \to \infty$, the fixed points $h_i^\star$ become functions $h^\star(z_1, \
 
 [TODO : add derivation for neural field ?]
 
-### Stability of the fixed points
+## Stability of the fixed points
 
 We now study the stability of the fixed points. In the original equation, we substitute $h_i(t) = h_i^\star + \delta_i(t)$, where $\delta_i(t)$ is a small perturbation.
 
@@ -227,97 +225,3 @@ The study of the Taylor expansion therefore instructs us that stability is impro
 We finish the study of eigenvalues by noting that in the $N \to \infty$ limit, the remaining $N-p$ eigenvalues of $J^\prime$ are zero. The corresponding eigenvectors span the orthogonal complement of the vectors $\vec{G^\prime_\nu} = (G^\prime_{\nu 1}, \cdots, G^\prime_{\nu N})$, formally $\vec{v} \in \mathrm{span}(\vec{G^\prime_1}, \cdots,\vec{G^\prime_p})^\perp$.
 
 In conclusion, the spectrum of $K$ is composed of $p$ eigenvalues $\lambda_\nu = \avg{g_\nu(z_\nu) f_\nu(z_\nu) \partial \phi(h^\star)}-1$, and $N-p$ eigenvalues $\lambda_\perp = -1$. For the network considered in this work, the interpretation of this is that components of the field aligned with the patterns $z_\nu$ converge to the fixed point, and the orthogonal components decay as $t \to \infty$. The fixed point $h_i^\star=0$ is therefore unstable, and the pattern fixed points $h_i^\star = z_{\nu i}$ are stable. We also note that since the normal distribution is centered around zero and symmetric, $h_i^\star = -z_{\nu i}$ are also stable fixed points.
-
-## Behaviour of $\kappa_\mu(t)$ in the cyclic neural field
-
-### Definitions of dynamics
-
-[TODO MATH : derivation of this ? from the general setting to our case]
-
-We recall the definition of the low-rank variables $\kappa_\mu(t)$.
-
-The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\avg{f, g} = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
-
-We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
-
-$$
-\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
-$$
-
-with initial conditions
-
-$$
-\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
-$$
-
-and the orthogonal component evolves according to
-
-$$
-h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
-\quad
-h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
-$$
-
-### Cyclic dynamics in the $p=2$ cyclic neural field
-
-[TODO MATH : derivation of delayed ?]
-
-[TODO MATH : derivation of cyclic ?]
-
-In the case of the cyclic neural field, the evolution equation for $\kappa_\nu(t)$ is modified, where $\delta$ is the delay, and with the convention $\mu+1 = 1$ if $\mu=p$.
-
-$$
-\dot \kappa_\mu(t) = -\kappa_\mu(t) + m_{\mu+1}(t - \delta)
-$$
-
-### Relation to overlaps $m_\mu(t)$
-
-[TODO]
-
-## "Mean patterns" in the binned connectivity
-
-[TODO]
-
-derivation of $\Jab$ and mean patterns
-
-For finite number of recursive quadrant iterations $n$, we can do a "mean-field approximation" inside each of the $4^n$ segments. Let $\alpha = \{i_1,\cdots,i_{|\alpha|}\}$ be the multi-index corresponding to all neurons of which the embedding in $\mathbb R^p$ gets mapped to the segment $\alpha$ in $[0,1]$. Let $H_\alpha(t) = \frac 1 {|\alpha|} \sum_{i \in \alpha} h_i(t)$ be the (mean) RNN potential of the segment $\alpha$. The connectivity matrix $\tilde J_{\alpha,\beta}$ satisfies
-
-$$
-\dot H_\alpha(t) = -H_\alpha(t) + \sum_{\beta \in \text{segments of length } 4^{-n}} \tilde J_{\alpha,\beta} \phi(H_\beta(t))
-$$
-
-By substituting the original $h_i(t)$, we find the correct rescaling is given by
-
-$$
-\tilde J_{\alpha,\beta} = \frac 1 {|\alpha|} \sum_{i \in \alpha} \sum_{j \in \beta} J_{ij}
-$$
-
-In the low-rank case, we have
-
-$$
-J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
-$$
-
-We can define the "mean pattern" inside each bin :
-
-$$
-\tilde F_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} F_{\mu,i}, \; \tilde G_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} G_{\mu,i}
-$$
-
-Then the connectivity matrix is given by, noting $N = \sum_{\alpha} |\alpha|$,
-
-$$
-\tilde J_{\alpha,\beta} = \frac{|\beta|}{\sum_{\beta'} |\beta'|} \left( \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} - \delta_{\alpha,\beta} \underbrace{\sum_{\mu=1}^p \sum_{i \in \alpha} \frac{F_{\mu,i}}{|\alpha|} \frac{G_{\mu,i}}{|\alpha|}}_{\gamma_{\alpha}} \right)
-$$
-
-Recurrent current is given by
-
-$$
-I^\text{rec}_\alpha(t) = \sum_\beta \tilde J_{\alpha,\beta} \phi(H_\beta(t)) = \frac{1}{\sum_{\beta'} |\beta'|} \left( \sum_\beta |\beta| \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} \phi(H_\beta(t)) - |\alpha| \tilde \gamma_\alpha \phi(H_\alpha(t)) \right)
-$$
-
-The overlaps can be computed as
-
-$$
-\tilde m_\mu(t) = \frac{1}{\sum_{\alpha} |\alpha|} \sum_\alpha |\alpha| G_{\mu,\alpha} \phi(H_\alpha(t))
-$$

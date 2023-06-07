@@ -5,16 +5,18 @@ project:
     port: 4200
 
 book:
-  title: "Embeddings of neural field dynamics : simulations and fractal mappings"
-  author: "Nicole Vadot"
+  title: "Neural field dynamics and equivalence of embeddings in different dimensions"
+  author:
+    - name: Nicole Vadot
+    # - name: Valentin Schmutz
+    #   acknowledgements: Thesis Supervisor
   date: last-modified
   abstract: |
-    The literature around the study of neural field dynamics is centered around the convergence of networks of neurons to a smooth continuum in some $p$-dimensional space [@Bressloff2012]. Historically, the positions of the neurons in this "embedding space" has been interpreted as being closely related to physical positions in the cortex [@Wilson1973;@Amari1977;@Yishai1995].
-    <!-- Recent developments in imaging techniques \cite{Demas2021} allow the study of thousands of neurons discriminated by their physical positions. -->
+    Literature around the study of biological networks of neurons shows evidence that neurons can be spatially structured, leading to the developement of neural field models. In early papers, this structure emerges from the observation that functionally similar neurons tend to share similar positions in the cortex. Later it has been shown that not only the physical position of the neurons can be used to parametrize their function, but also their location in more abstract "embedding spaces", for example a space of "neuron celltypes".
 
-    Recent results in graph theory @jabin2022meanfield motivate the question of whether this "natural embedding" is unique, and what conditions must be imposed on the neural fields in order to converge to smooth dynamics.
+    Decoupling the embedding space from the physical position of neurons on the cortical sheet leads to asking the question of uniqueness of the embedding space. Given an embedding space and neural dynamics thereon, do there exist other embedding spaces which can express the same behavior ? Is there a "natural" choice for the embedding space ?
 
-    In this thesis, we show that the dimension of neural embeddings is arbitrary, and demonstrate examples of numerically equivalent dynamics emerging from neural fields in different dimensions. We derive methods to reduce dimensionality of any neural field by employing fractal mappings, and study properties that these must satisfy.
+    In this work, we show that the answer to the second question is highly nontrivial because given some neural dynamics, we can find multiple equivalent embedding spaces in different dimensions. We illustrate this using a toy example of a 2 (or 3)-dimensional embedding that is mapped to an equivalent 1-dimensional embedding. This is done by applying measurable bijective mappings $S : [0,1]^2 \mapsto [0,1]$, which we additionally show are well-behaved under numerical simulation schemes. In this, we exploit the key concept of "locality", which expresses the property of (not necessarily continuous, or possibly fractal) neural fields, in which neighbouring neurons in the embedding space *tend* to have similar functions.
   chapters:
     - index.qmd
     - chapters/1_intro.qmd
@@ -22,13 +24,18 @@ book:
     - chapters/3_mappings.qmd
     - chapters/4_locality.qmd
     - chapters/5_conclusion.qmd
-    - chapters/6_appendix.qmd
     - references.qmd
+  appendices:
+    - appendices/A_fixed_points.qmd
+    - appendices/B_kappa.qmd
+    - appendices/C_mean_patterns.qmd
   repo-url: https://github.com/ninivert/lcnthesis
   downloads: [pdf, epub]
   language: en
 
-bibliography: references.bib
+bibliography:
+  - references.bib
+  - references2.bib
 csl: ieee-with-url.csl
 
 format:
@@ -36,7 +43,11 @@ format:
     theme:
       light: [flatly, custom.scss]
       dark: darkly
-  epub: default
+    toc: true
+    toc-depth: 3
+  epub:
+    toc: true
+    date: last-modified
   pdf:
     pdf-engine: pdflatex
     documentclass: scrreprt

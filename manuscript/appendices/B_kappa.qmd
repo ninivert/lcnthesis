@@ -1,0 +1,45 @@
+# Behaviour of $\kappa_\mu(t)$ in the cyclic neural field
+
+## Definitions of dynamics
+
+[TODO MATH : derivation of this ? from the general setting to our case]
+
+We recall the definition of the low-rank variables $\kappa_\mu(t)$.
+
+The dynamics of $h(t, \vec z)$ are in a subsystem of dimension $p$ spanned by the ONB of functions $\{e_\mu(\vec z) = z_\mu | \mu=1,\cdots,p\}$, with the scalar product $\avg{f, g} = \int_{\mathbb R^p} f(\vec y) g(\vec y) \rho(\mathrm d \vec y)$.
+
+We decompose $h(t, \vec z) = h^\perp(t, \vec z) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu$, and write the system of equations for $\mu=1,\cdots,p$.
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + \int_{\mathbb{R}^p} \tilde\phi(y_\mu) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t)
+$$
+
+with initial conditions
+
+$$
+\kappa_\mu(0) = \int_{\mathbb{R}^p} y_\mu h(0, \vec y) \rho(\mathrm d \vec y)
+$$
+
+and the orthogonal component evolves according to
+
+$$
+h^\perp(t, \vec z) = h^\perp(0, \vec z) \mathrm e^{-t},
+\quad
+h^\perp(0, \vec z) = h(0, \vec z) - \sum_{\mu=1}^p \kappa_\mu(0) z_\mu
+$$
+
+## Cyclic dynamics in the $p=2$ cyclic neural field
+
+[TODO MATH : derivation of delayed ?]
+
+[TODO MATH : derivation of cyclic ?]
+
+In the case of the cyclic neural field, the evolution equation for $\kappa_\nu(t)$ is modified, where $\delta$ is the delay, and with the convention $\mu+1 = 1$ if $\mu=p$.
+
+$$
+\dot \kappa_\mu(t) = -\kappa_\mu(t) + m_{\mu+1}(t - \delta)
+$$
+
+## Relation to overlaps $m_\mu(t)$
+
+[TODO]

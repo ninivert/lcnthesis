@@ -4,21 +4,34 @@
 {{< include ../macros.tex >}}
 :::
 
-## Networks of rate neurons
+## Neural field models in neuroscience
 
-Networks of rate neurons model the time evolution of the potential $h_i(t) \,[\textrm{V}]$ associated to $N$ individual neurons labeled $i\in\{1,\cdots,N\}$. In their most general form, a connectivity matrix $J_{ij}$ describes the amplitude of the recurrent currents $I^\text{rec}_{ij} = J_{ij} \phi(h_j(t)) \,[\textrm{A}]$ emitted by neuron $j$ and received by neuron $i$. The (monotonically increasing) function $\phi(h)$ has units of $\textrm{Hz}$, and describes the spike firing rate of a given neuron as a function of its potential. In the absence of recurrent currents, the potential of each neuron decays exponentially with time constant $\tau \,[\textrm{s}]$. Neurons can also receive external currents $I^\text{ext}_i(t) \,[\textrm{A}]$. Conversion of current to voltage happens through the resistivity factor $R_i \,[\textrm{Ohm}]$. @eq-rnn writes out the full equation a rate neural network.
+Early recordings of the cat's somatosensory @Mou57 visual cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons. 
 
-$$
-\tau \dot h_i(t) = \underbrace{-h_i(t)}_{\text{exponential decay}} + R_i \sum_{j=1}^{N} \underbrace{J_{ij} \phi(h_j(t))}_{I^\text{rec}_i(t)} + R_i I^{\text{ext}}_i(t)
-$$ {#eq-rnn}
+The putative columnar organization of the cortex motivated the design of spatially structured models of neural population dynamics, namely neural field models [@WilCow73;@Nun74;@Ama77], where the spatial dimensions were nothing but the two dimensions of the cortical sheet. 
 
-This model can intuitively be seen as the $N \rightarrow \infty$ limit of a network of spiking neurons, in which neurons emit current spikes (modeled as $\delta$-functions) at some time-variable rate $\phi(h_i(t))$. The convergence is formally proven in @schmutz2023convergence.
+As models of spatiotemporal neural population dynamics on the cortical sheet, neural field models can be used to explain experimentally observed patterns of cortical activity, such as travelling waves in visual [@SatNau12;@MulRey14], somatosensory [@PetHah03;@FerBol06], motor [@RubRob06;@TakKim15], and hippocampal [@LubSia09;@PatFuj12;@PatSch13] cortices (see @MulCha18 for a review), and are used to model large-scale brain signals, such as electroencephalography (EEG) recordings @Bre17. See also @DipRan18 for an example of neural field modelling of 2-photon calcium imaging recording of visual cortex @DipRan18.
 
-In the following, we set $\tau=1$ and $R_i=1$ for all neurons $i$, since these just correspond to rescaling time and currents. Additionally, we consider $I^\text{ext}_i(t)=0$ to simplify the model.
+More recent recording methods, especially in rodents, have provided evidence of low-dimensional organization of neuronal activity that does not depend on the physical locations of neurons on the cortical sheet. For example, contrary to cat's visual cortex, the orientation selectivity of pyramidal neurons in rat's visual cortex does not depend on their locations, that is, orientation selectivity is heterogeneous at any given location @OhkChu05. Moreover, the activity of interneurons in any small volume of visual cortex is also heterogeneous and seems to be structured by a low-dimensional transcriptomic manifold of fine cell subtypes @BugDuf22. The local functional heterogeneity of neuronal activity in cortex challenges the old concept of functionally homogeneous cortical columns and, with it, classical neural field models. 
 
-## Convergence to a neural field equation
+While, historically, the spatial dimensions in neural field models have been the two dimensions of the cortical sheet (with the notable exception of the ring models for orientation selectivity in visual cortex @BenBar95 and the head-direction system @Zha96), the ``space'' in neural field models does not need to represent physical space but can represent any suitable abstract embedding space. Neural field models with abstract embedding spaces could constitute a generalization of classical neural field theory for cortical networks that are not solely structured by distances of neurons on the cortical sheet.
 
-Neural field equations emerge from the structure of rate neural networks as the number of neurons $N$ becomes large. Positions $\vec \xi_i \in \Rp$ are attributed to each neuron, and define the *embedding space*. If the embedding is well-chosen, then as $N \rightarrow \infty$ neurons close in the embedding space tend to have similar potentials $h_i(t)$, such that these tend to a continuum $h(t, \vec z)$, where $\vec z \in \Rp$.
+If we consider neural fields in abstract embedding spaces, which embedding space should we choose? More fundamentally, given some spatio-temporal dynamics, is there a ``natural'' choice for the embedding space?
+
+The goal of this Master Thesis is to show that the answer to the second question is highly nontrivial because even the dimensionality of the embedding space, for some given spatio-temporal dynamics, is not clearly defined if we don't specify the regularity (the ``smoothness'') of the neural fields along the spatial dimensions. 
+
+In particular, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation on the interval, where the embedding space is simply the interval $[0,1]$, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections for the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not (and can't be) diffeomorphisms. Also, we show that despite the fact that the connectivity kernel of the one-dimensional equation is not continuous, it is sufficiently regular for its solution to be numerically approximated using standard mesh-based simulations.
+
+Our result shows that the notion of (spatial) dimensionality in neural field dynamics is not well-defined if not associated with a constraint on the regularity of the neural fields (or the connectivity kernel). Thereby, this work, by studying a simple toy model, illustrates the importance of the analytic notion of regularity when neural population dynamics over abstract continuous spaces are considered.  
+
+This work was inspired by recent mathematical development in mean-field theory involving the theory of graphons \cite{JabPoy21}.
+
+## Neural fields as the limit of spatially-structured networks of neurons
+
+<!-- Valentin Schmutz: Which structure? At this point, the reader can't guess that you are talking about spatial structure. For the logic of this section, you should first gently introduce the notion of spatial structure.
+Nicole : the papers you give for the introduction should give a good understanding of the spatial structure -->
+
+Neural field equations emerge from the structure of rate neural networks as the number of neurons $N$ becomes large. Positions $\vec z_i \in \Rp$ are attributed to each neuron, and define the *embedding space*. If the embedding is well-chosen, then as $N \rightarrow \infty$ neurons close in the embedding space tend to have similar potentials $h_i(t)$, such that these tend to a continuum $h(t, \vec z)$, where $\vec z \in \Rp$.
 
 ![Every neuron in a rate neural network has a position in the $p$-dimensional embedding space](figures/neural_field_discrete.png)
 
@@ -30,24 +43,18 @@ $$ {#eq-nf}
 
 ![The connectivity kernel defines the influence between neural densities in the embedding space](figures/connectivity_kernel.png)
 
-In the litterature, the embedding space is often thought of as being closely related to the physical positions of the neurons @Bressloff2012. Rigorous proofs of convergence are still an active area of study @chevallier2018mean and are not the subject of this report.
+In the litterature, the embedding space is often thought of as being closely related to the physical positions of the neurons @Bre11. Rigorous proofs of convergence are still an active area of study @CheDua19 and are not the subject of this report.
 
-The results we present here should hold for any neural field, but for the sake of argument we shall consider a low-rank rate neural network, for which there are informal proofs of convergence to a neural field equation  @schmutz2023convergence \[TODO : reformulate this\]. Low-rank neural networks hold their name from the rank of their connectivity matrix, defined in @eq-lrj.
+## Motivation for a one-dimensional neural field
 
-$$
-J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
-$$ {#eq-lrj}
+[TODO : extra motivation, see Valentin's intro]
 
-In the case that $\vec F_i = (F_{1,i},\cdots,F_{p,i}) \in \Rp$ sample from some $p$-dimensional distribution $\rho$, the vectors $\vec F_i$ define a "natural embedding" of neuron $i$ in $\Rp$. When the number of neurons increases, the numeric density of neurons in the embedding approaches the actual probability distribution $\rho$, and we can intuitively see the convergence towards a connectivity kernel $w(\vec z, \vec y) = \sum_{\mu=1}^p z_\mu g_\mu(y_\mu)$.
+The paper @JabPoy21 provides some motivation for the existence of an equivalent neural field in one dimension. Their main result is that under some boundedness assumptions of the connectivity, the limiting equation describing the dynamics of the system incorporates only an integral over $[0,1]$. In our low-rank case, the weights scale as $J_{ij} \sim \frac 1N$, and so we can expect that it should be possible to perform a change of variables from $\Rp$ to $[0,1]$.
 
-## A one-dimensional neural field
-
-The paper @jabin2022meanfield provides some motivation for the existence of an equivalent neural field in one dimension. Their main result is that under some boundedness assumptions of the connectivity, the limiting equation describing the dynamics of the system incorporates only an integral over $[0,1]$. In our low-rank case, the weights scale as $J_{ij} \sim \frac 1N$, and so we can expect that it should be possible to perform a change of variables from $\Rp$ to $[0,1]$.
-
-The idea is that we define a measurable mapping $S : \Rp \mapsto [0,1]$ and a measure $\mu : [0,1] \mapsto \mathbb{R}^+$ on $([0,1], \mathcal B([0,1]))$, such that we can write the change of variables in the integral :
+The idea is that we define a measurable mapping $S : \Rp \mapsto [0,1]$ and a measure $\lambda : [0,1]^2 \mapsto \mathbb{R}^+$, such that we can write the change of variables in the integral :
 
 $$
-\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = \int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot)] \circ S^{-1} \; \mathrm d \mu
+\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = \int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot) \lambda(\cdot)] \circ S^{-1}(\d \alpha)
 $$
 
 Informally, we would like to define the one-dimensional field $\tilde h(\alpha, t) = h(S^{-1}(\alpha), t)$, connectivity $\tilde w(\alpha, \beta) = w(S^{-1}(\alpha), S^{-1}(\beta))$ and density $\tilde \rho(\alpha) = \rho(S^{-1}(\alpha))$, so that we can write the neural field in the $[0,1]$ embedding :
@@ -64,7 +71,7 @@ The goal of this report is to not only give an intuition on the mappings between
 
 We distinguish two types of numerical simulations for the neural field in @eq-nf : 
 
-1. A neuron-based simulation of $N$ neurons. Each neuron samples the probability distribution $\rho(z_1, \cdots, z_p)$ independantly. This case then just reduces to simulating the network of rate neurons, which follows @eq-rnn. In other words, we are simulating the full network of rate neurons, and the simulation converges to the true mathematical neural field equation as $N$ becomes large.
+1. A neuron-based simulation of $N$ neurons. Each neuron samples the probability distribution $\rho(z_1, \cdots, z_p)$ independantly. This case then just reduces to simulating the network of rate neurons. In other words, we are simulating the full network of rate neurons, and the simulation converges to the true mathematical neural field equation as $N$ becomes large.
 
 2. A discretization-based simulation. In the $\Rp$ space, we discretize each dimension, forming a grid of $p$-dimensional bins. Each bin effectively corresponds to an infinite population of neurons, which are approximated to be the same (this is a mean-field approximation). This works because by continuity of the field, neurons which are close in $\Rp$ also have similar potentials. As we increase the number of bins, the simulation becomes more precise and the dynamics approach that of the true mathematical neural field.
 
@@ -72,7 +79,15 @@ With this in mind, we can try to understand why simulating a neural field in $[0
 
 \[TODO : an illustration for this\]
 
-In some sense, we would like to find a mapping that conserves "locality" : populations that are close in $\Rp$ should also be close in $[0,1]$, or at least there shouldn't be "too many large discontinuities". @sec-mapping is dedicated to the discussion of these mappings, and gives various numerical demonstrations of the resulting dynamics.
+In some sense, we would like to find a mapping that conserves "locality" : populations that are close in $[0,1]$ should represent nearby populations in $\Rp$, or at least there shouldn't be "too many large discontinuities".
+
+## Summary of contents
+
+@sec-nf introduces a toy model for a neural field in $p$ dimensions, and we discuss interpretations of numerical simulation schemes.
+
+@sec-mappings is dedicated to the discussion of mappings from 2 dimensions to 1 dimension, we give intuitions accompanied by simulations, and discuss in detail how "locality" emerges from these mappings.
+
+Finally, @sec-locality tries to formalize the intuitive results obtained in the previous chapters. We build a metric to measure the "discretization error", and provide the key arguments for a proof of convergence of the numerical approximations.
 
 <!-- 
 

@@ -2,15 +2,52 @@
 {{< include ../macros.tex >}}
 :::
 
-# Locality and numerical convergence
+# Locality and numerical convergence {#sec-locality}
 
 ## Analytical equivalence of the dynamics
 
-composition of functions
+### The case $S$ measurable and bijective
 
-bijectivity (actually injection in one sense)
+In the previous sections, it has been obtained that a sufficient criterion for equivalent dynamics in the 2D and the 1D embedding, is that the mapping $S$ is bijective (or at least, injective from 2D in 1D, but we will use the slightly stronger assumption of bijectivity).
 
-TODO : write the proof of this
+We furthermore assume that the mapping $S$ is measurable. This is not a strong assumption, since the limit of pointwise convergent measurable functions is also measurable. In our case, we have written finite-precision expansions $S^n$, which by being sums of piecewise constant functions, are also measurable. Measurability of $S$ by definition allows us to write $\lambda \circ S^{-1}$ [TODO MATH : write this better. the inverse image of a set is measurable.], which defines a measure of the 1D space by first going to 2D space, then taking the measure there.
+
+[TODO FIG : $\lambda \circ S^{-1}$ defines a measure in 1D by going through 2D first ![](figures/Screenshot_2023-06-05_10-12-36.png)]
+
+With this in mind, let us prove that by defining the initial condition $\tilde h(t=0, \alpha) = h_U(t=0, S^{-1}(\alpha))$ and connectivity $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta)$, then the solution $h_U(t, \vec v)$ of the neural field equation in $[0,1]^2$ uniquely defines the solution of the neural field equation in $[0,1]$ by writing $\tilde h(t, \alpha) = h_U(t, \cdot) \circ S^{-1}(\alpha)$.
+
+We write the neural field equation in 1D and the initial condition.
+
+$$
+\begin{aligned}
+\partial_t \tilde h(t, \alpha) &= -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \\
+\tilde h(t=0, \alpha) &= h_U(t=0, S^{-1}(\alpha))
+\end{aligned}
+$$
+
+We now substitute $\tilde h(t) = h_U(t) \circ S^{-1}$, and write $\vec{v} = S^{-1}(\alpha),\, \vec{u} = S^{-1}(\beta)$.
+
+$$
+\begin{aligned}
+\partial_t h_U(t, S^{-1}(\alpha)) &= -h_U(t, S^{-1}(\alpha)) + \int_{[0,1]} w(S^{-1}(\alpha), S^{-1}(\beta)) \phi(h_U(t, S^{-1}(\beta))) \lambda \circ S^{-1}(\d \beta) \\
+\iff \partial_t h_U(t, \vec v) &= -h_U(t, \vec v) + \int_{[0,1]} w(\vec v, S^{-1}(\beta)) \phi(h_U(t, S^{-1}(\beta))) \lambda \circ S^{-1}(\d \beta) \\
+&= -h_U(t, \vec v) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(t, \vec u)) \lambda(\d \vec u)
+\end{aligned}
+$$
+
+The measure $\lambda : [0,1]^2 \mapsto \R^+$ simply plays the role of a uniform distribution on $[0,1]^2$ [TODO MATH : $\lambda$ is the lebesgue measure ?], and we simply write
+
+$$
+\partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(t, \vec u)) \d \vec u
+$$
+
+Therefore, if $h_U(t, \vec v)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(t) = h_U(t) \circ S^{-1}$ solves the equivalent neural field equation in $[0,1]$.
+
+[TODO MATH : do i need to state a theorem of existence and uniqueness of the solution ?]
+
+### Can the bijectivity condition be relaxed ?
+
+[TODO : go into more detail on the injectivity, surjectivity. how the fact that $S$ is injective forces us to have that we can't map 2 neurons to the same positino. surjecivity is not that important, we could duplicate a neuron and adjust the weights]
 
 ## Locality
 
@@ -230,7 +267,7 @@ $$
 \end{aligned}
 $$
 
-We now want to prove that evaluating the integrand at $\beta_i = \tfrac{i-1}{2^n}$ gives a good approximation of the integral. Since $\int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \lambda \circ S^{-1}(\d \beta) = \tfrac{1}{2^n}$ [TODO MATH : is this true ?], we write
+We now want to prove that evaluating the integrand at $\beta_i = \tfrac{i-1}{2^n}$ gives a good approximation of the integral. Since $\int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \lambda \circ S^{-1}(\d \beta) = \tfrac{1}{2^n}$ [TODO MATH : is this true ? this is obvious when we consider the binary expansion of $S^{-1}$], we write
 
 $$
 \begin{aligned}
@@ -239,7 +276,7 @@ $$
 \end{aligned}
 $$
 
-The main source of variance inside the integrand is the term $S^{-1}$, since $w_U$ and $h_U$ are "nice" functions. We express this regularity by the added assumption that $w_U(\cdot, \vec z) h_U(t, \vec z)$ is Lipschitz in $\vec z$, with Lipschitz constant $L(\cdot)$, and $\norm{\cdot}$ the corresponding norm on $[0,1]^2$. 
+The main source of variance inside the integrand is the term $S^{-1}$, since $w_U$ and $h_U$ are "nice" functions. We express this regularity by the added assumption that $w_U(\cdot, \vec z) h_U(t, \vec z)$ is Lipschitz in $\vec z$, with Lipschitz constant $L(\cdot)$, and $\norm{\cdot}$ the corresponding norm on $[0,1]^2$. [TODO : argue on the niceness of $I_rec$, add $\phi$]
 
 Once we have applied the Lipschitz property, we make use of our intuition of "locality" : points close in $[0,1]$ should be (on average) mapped to points close in $[0,1]^2$. Therefore, taking the sup inside each $2^{-n}$ segment does not introduce a too large error.
 
