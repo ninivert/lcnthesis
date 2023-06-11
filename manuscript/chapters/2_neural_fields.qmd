@@ -248,7 +248,7 @@ then one can repeat this for the next cycles. basically each cycle is applying a
 
 ![simulate cycling in p=2](figures/kappa_cycling_p=2.tmp.png)
 
-## Mapping $\R^2$ to $[0,1]^2$ using the CDF
+## Mapping $\R^2$ to $[0,1]^2$ using the CDF {#sec-mapping-cdf}
 
 <!-- ### Using the CDF -->
 

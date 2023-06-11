@@ -27,7 +27,7 @@ book:
     - references.qmd
   appendices:
     - appendices/A_fixed_points.qmd
-    - appendices/B_kappa.qmd
+    - appendices/B_zcurve.qmd
     - appendices/C_mean_patterns.qmd
   repo-url: https://github.com/ninivert/lcnthesis
   downloads: [pdf, epub]

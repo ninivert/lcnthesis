@@ -106,19 +106,45 @@ Therefore, we can see why the composition of $w_U$ with a possibly non-different
 
 ## Mappings of $[0,1]^2$ to $[0,1]$
 
-### Differentiable mappings
+### The search for differentiable mappings
 
-Let us start our search for a mapping $S^{-1}$ (more precisely, we need $S^{-1} : [0,1] \mapsto [0,1]^2$) that is continuous, motivated by the need to conserve the regularity of the kernel.
+We start our search of mappings by attempting to find a mapping $S$ that is differentiable.
+The easiest example of such a mapping would be a linear projection, for instance $P(v_1, v_2) = v_1$. This mapping is obviously continuous and differentiable in both components, and surjectively maps the unit square to the unit segment.
 
-We start the discussion on the search of an adequate mapping by citing a result from @kharazishvili_strange_2017.
+However, the obvious problem with this approach is that linear projections are not invertible. Hence, should we nevertheless define an inverse $P^{-1}$ that computes the preimage of $\alpha \in [0,1]$, we have that
 
-linear projections don’t work ofc.
+$$
+P^{-1}(\alpha) = \{(\alpha, v_2)\ |\ v_2 \in [0,1] \}.
+$$
 
-Note : why are not using the CDF to embed in 1D ? because it's not bijective !
+In other words, $P^{-1}(\alpha)$ defines a vertical line in the $[0,1]^2$ embedding. When we then take the composition $w_U \circ P^{-1}$, the regularity is destroyed, in the sense that the same population $\alpha$ in the 1D embedding will "sense" all the connectivity kernels on the vertical line.
 
-> there is no homeomorphism
-  (continuous bijective function)
-  between [0,1]² and [0,1]
+A more sophisticated attempt, in the spirit of @sec-mapping-cdf, might be to consider the joint cumulative function
+
+$$
+\alpha = \mathrm{CDF}(z_1, z_2) = \int_{-\infty}^{z_1} \int_{-\infty}^{z_2} \rho(y_1, y_2) \d y_1 \d y_2.
+$$
+
+However this again fails because the joint cumulative function is not bijective, and isolines of the CDF define diagonals in the uniform embedding space $[0,1]^2$[^jointcdf].
+
+[^jointcdf]: We note to avoid any confusion, that in @sec-mapping-cdf the CDF is taken component-wise, instead of jointly. The univariate gaussian CDF defines a bijection between $\R$ and $(0,1)$, but the joint CDF does not.
+
+Perhaps the linear projection or CDF examples are a bit too naive, and we need to look for more complex examples. We might ask the question of whether a diffeomorphism (a differentiable bijection with differentiable inverse) even exists between the unit square and the unit segment. Unfortunately, results from topology give a negative answer, and even worse, it can be shown that there is no homeomorphism (a continuous bijection with continuous inverse) between the unit square and the unit segment. This is stated by Netto's theorem, which imposes continuous bijections to conserve the dimensionality between the domain and the image.
+
+### Mappings of $[0,1]$ into $[0,1]^2$
+
+Since in the composion $w_U \circ S^{-1}$ we work with the inverse mapping, it might be judicious to directly consider functions from $[0,1]$ into $[0,1]^2$. We have already established that there is no homeomorphism between those spaces, and need to relax one of the conditions.
+
+Functions of $[0,1]$ into $[0,1]^2$ are extensively discussed in chapter 1 of @kharazishvili_strange_2017, and we cite two classes of such functions :
+
+1. Cantor functions are bijections between $[0,1]$ and $[0,1]^2$. By the non-existence theorem, these functions cannot be continuous.
+2. Peano functions are continuous surjections from $[0,1]$ to $[0,1]^2$. They cannot be injections. For reasons that will become apparent in the following sections, Peano functions are often called space-filling curves.
+
+In the light of these results, we might be tempted to search for expressions for Cantor-type functions, since having a bijection would allow us to have a direct mapping between the square and the segment populations. Unfortunately, these functions are discontinuous which breaks the regularity of the kernel.
+
+Peano functions seem like good candidates for the mapping $S^{-1}$, and are extensively studied in the litterature (we refer for instance to [@sagan_space-filling_1994;@Sagan1993]). They have the nice property that they are continuous, and are surjective, so we the segment populations are able to "reach" the entirety of the square populations. All things considered, non-injectivity is not a problem, since it just means that two segment populations can "refer" the same square population, which does not break the regularity of the kernel, since the two segments populations can just have their own neighbourhoods. Furthermore, we will see that in our examples, the non-injectivity can be ignored because the mapping is quasi-bijective.
+
+![Non-injectivity of $S^{-1}$ means that two segment populations can refer to the same square population.](figures/photo_2023-06-12_00-46-26.jpg)
 
 ### Sequences of bijective mappings
 
@@ -458,9 +484,11 @@ $$
 
 The limit is not bijective, because the bits of $v_2$ are "lost" in the $n\to\infty$ limit, and the inverse $C_2^{-1}(\alpha)$ is not well-defined, since it "takes bits from $\infty$ to $2\infty$".
 
-The Z-mapping however seems to converge to some sort of fractal structure, the limit is nowhere continuous and has an infinite number of discontinuities, but the size of these discontinuities is overwhelmingly small : on average, the fact that there are large discontinuities does not matter in the $n\to\infty$. We don't go further into detail about this in this section, but this gives some intuition for the arguments presented in @sec-locality.
+The Z-mapping however seems to converge to a fractal curve. Numerically of course, there seem to be infinite number of discontinuities, but the size of these discontinuities is overwhelmingly small, and *on average* the size of these numerical disconuities vanishes as $n\to\infty$. We don't go further into detail about this in this section (in @sec-zcurve-lebesgue we develop on the convergence to a space-filling fractal curve), but this gives some intuition for the arguments presented in @sec-locality.
 
-We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective. In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary :
+We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective[^zmapping-notbijective]. In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary :
+
+[^zmapping-notbijective]: Despite what can often be found in online resources, the Z-mapping is *not* a bijection because that would violate Netto's theorem. The rew_ason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give a proof that the Z-mapping is not injective in the $n\to\infty$ limit. However the Z-mapping is *quasi-bijective*, in the sense that the set of points for which the Z-mapping is not injective has zero measure, and can therefore be ignored.
 
 1. condition of pointwise convergence : the LSB of the input must be mapped to the LSB of the output,
 2. condition of "no information loss" : the MSB of the input must be mapped to the MSB of the output.

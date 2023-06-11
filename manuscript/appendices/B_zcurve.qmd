@@ -1,0 +1,46 @@
+::: content-hidden
+{{< include ../macros.tex >}}
+\def\C{\mathcal{C}}
+:::
+
+# On the quasi-bijectivity and continuity of the Z-mapping
+
+We study the Z-curve $Z^{-1}$
+
+## The Z-curve is not injective {#sec-zcurve-noninjective}
+
+this is common misconception, and people write it is a bijection, when really it is not
+
+The Z-curve : [0,1] -> [0,1]^2 is not injective since the binary expansion is ambiguous
+
+x = 0.10000... = 0.011111...
+
+=> alpha = 0.1y0y0y0  !=   alpha = 0.0y1y1y1y1
+
+
+but the point on which the expansion is ambiguous form a set of zero measure, so the integral is still ok
+
+on the set [0,1] \ {problems}, Z-curve is bijective
+
+injectivity is the property that f(x) != f(y)  iff  x != y,  (equiv f(x) == f(y) iff x == y)
+
+Z^{-1} defines a space-filling curve
+
+not a problem because we are just repeating the same population twice
+
+## $Z^{-1}$ defines a space-filling curve on a subset of $[0,1]$ {#sec-zcurve-lebesgue}
+
+### The Cantor set $\C$
+
+the cantor set has measure 0, but has the same cardinality of the continuum
+
+### $Z^{-1} | \C$ is a surjection
+
+### $Z^{-1} | \C$ is continuous
+
+## Relation with the Lebesgue space-filling curve
+
+we would also relax and say the Z-curve is discontinuous, because lim alpha ->0.5+ Z(alpha) != lim alpha -> 0.5- Z(alpha)
+-> NO ! because we linearly interpolate between the quadrants. we say the curve is continuous, in the sense that it is connected. but it is allowed to jump around !
+
+talk about the fact we have other space filling curves, such as hilbert curve or peano curve, that are continuous and surjective [0,1] -> [0,1]^2. we use the Z-curve because it's easy to implement numerically
