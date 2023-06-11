@@ -6,7 +6,7 @@ import colorsys
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from ._rnn import LowRankRNN, Result
-from ._overlap import overlap
+from ._overlap import overlap, projection
 
 __all__ = [
 	'plot_neuron_trajectory', 'plot_overlap_trajectory', 'plot_dh_hist',
@@ -41,12 +41,12 @@ def plot_overlap_trajectory(rnn: LowRankRNN, res: Result, figax: tuple[Figure, A
 	fig, ax = _unwrap_figax(figax)
 
 	ax.set_xlabel('Time $t$ [s]')
-	ax.set_ylabel('Overlap $m_{{\\mu}}$')
-	ax.set_title('Overlap trajectory')
-	m = overlap(rnn, res.h)
+	ax.set_ylabel('Latent $\\kappa_{{\\mu}}$')
+	ax.set_title('Latent trajectory')
+	kappa = projection(rnn, res.h)
 
-	for mu in range(len(m)):
-		ax.plot(res.t, m[mu], label=f'$\\mu={mu}$', **kwargs)
+	for mu in range(len(kappa)):
+		ax.plot(res.t, kappa[mu], label=f'$\\mu={mu+1}$', **kwargs)
 
 	ax.grid(visible=True, axis='y')
 	ax.legend()
@@ -57,14 +57,14 @@ def plot_overlap_trajectory(rnn: LowRankRNN, res: Result, figax: tuple[Figure, A
 def plot_overlap_phase2D(rnn: LowRankRNN, res: Result, point_start: bool = True, point_end: bool = True, lim01: bool = True, figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
 	fig, ax = _unwrap_figax(figax)
 
-	ax.set_xlabel('Overlap $m_0(t)$')
-	ax.set_ylabel('Overlap $m_1(t)$')
+	ax.set_xlabel('Latent $\\kappa_1(t)$')
+	ax.set_ylabel('Latent $\\kappa_2(t)$')
 	ax.set_title('Latent trajectory')
 	ax.set_aspect('equal')
-	m = overlap(rnn, res.h)
-	line, = ax.plot(m[0], m[1], **kwargs)
-	if point_start: ax.plot(m[0, 0], m[1, 0], 'o', color=line.get_color(), **kwargs)
-	if point_end: ax.plot(m[0, -1], m[1, -1], 'x', color=line.get_color(), **kwargs)
+	kappa = projection(rnn, res.h)
+	line, = ax.plot(kappa[0], kappa[1], **kwargs)
+	if point_start: ax.plot(kappa[0, 0], kappa[1, 0], 'o', color=line.get_color(), **kwargs)
+	if point_end: ax.plot(kappa[0, -1], kappa[1, -1], 'x', color=line.get_color(), **kwargs)
 	if lim01:
 		ax.set_xlim((0,1))
 		ax.set_ylim((0,1))
@@ -80,7 +80,7 @@ def plot_dh_hist(rnn: LowRankRNN, figax: tuple[Figure, Axes] | None = None, **kw
 	ax.yaxis.set_major_locator(ticker.NullLocator())
 	ax.yaxis.set_minor_locator(ticker.NullLocator())
 	ax.set_xlabel('$\\dot h_i$')
-	ax.set_title('Derivative $\dot h_i$ at $\\xi_i^{\\mu}$')
+	ax.set_title('Derivative $\\dot h_i$ at $z_i^{\\mu}$')
 	ax.legend()
 
 	return fig, ax
@@ -96,8 +96,8 @@ def plot_2D_embedding_contour(
 	if draw_cbar:
 		cbar = fig.colorbar(contour, ax=ax, label='Activity $A = \\phi(h_i)$ [Hz]')
 
-	ax.set_xlabel('$\\xi^0_i$')
-	ax.set_ylabel('$\\xi^1_i$')
+	ax.set_xlabel('$z^1_i$')
+	ax.set_ylabel('$z^2_i$')
 	ax.set_aspect('equal')
 
 	return (fig, ax), contour
@@ -122,8 +122,8 @@ def plot_2D_embedding_scatter(
 		zorder=1000  # we need this, otherwise the new contours get drawn on top of the scatterpoints
 	)
 
-	ax.set_xlabel('$\\xi^0_i$')
-	ax.set_ylabel('$\\xi^1_i$')
+	ax.set_xlabel('$z^1_i$')
+	ax.set_ylabel('$z^2_i$')
 	ax.set_aspect('equal')
 
 	return (fig, ax), sc
@@ -137,8 +137,8 @@ def plot_2D_to_1D_mapping(
 	fig, axes = _unwrap_figax(figax, nrows=2)
 	
 	scat2d = axes[0].scatter(rnn.F[:, 0], rnn.F[:, 1], c=mapping, **kwargs)
-	axes[0].set_xlabel('$\\xi_i^0$')
-	axes[0].set_ylabel('$\\xi_i^1$')
+	axes[0].set_xlabel('$z_i^1$')
+	axes[0].set_ylabel('$z_i^2$')
 	axes[0].set_aspect('equal')
 
 	scat1d = axes[1].scatter(mapping, activity, c=mapping, **kwargs)

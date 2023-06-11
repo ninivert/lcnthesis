@@ -117,7 +117,7 @@ $$
 
 Detail : strictly speaking, MC samples new points every timestep, here we sample once at t=0, then propagate these points
 
-#### Grid method (Trapezoidal integration)
+#### Grid method (Trapezoidal integration) {#sec-gridmethod}
 
 This method describes the trapezoidal method of integration. We state the result that the convergence rate is $\bO(N^{-2/p})$. For $p \geq 4$, MC shows better scaling behavior (but prefactors of error can change which method is better).
 

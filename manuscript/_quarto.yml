@@ -44,7 +44,8 @@ format:
       light: [flatly, custom.scss]
       dark: darkly
     toc: true
-    toc-depth: 3
+    toc-depth: 4
+    fig-format: svg
   epub:
     toc: true
     date: last-modified

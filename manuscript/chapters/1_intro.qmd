@@ -65,7 +65,7 @@ $$ {#eq-nf1d}
 
 This change of variable seems counter-intuitive : how is it possible to map a higher dimension to a lower dimension without losing information ? And even if mathematically such a change of variables is possible, is it actually feasible to simulate it numerically ?
 
-## Numerical simulations of neural fields
+## Numerical simulations of neural fields {#sec-intro-simnf}
 
 The goal of this report is to not only give an intuition on the mappings between $[0,1]$ and $\Rp$ embedding spaces, but also show that the mathematical construction works numerically.
 

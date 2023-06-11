@@ -2,57 +2,115 @@
 
 ::: {.content-hidden}
 {{< include ../macros.tex >}}
+
+```{python}
+import matplotlib as mpl, matplotlib.pyplot as plt, matplotlib.colors as mplcolors, matplotlib.patheffects as pe, matplotlib.ticker as ticker
+import numpy as np
+import sys
+sys.path.append('../../notebooks')  # import neurodyn
+from neurodyn import *
+from matplotlib_tufte import *
+setup()
+
+mpl.use('svg')
+```
 :::
+
+In the previous chapter, we have established a simple toy model for a neural field in $p$ dimensions, and have shown how it can be embedded in $[0,1]^p$. In this chapter, we discuss in-depth what types of mappings can be used to map the $p$-dimensional space to $[0,1]$, and in particular first study the case $p=2$. Before getting into too much detail, let us give some insight as to why this problem is not trivial.
 
 ## Population dynamics : an introductory example of a 1D embedding
 
-the case of population dynamics can easily be embedded in 1D (this is the trivial case)
+### Embedding a finite number of populations in $[0,1]$
 
-<!--
-$$\begin{aligned}
-\rho(\vec z) &= \sum_{a \in P} p_{a} \delta(\vec{z_a} - \vec{z}) \\
-\text{normalization : } \int_{\Rp} \rho(\d \vec{z}) &= \sum_{a} p_a = 1
-\end{aligned}$$
-we can explicitly formulate the embedding with a new 1D PDF (arrange the populations on the line, their probability is their segment length)
-$$\gamma(\alpha) = \sum_{a \in P} p_a \mathbb{1}(C_{a-1} \leq \alpha < C_{a}),\, C_a=\sum_{b=1}^a p_b$$
-the connectivity matrix in the 1D model becomes
-$$J_{ab} = \sum_{\mu=1}^p f_\mu(\vec{z_a}) g_\mu(\vec{z_b})$$
-[TODO MATH : flesh this out]
-[TODOSIM : would this be interesting to simulate ?]
-case 2 populations, we get the ising model (binary patterns) -->
+Let us for a moment consider another type of model networks of neurons, that of homoegeneous population dynamics, that describes how $N_\text{pop}$ different populations interact with each other. These types of models emerge when networks of neurons exhibit a finite number of "neuron types". We then group together similar neurons, and make the approximation that all neurons inside the population have the same potential, and the same interaction weights with other neurons. In effet, every population then represents in actuality an infinity of discrete identical neurons.
 
-TODO : a nice drawing with motivation
+The result of this is that the population dynamics can be written with the same equation as a finite network of neurons, but it already represents the $N \to \infty$ limit. We write the potential of the populations $H_a(t)$ and the population connectivity $\tilde J_{ab}$, where $a,b \in \{1, \cdots, N_\text{pop}\}^2$ in @eq-pop-dynamics.
 
-this also helps give an intuition that effectively, when we do the binning in $[0,1]^2$, each bin represents a population
+$$
+\dot H_a(t) = -H_a(t) + \sum_{b=1}^{N_\text{pop}} \tilde J_{ab} \phi(H_b(t))
+$$ {#eq-pop-dynamics}
 
-the point i try to make is that for discrete distributions (i can enumerate the HOMOGENEOUS populations of neurons), it is easy to embed in 1D. the problem comes when the distribution is continuous -> we have an infinite amount of homogeneous populations.
+We don't show the derivation of population dynamics here (see @GerKis14, chapter 12.3 for a detailed analysis), but we point out the implicit scaling behavior of $\tilde J_{ab}$. Letting $i$ be a neuron of population $a$ and $j$ be neuron of population $b$, the connectivity between the two neurons is $J_{ij}$ and the population connectivity scales with the number of neurons in the presynaptic population $|b|$. Furthermore, we make the reasonable assumption that $J_{ij}$ scales as $J^0_{ij} / N$, where $J^0_{ij} \sim \bO(1)$.
 
-we know how to map finite populations to [0,1], we now need a mapping that is good when the number of populations tends to infty
+$$
+\tilde J_{ab} = \frac{|b|}{N} J^0_{ij}
+$$
 
-idea : we need a sequence of mappings ("permutations", this expresses J perm-invar) acting on a finite number of populations, that has a "well defined convergence"
+As $N\to\infty$, the ratio $\tfrac{|b|}{N}$ converges to a constant $p_b$, the probability of the population, normalized such that $\sum_{a=1}^{N_\text{pop}} p_a = 1$. It expresses the probability of uniformly sampling a neuron belonging to population $b$. In effect, $p_b$ can be interpreted as the "weight" of the population.
 
+So far, we have not considered that the populations are embedded in some abstract space ; but the notion of population weights gives rise to the obvious embedding in $[0,1]$ given by the cumulative sums of the population weights, illustrated in @fig-popdynamics-01. We define (somewhat informally) the connectivity kernel $w(\alpha, \beta) = J^0_{ab}$ for $\alpha, \beta$ in the regions corresponding to populations $a$ and $b$ respectively[^poplocation].
+
+[^poplocation]: Formally, we would write the cumulative sum $K_a = \sum_{b=1}^a p_b$. Then, we have $\alpha \in [K_{a-1}, K_{a})$ and $\beta \in [K_{b-1}, K_{b})$. We abusively wrote $J^0_{ab}$ since all neurons in each population are identical, therefore we can index into the connectivity $J^0_{ij}$ with the population indices $a,b$ instead of neuron indices $i,j$.
+
+![(TODO) Embedding of the population dynamics in $[0,1]$](figures/photo_2023-06-10_19-26-49.jpg){#fig-popdynamics-01}
+
+Defining the neural field $H(\alpha, t) = H_a(t)$, we can write a "neural field equation" on the $[0,1]$ space.
+
+$$
+\begin{aligned}
+\partial_t H(\alpha, t) &= -H(\alpha, t) + \int_0^1 w(\alpha, \beta) \phi(H(\beta, t)) \d \beta \\
+&= -H(\alpha, t) + \sum_{b=1}^{N_\text{pop}} p_b w(\alpha, b) \phi(H_b(t)) \\
+\iff \partial_t H_a(t) &= -H(a, t) + \sum_{b=1}^{N_\text{pop}} p_b w(a, b) \phi(H_b(t)) \\
+&= -H(a, t) + \sum_{b=1}^{N_\text{pop}} p_b J^0_{ab} \phi(H_b(t)) \\
+&= -H(a, t) + \sum_{b=1}^{N_\text{pop}} \tilde J^0_{ab} \phi(H_b(t)) 
+\end{aligned}
+$$
+
+We hereby showed (having taken many writing liberties, but this is just to give an idea) how the neural field reduces back to the original population dynamics, which was in itself already the $N\to\infty$ limit of the network. The case of population dynamics therefore shows a trivial example of an embedding in $[0,1]$.
+
+### Population dynamics with an infinite number of populations
+
+When taken in isolation, the previous developments might sound a little bit silly, though they serve to give an impression of the problem at hand, and an interpretation of the rest of this work. For a finite number of populations $N_\text{pop}$, the population dynamics is perfectly defined, however what happens as $N_\text{pop} \to \infty$ ? The core of the question lies in the fact that we can easily *enumerate* a finite number of populations, but the sum $\sum_{b=1}^{N_\text{pop}}$ must have a clearly defined interpration when this number tends to infinity.
+
+In the light of the toy model presented in @sec-nf, we can reinterpret the density $\rho$ of the neural field equation. Every point $\vec z \in \R^p$ (let us consider $p=2$ for the rest) describes a infinite population of homogeneous neurons, associated with a probability (density) $\rho(\vec z)$. Therefore, in order to write an equivalent neural field in $[0,1]$, we need a way to *enumerate* the populations. This is done using a mapping $S : [0,1]^2 \mapsto [0,1]$, where we traverse the $[0,1]^2$ space by following the order in the image $[0,1]$.
+
+Additionally, the notion of population dynamics helps give another interpretation of the grid integration method given in @sec-gridmethod. When we discretize the $[0,1]^2$ space, we are effectively performing a coarse-graining approximation and simulating a finite number of populations. For every bin localized by $(v_1, v_2)$, we are sampling the connectivity kernel $w_U((v_1, v_2), \cdot)$ and 2D neural field $h_U((v_1, v_2), t)$ (see @fig-grid-sampling). In the rest of the chapter, we refer to these 2D bins as "square populations", and to the corresponding 1D bins as "segment populations".
+
+![Every point of the grid effectively performs coarse-graining, and defines a point where we sample the connectivity kernel $w_U$ and the 2D neural field $h_U$](figures/photo_2023-06-10_21-13-23.jpg){#fig-grid-sampling}
+
+For a finite number of populations $N_\text{pop}$, applying a bijective mapping $S$ will evidently give an equivalent neural field, because the connectivity matrix is permutation-invariant, and the resulting connectivity matrix $J_{S(a),S(b)}$ will therefore give equivalent dynamics. As we increase $N_\text{pop}$ by taking finer and finer grids, the image of the grids define a sequence of mappings $S^n : \text{grid in}\ [0,1]^2 \mapsto \text{grid in}\ [0,1]$, which we aim to study in the rest of this chapter.
+
+> How do we define a sequence of mappings $S^n$ such that the limiting $S : [0,1]^2 \mapsto [0,1]$ can express a 1D neural field with identical dynamics ?
 
 ## Defining the neural field in $[0,1]$
 
-Define a measurable and bijective mapping $S : [0,1]^2 \rightarrow [0, 1]$.
+We start by writing the neural field equation in the $[0,1]$ space. For this, we define a measurable and bijective mapping $S : [0,1]^2 \rightarrow [0, 1]$. Furthermore, we let $\lambda : [0,1]^2 \rightarrow [0, \infty]$ be a measure on the unit square (for instance, the Lebesgue measure). Taking the composition $\lambda \circ S^{-1}$ then defines a measure on $[0,1]$, which  keeps track of how 2D surfaces are transformed to 1D lengths through the mapping $S$.
 
-Let $\lambda : [0,1]^2 \rightarrow [0, \infty]$ be a measure.
+The connectivity kernel $\tilde w$ defines the interactions between the populations in the $[0,1]$ embedding, which we define in relation to the uniform kernel on $[0,1]^2$ as :
 
-We define $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$ + intial condition
+$$
+\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))
+$$ {#eq-kernel-1d}
 
-<!-- $\tilde h(t, \alpha) = h_U(t, S^{-1}(\alpha))$ -->
+Defining the initial condition for the 1D neural field as $\tilde h(\alpha, t=0) = h_U(S^{-1}(\alpha), t=0)$, we have fully defined the equation of evolution in the one-dimensional embedding in @eq-nf-1d.
 
 $$
 \partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta)
+$$ {#eq-nf-1d}
+
+The definition of the connectivity kernel in @eq-kernel-1d might seem innocent, but the key element here is the inclusion of the inverse $S^{-1}$. We recall that in the toy model, the original connectivity kernel is written as $w(\vec z, \vec y) = \sum_{\mu=1}^p \tilde \phi(y_\mu) z_\mu$. This kernel is highly regular, by which we mean that by its continuity in each of its arguments, populations nearby in the embedding will "sense" similar connectivity functions. Since it is also differentiable, we can write this as a Taylor expansion in the first argument :
+
+$$
+\begin{aligned}
+w(\vec z + \vec \epsilon, \vec y) &= w(\vec z, \vec y) + \sum_{\mu=1}^p \epsilon_\mu \frac{\partial w}{\partial z_\mu} + \bO(\norm{\vec \epsilon}^2) \\
+&= w(\vec z, \vec y) + \sum_{\mu=1}^p \epsilon_\mu \phi(y_\mu) + \bO(\norm{\vec \epsilon}^2) \\
+&\approx w(\vec z, \vec y) 
+\end{aligned}
 $$
 
-[TODO FIG : a nice drawing of this, also to give an intuition for $\lambda$]
+When we do the change of variables with the CDF, we don't encounter problems because the gaussian (inverse) CDF is differentiable and its derivative is continuous[^inversecdf] ; therefore $w_U(\vec v, \vec u) = w(\textrm{CDF}^{-1}(\vec v), \textrm{CDF}^{-1}(\vec u))$ is still highly regular.
+
+[^inversecdf]: Strictly speaking, we have the problem that $\textrm{CDF}^{-1}(v) \xrightarrow{v \to 1} \infty$, and so the derivative diverges when $v \to 1$ (and similarly, when $v \to 0$). However this is not a problem, since these limits correspond to $z \to \pm \infty$, where the density vanishes.
+
+Therefore, we can see why the composition of $w_U$ with a possibly non-differentiable mapping $S$ might be problematic. Since the only thing we know about $S$ is that it is measurable and bijective, *there is no guarantee that the regularity of the kernel is conserved through the composition with the mapping $S$.*
 
 ## Mappings of $[0,1]^2$ to $[0,1]$
 
-cite @kharazishvili_strange_2017 peano vs cantor mappings
+### Differentiable mappings
 
-### Continuous mappings
+Let us start our search for a mapping $S^{-1}$ (more precisely, we need $S^{-1} : [0,1] \mapsto [0,1]^2$) that is continuous, motivated by the need to conserve the regularity of the kernel.
+
+We start the discussion on the search of an adequate mapping by citing a result from @kharazishvili_strange_2017.
 
 linear projections don’t work ofc.
 
@@ -62,128 +120,358 @@ Note : why are not using the CDF to embed in 1D ? because it's not bijective !
   (continuous bijective function)
   between [0,1]² and [0,1]
 
-### Bijective mappings
+### Sequences of bijective mappings
+
+#### Mappings as binary expansions {#sec-mappings-binary}
 
 We consider $(v_1, v_2) \in [0,1]^2$. Given $n \in \mathbb N$, we write a (truncated) binary expansion of $v_1$ and $v_2$.
 
 $$
-v_1=\sum_{l=1}^{n} b^1_l 2^{-l} = 0.b^1_1b^1_2\cdots b^1_{n} \iff b^1_l = \mathrm{Ind}\left\{2^{l-1}v_1 - \lfloor2^{l-1}v_1\rfloor \geq \frac{1}{2}\right\}
-$$
+\begin{aligned}
+v^{(n)}_1 &= \sum_{l=1}^{n} b^1_l 2^{-l} = 0.b^1_1b^1_2\cdots b^1_{n} \iff b^1_l = \mathrm{Ind}\left\{2^{l-1}v_1 - \lfloor2^{l-1}v_1\rfloor \geq \frac{1}{2}\right\} \\
+v^{(n)}_2 &= \sum_{l=1}^{n} b^2_l 2^{-l} = 0.b^2_1b^2_2\cdots b^2_{n} \iff b^2_l = \mathrm{Ind}\left\{2^{l-1}v_2 - \lfloor2^{l-1}v_2\rfloor \geq \frac{1}{2}\right\}
+\end{aligned}
+$$ {#eq-trunc}
 
-The intuition behind this expansion is we take a segment, we split it in two, write 0 to go left, write one to go right, then recurse. Then combine the bits of $v_1$ and $v_2$ to get the position in the $[0,1]^2$ embedding.
+The intuition behind this expansion is we take a segment, we split it in two, write 0 to go left, write one to go right, then recurse. Then combine the bits of $v^{(n)}_1$ and $v^{(n)}_2$ to get the position in the $[0,1]^2$ embedding.
 
-[TODO FIG : splitting the segment recursively locates the position of the component]
+![Splitting $[0,1]$ recursively gives the binary bit expansion of $v_1$](figures/photo_2023-06-10_17-21-28.jpg)
 
-We define the mapping $S^n$ that takes the $n$-bit truncations of $v_1$ and $v_2$ as input, and outputs a $2n$ bit truncation of $\alpha=S(v_1, v_2)$, where $S$ is the $n\to\infty$ limit of the sequence $S^n$.
+We define the mapping $S^n$ that takes the $n$-bit truncations $v^{(n)}_1$ and $v^{(n)}_2$ as input, and outputs a $2n$ bit truncation $\alpha^{(n)}$ of $\alpha=S(v_1, v_2)$, where $S$ is the $n\to\infty$ limit of the sequence $S^n$.
 
 $$
 \begin{alignat}{2}
 S^n : &\{0, \tfrac{1}{2^n}, \cdots, 1-\tfrac{1}{2^n}\}^2 &&\mapsto \{0, \tfrac{1}{4^n}, \cdots, 1-\tfrac{1}{4^n}\} \\
-&(0.b^1_1 b^1_2 \cdots b^1_n, 0.b^2_1 b^2_2 \cdots b^2_n) &&\mapsto 0.b_1 b_2 \cdots b_{2n}
+&(v^{(n)}_1,v^{(n)}_2)=(0.b^1_1 b^1_2 \cdots b^1_n, 0.b^2_1 b^2_2 \cdots b^2_n) &&\mapsto \alpha^{(n)}=0.b_1 b_2 \cdots b_{2n}
 \end{alignat}
-$$
+$$ {#eq-Sn}
 
 In general, each bit $b^k$ of the image would be a binary function of the $n$ bits of $v_1$ and the $n$ bits of $v_2$, implicitly $b_k = b_k(b^1_1, b^1_2, \cdots, b^1_n, b^2_1, b^2_2, \cdots, b^2_n)$.
 With this, we are able to formulate any mapping of $4^n$ distinct elements (here : squares of size $2^{-n} \times 2^{-n}$) onto $4^n$ elements (here : segments of length $4^{-n}$).
 
 The intuition behind the use of $2n$ bits for the image is that we take $2^n \times 2^n = 4^n$ squares in $[0,1]^2$ and map those to $4^n$ segments in $[0,1]$. In an informal way, we map $n+n$ bits onto $2n$ bits.
 
-![](figures/mapping_demo_indices.png)
+In the following, we will restrict ourselves to mappings where the functions $b_k(\{b^1_l\}_{l\in\{1,\cdots,n\}}, \{b^2_l\}_{l\in\{1,\cdots,n\}})$ are defined in such a way that each bit of the inputs is used once, and only once. Therefore, for each bit $k$ there is a function $b_k(b^{\mu_k}_{l_k})$ acting on only one bit of the input. $\mu_k \in \{1,2\}$ is the input component and $l_k \in \{1,\cdots,n\}$ the bit number corresponding to $k$. Since this function is binary, the only allowed definitions are 
 
-In the following, we will restrict ourselves to mappings where the functions $b_k(\{b^1_l\}_{l\in\{1,\cdots,n\}}, \{b^1_l\}_{l\in\{1,\cdots,n\}})$ are defined in such a way that each bit of the inputs is used once, and only once. Therefore, for each bit $k$ there is a function $b_k(b^{\mu_k}_{l_k})$ acting on only one bit. Since this function is a binary, the only allowed definitions are $b_k(b^{\mu_k}_{l_k}) = b^{\mu_k}_{l_k}$ (identity) or $b_k(b^{\mu_k}_{l_k}) = 1-b^{\mu_k}_{l_k}$ (inversion). We furthermore restrict the formulation by allowing only identity functions[^inversion_restriction].
+* $b_k(b^{\mu_k}_{l_k}) = b^{\mu_k}_{l_k}$ (identity),
+* $b_k(b^{\mu_k}_{l_k}) = 1-b^{\mu_k}_{l_k}$ (inversion),
+* $b_k(b^{\mu_k}_{l_k}) = 0$ (constant zero),
+* $b_k(b^{\mu_k}_{l_k}) = 1$ (constant one).
 
-[^inversion_restriction]: This last restriction is not strictly necessary for the following, however it helps to have a simple model to build a good understanding of the problem
+The constant functions are ignored, since they effectively just restrict the output domain to a subset of $[0,1]$ ; and since only $2n$ bits are allowed for the output, they are a "waste" by ignoring information of the input.
+Because the don't add information to the output (they just "swap" the values of the output bits at known locations), inversion functions are also not considered.
 
-All this mathematical formalism expresses, in essence, that the mapping $S^n$ is just a *reordering* of the input bits. The geometric view of this is that $S^n$ takes $4^n$ points embedded in $[0,1]^2$, and reorders them onto $4^n$ points in $[0,1]$. Therefore, there is a one-to-one mapping between the points on the square and the points on the segment, and the mapping $S^n$, with the restrictions is bijective.
+<!-- [^inversion_restriction]: This last restriction is not strictly necessary for the following, however it helps to have a simple model to build a good understanding of the problem -->
 
-[TODO FIG : mapping of points to segment]
+All this mathematical formalism expresses, in essence, that the mapping $S^n$ is just a *reordering* of the input bits. $S^n$ takes $4^n$ points embedded in $[0,1]^2$, and reorders them onto $4^n$ points in $[0,1]$.
+
+<!-- ```{dot}
+digraph {
+	subgraph {
+		rank=same
+		ordering="in"
+		node [shape=square];
+		edge [style=invis]           // for all edges, invisible links
+		// we use the invisible edges to establish their sequence (kludge)
+		cdots1 [label=⋯ shape=plaintext]
+		cdots2 [label=⋯ shape=plaintext]
+		b11 [label=b¹₁ shape=rect]
+		b12 [label=b¹₂ shape=rect]
+		b1n1 [label=b¹ₙ₋₁ shape=rect]
+		b11 -> b12 -> cdots1 -> b1n1 -> b1n -> b21 -> b22 -> cdots2 -> b2n
+	}
+
+	subgraph {
+		rank=same
+		ordering="in"
+		edge [style=invis]           // for all edges, invisible links
+		// we use the invisible edges to establish their sequence (kludge)
+		b1 -> b2 -> b3 -> b4 -> b5 -> b6 -> cdots0 -> b_2n1 -> b_2n
+	}
+
+	b11 -> b1
+	b21 -> b2
+	b12 -> b3
+	b22 -> b4
+	b1n -> b_2n1
+	b2n -> b_2n
+}
+``` -->
+
+Therefore, there is a one-to-one mapping between the points on the square and the points on the segment, and the mapping $S^n$ is bijective.
 
 These simplifications might seem too restrictive, however we will show in the rest of this thesis that this formulation is flexible enough to express mapping which have good properties such as "locality", all while being simple enough to help build an intuition.
 
-Random mapping. mentionned in the introduction. basically a random permutation of bits. not even stable formulation for fixed $n$.
+TODO : might need to talk about how $S(v^{(n)}_1,v^{(n)}_2) = S^n(v^{(n)}_1,v^{(n)}_2)$ in appendix ? so basically the limit $n\to\infty$ is the limit where we take infinite precision in the input. Or we can drop the $n$ on the inputs, $\alpha^{(n)} = S^n(v^{(n)}_1,v^{(n)}_2) = S^n(v_1,v_2)$ (i think this true just for pointwise convergent mappings)
 
-Anti-Z mapping. Also called in code "Far mapping" (initially I didn't see the link with the Z-order curve), because it destroys locality 2D -> 1D.
+TODO NOTE : talk about how we center the bins instead of taking the corners. this is not super important in the n -> oo limit, but numerically at 0 and 1 the CDF-1 goes to infty. at infinity, the connectivity kernel is infinite but we have zero neurons (zero measure) (linear growth vs exponential tail of the gaussina) : effectively the recurrent current is zero and we can safely ignore these effects.
+
+#### A link with space-filling curves
+
+With this formalism in mind, we give a geometric intrpretation to the mappings $S^n$. The core idea is that the populations in $[0,1]$ have a clear ordering to them, and we can enumerate them simply by their position in the embedding. Since we constructed $S^n$ to be bijective, this enumeration traces a path in the corresponding populations of the $[0,1]^2$ embedding.
+
+We illustrate this by introducing the "column" mapping.
 
 $$
-\alpha = A(v_1,v_2) = 0.b^1_n b^2_n b^1_{n-1} b^2_{n-1} \cdots b^1_1 b^2_1 = \sum_{k=1}^{n} b^1_{n+1-k} 2^{1-2k} + b^2_{n+1-k} 2^{-2k}
-$$
+\alpha^{(n)} = C(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n
+$$ {#eq-column}
 
-Its inverse is :
+The intuition behind this mapping is we enumerate the populations on a grid column by column, letting the index of the rows vary the fastest. We visualize this mapping in @fig-col, by coloring the square populations by the position of the corresponding $[0,1]$ population, and additionally drawing lines between the points to help guide the eye.
+
+```{python}
+#| label: fig-col
+#| fig-cap: Column mapping for $n=2$. Numbers represent the ordering of the populations in the $[0,1]$ embedding, neighbouring populations are connected by lines.
+#| echo: false
+def plot_trace(mapping_cls, nrec, do_trace: bool = True, do_numbers: bool = True):
+	F = ColumnMapping.new_nrec(nrec).inverse_samples(centered=True)
+	mapping = mapping_cls.new_nrec(nrec)
+	alpha = mapping(F)
+	
+	fig, ax = plt.subplots(facecolor='#FFFFFF00')
+	im = ax.imshow(alpha.reshape((2**nrec, 2**nrec)).T, origin='lower', vmin=0, vmax=1, extent=(0,1,0,1), interpolation='none')
+	mapping_letter = { ZMapping: 'Z', ColumnMapping: 'C', AntiZMapping: 'A' }.get(mapping_cls, 'S')
+	plt.colorbar(im, ax=ax, label=f'$\\alpha={mapping_letter}^{{n}}(v_1, v_2)$')
+	if do_trace:
+		# plot the trace
+		ax.plot(*F[np.argsort(alpha)].T)
+		# hide trace at numbering location
+		ax.scatter(*F.T, s=250, c=alpha, cmap='viridis', vmin=0, vmax=1, zorder=10)  
+	# add the bin numbers
+	if do_numbers:
+		for xy, i in zip(F[np.argsort(alpha)], range(1, 4**nrec+1)):
+			ax.annotate(i, xy=xy, va='center_baseline', ha='center', zorder=20, color='white', fontweight='bold',
+				path_effects=[pe.withStroke(linewidth=1, foreground='black')])
+	ax.set_aspect('equal')
+	ax.set_xlabel('$v_1$'); ax.set_ylabel('$v_2$')
+	ax.set_xlim((0,1)); ax.set_ylim((0,1))
+	ax.xaxis.set_major_locator(ticker.MultipleLocator(1/2**2))
+	ax.yaxis.set_major_locator(ticker.MultipleLocator(1/2**2))
+	# for x in np.linspace(0, 1, 2**nrec+1): ax.axvline(x, ymin=0, ymax=1, color='tab:gray', linewidth=0.5, zorder=0, clip_on=False)
+	# for y in np.linspace(0, 1, 2**nrec+1): ax.axhline(y, xmin=0, xmax=1, color='tab:gray', linewidth=0.5, zorder=0, clip_on=False)
+	breathe()
+	return fig, ax
+
+fig, ax = plot_trace(ColumnMapping, nrec=2)
+display(fig)
+```
+
+For finite $n$, we write the inverse of the column mapping in @eq-column-inverse.
 
 $$
 \begin{aligned}
-v_1 = A^{-1}_1(\alpha) &= 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \sum_{k=1}^n b_{2(n-k)-1} 2^{-k} \\
-v_2 = A^{-1}_2(\alpha) &= 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}
+v^{(n)}_1 = C^{-1}_1(\alpha^{(n)}) &= 0.b_1 b_2 \cdots b_n = \sum_{k=1}^n b_{k} 2^{-k} \\
+v^{(n)}_2 = C^{-1}_2(\alpha^{(n)}) &= 0.b_{n+1} b_{n+2} \cdots b_{2n} = \sum_{k=1}^n b_{n+k} 2^{-k}
 \end{aligned}
+$$ {#eq-column-inverse}
+
+This way of enumerating the square populations might be familiar to people who have worked with numerical arrays. In such (contiguous) arrays, the values of are laid out in memory in "row-major" order (C-style) or "column-major" order (Fortran-style) ; and we can go from the 1D memory representation to a 2D matrix representation by using "reshape" operations. Effectively, this is how this mapping is implemented in code, using `numpy.ravel_multi_index` (2D to 1D) and `numpy.unravel_index` (1D to 2D).
+
+#### "Local" space-filling curves {#sec-local}
+
+Research in computer science and efficient data structures has given rise to other ways of storing 2-dimensional information in a 1-dimensional memory.
+A problem in GPU computing is that of texture locality : sampling of textures often involves reading data corresponding to a small 2D region, and therefore in order to improve speed (minimize cache misses), the 2D data should be packed close together in the 1D memory.
+One way of ordering the 2D texture data in the 1D memory is by using the Z-order curve (also known as "Morton mapping" or "Lebesgue curve" @Sagan1994). In this way, points close in 2D *tend* to be tightly packed in 1D. We can define the Z-order curve (Z-mapping) in the following way[^zcurve] : 
+
+[^zcurve]: The Z-curve is often defined in the transpose manner, putting first the bits of $v_2$ (vertical component) then the bits of $v_1$, instead of $v_1$ then $v_2$. Doing this, we get the "upright" Z shapes, as [shown here](https://en.wikipedia.org/wiki/Z-order_curve#/media/File:Four-level_Z.svg).
+
 $$
+\alpha^{(n)} = Z(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^2_1 b^1_2 b^2_2 \cdots b^1_n b^2_n = \sum_{k=1}^{n} b^1_k 2^{1-2k} + b^2_k 2^{-2k}
+$$ {#eq-z}
 
-it does not converge
-
-Column mapping. Also called "Reshape mapping" in the code. It converges to a projection on the $x$-axis
-
-$$
-\alpha = C(v_1,v_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n
-$$
-
-Its inverse is :
+And its inverse is :
 
 $$
 \begin{aligned}
-v_1 = C^{-1}_1(\alpha) &= 0.b_1 b_2 \cdots b_n = \sum_{k=1}^n b_{k} 2^{-k} \\
-v_2 = C^{-1}_2(\alpha) &= 0.b_{n+1} b_{n+2} \cdots b_{2n} = \sum_{k=1}^n b_{n+k} 2^{-k}
+v^{(n)}_1 = Z^{-1}_1(\alpha^{(n)}) &= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
+v^{(n)}_2 = Z^{-1}_2(\alpha^{(n)}) &= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}
 \end{aligned}
-$$
+$$ {#eq-z-inverse}
 
-Z-mapping. Also called Z-order curve, Morton mapping. It conserves locality 2D -> 1D.
+@fig-z is a visualization for the Z-mapping when $n=2$, and shows how it is composed of the "Z" shapes giving it its name.
 
-$$
-\alpha = Z(v_1,v_2) = 0.b^1_1 b^2_1 b^1_2 b^2_2 \cdots b^1_n b^2_n = \sum_{k=1}^{n} b^1_k 2^{1-2k} + b^2_k 2^{-2k}
-$$
+```{python}
+#| label: fig-z
+#| fig-cap: Z-mapping for $n=2$. Numbers represent the ordering of the populations in the $[0,1]$ embedding, neighbouring populations are connected by lines.
+#| echo: false
+fig, ax = plot_trace(ZMapping, nrec=2)
+display(fig)
+```
 
-Its inverse is :
+To illustrate this notion of locality, we take a few consecutive populations in 1D and show where the corresponding populations fall in the 2D embedding. This is done in @fig-locality, in which we see that the Z-mapping seems to conserve locality from 1D to 2D : populations close in 1D seem to be close in 2D.
 
-$$
-\begin{aligned}
-v_1 = Z^{-1}_1(\alpha) &= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
-v_2 = Z^{-1}_2(\alpha) &= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}
-\end{aligned}
-$$
+We also see that the Column mapping is not local in this sense, since there is a large variation along the vertial direction, which seems to always be "of order one". This can be explained by looking at the expression for $C^{-1}_2(\alpha^{(n)}) = 0.b_{n+1} b_{n+2} \cdots b_{2n}$ : small variations of the order of $2^{-n}$ in the value of $\alpha$ always result in variations of order one in $C^{-1}_2$.
 
-note that in other definitions (and in code) it is defined by $0.b^2_1 b^1_1 b^2_2 b^1_2 \cdots$. This difference is not fundamentally important though.
+```{python}
+#| label: fig-locality
+#| fig-cap: Locality of the mappings. The 2D populations corresponding to three small segments of 1D populations of length $\tfrac{1}{16}$ are shown. The figures are generated with $n=6$.
+#| echo: false
+##| fig-subcap:
+##|   - Z mapping
+##|   - Column mapping
+##| layout-ncol: 2
+fig, axes = plt.subplot_mosaic('aa\nbc', facecolor='#FFFFFF00', figsize=(6, 4), height_ratios=[1, 5], subplot_kw=dict(facecolor='#FFFFFF00'))
+nrec = 6
 
-[TODO FIG : 3D vis of the mapping]
+cmap = mpl.colormaps['viridis']
+cmap.set_bad(color='#FFFFFF00')
+
+alpha = np.linspace(0, 1, 4**nrec+1)
+mask1d = (0.2 <= alpha) & (alpha < 0.2+1/4**2)
+mask1d |= (0.8 <= alpha) & (alpha < 0.8+1/4**2)
+mask1d |= (0.5 <= alpha) & (alpha < 0.5+1/4**2)
+alpha[~mask1d] = np.nan
+axes['a'].imshow(alpha[None, :], vmin=0, vmax=1, extent=((0,1,0,0.2)), interpolation='none', cmap=cmap)
+axes['a'].set_aspect('auto')
+axes['a'].spines.left.set_visible(False)
+axes['a'].yaxis.set_visible(False)
+axes['a'].set_title('Populations in 1D', fontsize='medium')
+axes['a'].set_xlabel('$\\alpha$')
+breathe(axes['a'])
+
+for mapping_cls, ax in zip((ZMapping, ColumnMapping), (axes['b'], axes['c'])):
+	F = ColumnMapping.new_nrec(nrec).inverse_samples(centered=True)
+	mapping = mapping_cls.new_nrec(nrec)
+	alpha = mapping(F)
+	mask1d = (0.2 <= alpha) & (alpha < 0.2+1/4**2)
+	mask1d |= (0.8 <= alpha) & (alpha < 0.8+1/4**2)
+	mask1d |= (0.5 <= alpha) & (alpha < 0.5+1/4**2)
+	alpha[~mask1d] = np.nan
+	ax.imshow(alpha.reshape((2**nrec, 2**nrec)).T, origin='lower', vmin=0, vmax=1, extent=(0,1,0,1), interpolation='none', cmap=cmap)
+	ax.set_xlabel('$v_1=S_1^{{-1}}(\\alpha)$'); ax.set_ylabel('$v_2=S_2^{{-1}}(\\alpha)$')
+	ax.set_xlim((0,1)); ax.set_ylim((0,1))
+	ax.xaxis.set_major_locator(ticker.MultipleLocator(1/2**2))
+	ax.yaxis.set_major_locator(ticker.MultipleLocator(1/2**2))
+	ax.set_title(f'To 2D with {mapping_cls.__name__}', fontsize='medium')
+	breathe(ax)
+
+display(fig)
+```
+
+The attentive reader might however object this treatment of locality, since in some sense the Column mapping is local, but from 2D to 1D. This can be seen from the definition of $\alpha^{(n)}=C(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n$, since small variations of order $2^{-n}$ in $v^{(n)}_1$ result in small variations also of order $2^{-n}$ in $\alpha^{(n)}$. Similarly, small variations of order $2^{-n}$ in $v^{(n)}_1$ result in even smaller variations also of order $2^{-2n}$ in $\alpha^{(n)}$ ! We therefore seem to have two notions of locality : from 1D to 2D, and from 2D to 1D ; and the Column mapping shows that they are not equivalent.
+
+However, we argue that in our case only the notion of locality from 1D to 2D matters. In essence, the dynamics in the 2D embeddeding are already known, and we ask the question of whether it is possible to write an equivalent neural field 1D (in the sense that it has identical latent trajectories). Without repeating the intuition given in @sec-intro-simnf, if neighbouring populations in 1D have similar potentials, then this allows us to write a neural field equation in $[0,1]$. Therefore we would like to have the property that populations close in 1D are (inversely) mapped to populations close in 2D, which already have similar potentials.
+
+<!-- note for me : find a formulation for the recursive local mapping. it is not trivial, since it has
+
+```
+n=1
+0 0 -> 00
+1 0 -> 01
+1 1 -> 10
+0 1 -> 11
+
+n=2
+00 00 -> 0000
+01 00 -> 0001
+01 01 -> 0010
+00 01 -> 0011
+10 00 -> 0100
+11 00 -> 0101
+11 01 -> 0110
+10 01 -> 0111
+10 10 -> 1000
+11 10 -> 1001
+11 11 -> 1010
+10 11 -> 1011
+00 10 -> 1100
+01 10 -> 1101
+01 11 -> 1110
+00 11 -> 1111
+```
+
+this might be nice as an appendix, to show that our formulation is very simplistic, and more complex formulations can also have nice properties
+
+this also shows our proof is "incomplete", because it relies on the fact we have a permutation of the bits, although it is not strictly necessary. we have a sufficient, but not necessary proof
+
+also : this might be a type of peano curve or smth. see @Sagan1994
+
+https://www.cut-the-knot.org/Curriculum/Geometry/LebesgueCurve.shtml
+-->
 
 ### Sequence of mappings and their limit
 
-the sequence in [0,1] traces a path in [0,1]²
+#### Pointwise convergence of mappings
 
-intuition for column. 
+We now discuss what happens to the bijective mappings when $n\to\infty$. For this, let us consider again the "random mapping" considered in the introduction @sec-intro-simnf. We discussed how this hypothetical mapping maps each position in $[0,1]^2$ into a "random position" in $[0,1]$. A finite-$n$ formulation would be that the mapping corresponds to a *random permutation* of the bits. It is however unclear how to formally write this mapping in a way that it is well-defined for a given $n$, since by definition, it is random. For a given position of the input $(v_1,v_2)$, we would like that the image is stable in the $n\to\infty$ limit.
 
-the limit of pointwise convergent mappings and measurable (which they are) is measurable.
+$$
+S^{n}(v_1, v_2) \xrightarrow{n\to\infty} \alpha =: S(v_1, v_2)
+$$
 
-argue over binary expansion, and especially how the fact that it converges forces the least significant bits of $z_1$ and $z_2$ to go to the lsb of $\alpha$. this imposes some structure of what mappings are good
+This is the condition of "pointwise convergence" of the mappings. We might be tempted to write that any mapping for which we can write the binary expansion $S^n$ is pointwise convergent, however we show by the example of the "anti-Z" mapping that this is not the case. Let us define for finite $n$
 
-z-mapping can in this context be seen as a "canonical representation" of the pointwise convergent, bijective, local mapping.
+$$
+\begin{aligned}
+\alpha^{(n)} &= A(v^{(n)}_1,v^{(n)}_2) = 0.b^1_n b^2_n b^1_{n-1} b^2_{n-1} \cdots b^1_1 b^2_1 = \sum_{k=1}^{n} b^1_{n+1-k} 2^{1-2k} + b^2_{n+1-k} 2^{-2k} \\
+\iff& \\
+v^{(n)}_1 &= A^{-1}_1(\alpha^{(n)}) = 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \sum_{k=1}^n b_{2(n-k)-1} 2^{-k} \\
+v^{(n)}_2 &= A^{-1}_2(\alpha^{(n)}) = 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}
+\end{aligned}
+$$
 
-### Numerical implementation
+<!-- Anti-Z mapping. Also called in code "Far mapping" (initially I didn't see the link with the Z-order curve), because it destroys locality 2D -> 1D. -->
 
-what we are doing in reality is assigning indices to squares of size $2^{-n} \times 2^{-n}$, and mapping them to indices representing segments of length $4^{-n}$
+```{python}
+#| label: fig-anti-z
+#| fig-cap: Anti-Z mapping for $n=2$. Numbers represent the ordering of the populations in the $[0,1]$ embedding. We don't plot the trace, because it has many crossovers and overlaps and makes the plot hard to read.
+#| echo: false
+fig, ax = plot_trace(AntiZMapping, nrec=2, do_trace=False)
+display(fig)
+```
 
-[TODO FIG : finite n is population dynamics. drawing of the square-to-segment mapping, something like
+@fig-anti-z gives some insight into the problem of this mapping. For a fixed input $(v_1,v_2)$, we see that the output point position jumps around, and that these jumps do not decay, they are always of order 1. The intuition behind pointwise convergence is that as $n$ increases, the image of a point by $S^n$ is continually refined.
 
-![Alt text](figures/Screenshot_2023-06-03_19-59-49.png)]
+Another way of looking at this is to consider how $\alpha^{(n)}$ fluctuates as the precision of the input increases with $n \to \infty$. As we refine the input with fluctuations of order $2^{-n}$, the output $\alpha^{(n)} = b^1_n 4^{-1} + b^2_n 4^{-2} + b^1_{n-1} 4^{-3} + b^2_{n-1} 4^{-4} \cdots$ fluctuates (at least) with amplitude $\sim 4^{-2}$ independantly of $n$. Therefore the output never converges, and the mapping $A^{n}$ is not pointwise convergent.
 
-we use the fact we have a compact set onto another [0,1]² -> [0,1], so we can write a binary expansion of (x, y) -> z.
-x has n bits, y has n bits, z has 2n bits.
+In our setting, how can we therefore guarantee that the mappings are pointwise convergent ? We need to show that small fluctuations in the input result in small fluctuations of the output. The binary expansion allows us to argue that for the sequence of mappings to be pointwise convergent, we need that the "least significant bits" (LSB, the bits to the right of the binary expansion) of the input are mapped to the LSB of the output. Conversely, the "most significant bits" (MSB, the bits to the left of the binary expansion) should be mapped to the MSB of the output.
 
-an arbitrary mapping can then be written as a recombination of the bits of x and y (and any other constant) into 2n bits
-this is good because with floating point we lose precision, here we work with integers (~ fixed point precision), so the implementations of the mappings are exact.
+We illustrate this with the Z-mapping, written in @eq-z. Corrections of order $2^{-n}$ in $v_1$ and $v_2$ induce corrections of order $2^{1-2n}$ and $2^{-2n}$ in $\alpha$ respectively. Therefore, it is easy to see that the Z-mapping is pointwise convergent as $n\to\infty$. Similarly, the Column mapping in @eq-column is also pointwise convergent, since as discussed @sec-local it has locality of 2D to 1D.
 
-the locality of 2D -> 1D is not important (i.e neurons can be repeated in 1D without too much trouble). locality 1D -> 2D is much more important (a neuron in 1D must refer to only one (not multiple) neurons in 2D)
+#### Conservation of bijectivity in the $n\to\infty$ limit
 
-![](figures/mappings_h1d_state.png)
+However, the behavior of the Column mapping in that of the Z-mapping are very different in the $n\to\infty$ limit. Up until now, we have avoided this issue by considering the finite-$n$ approximation of the mappings, which by construction is bijective. We illustrate the infinite-$n$ (numerically, large $n$) limit of these two mappings in @fig-n-to-infty.
 
-![simulation of 2D field, and mapping of the dynamics to the 1D field](figures/mapping_recursive_quadrant.mp4)
+```{python}
+#| label: fig-n-to-infty
+#| fig-cap: The $n\to\infty$ limit of mappings.
+#| fig-subcap:
+#|   - Z-mapping
+#|   - Column mapping
+#| layout-ncol: 2
+#| echo: false
+fig, ax = plot_trace(ZMapping, nrec=6, do_trace=False, do_numbers=False)
+display(fig)
+fig, ax = plot_trace(ColumnMapping, nrec=6, do_trace=False, do_numbers=False)
+display(fig)
+```
+
+We see that the Column mapping converges to projection on $v_1$, in other words $\alpha=C(v_1, v_2) = v_1$, showing that despite every $C^{n}$ being bijective, the limit of the sequence is not bijective. This becomes clear when looking at the binary expansion of $C$ :
+
+$$
+\begin{aligned}
+C(v_1, v_2) &= \lim_{n\to\infty} C^{(n)}(v_1,v_2)\\
+&= \lim_{n\to\infty} 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n \\
+&= \lim_{n\to\infty} 0.b^1_1 b^1_2 \cdots \\
+&= v_1
+\end{aligned}
+$$
+
+The limit is not bijective, because the bits of $v_2$ are "lost" in the $n\to\infty$ limit, and the inverse $C_2^{-1}(\alpha)$ is not well-defined, since it "takes bits from $\infty$ to $2\infty$".
+
+The Z-mapping however seems to converge to some sort of fractal structure, the limit is nowhere continuous and has an infinite number of discontinuities, but the size of these discontinuities is overwhelmingly small : on average, the fact that there are large discontinuities does not matter in the $n\to\infty$. We don't go further into detail about this in this section, but this gives some intuition for the arguments presented in @sec-locality.
+
+We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective. In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary :
+
+1. condition of pointwise convergence : the LSB of the input must be mapped to the LSB of the output,
+2. condition of "no information loss" : the MSB of the input must be mapped to the MSB of the output.
+
+These two conditions do not leave a lot of flexibility in the design of new mappings. We can of course define mappings where we interleave the bits in a different order, for instance $0.b^2_1 b^1_1 b^2_2 b^1_2 \cdots$ ; or mappings where we reorder the $k$ bits of the input, for instance $0.b^1_2 b^2_2 b^1_1 b^2_1 b^1_4 b^2_4 b^1_3 b^2_3 \cdots$, but the conditions restrict the reordering to be permutations of neighbouring bits. In essence, these mappings are not fundamentally different, and the Z-mapping can be seen as a "canonical representation" of the pointwise convergent mappings with bijective limits.
+
+### Visualizating the mappings of the dynamic 2D neural field
+
+It is time for a little treat. Before we argue about how to simulate the dynamics of the 1D neural field, let us simulate the dynamics of the 2D neural field, then at each timestep, we map the 2D neural field to the 1D embedding. This will give us a reference of how the 1D neural field is supposed to look like under the condition that its latent dynamics are identical.
+
+![(TODO) Animation showing the image of the dynamics 2D neural field through different mappings $S : [0,1]^2 \mapsto [0,1]$](figures/photo_2023-06-10_17-21-19.jpg)
 
 ## Coarse-graining the neural field in $[0,1]$
 
@@ -219,11 +507,13 @@ In the following, this assertion is made by comparing the trajectories $(m_0(t),
 
 [^4]: Each point in $(m_0,m_1)$ fully encodes the state of a linear low-rank RNN. We can prove (see my own handwritten notes) that $m_\mu(t) \approx \kappa_\mu(t)$ when $\phi(h)$ is close to linear. In our case, $\phi(h)$ is a sigmoid (I found a sigmoid has better convergence properties than a linear function), and can be considered linear as long as $-3 \lesssim h(t) \lesssim 3$.
 
-### Reinterpretation of sampling and binning methods
-
 reintrpretation of the simulation methods
 
-average low-rank vectors
+-> sampling the 2D connectivity kernel
+
+-> average low-rank vectors
+
+![Alt text](figures/Screenshot_2023-06-03_19-59-49.png)]
 
 derivation of $\Jab$ and mean patterns
 

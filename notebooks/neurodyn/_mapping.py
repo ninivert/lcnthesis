@@ -394,7 +394,7 @@ class RecursiveLocalMapping(BinMapping):
 		return f'RecursiveLocalMapping{{nrec={self.nrec}}}'
 
 
-class ReshapeMapping(BinMapping):
+class ColumnMapping(BinMapping):
 	"""Implements mapping column-by-column (reshape operation)
 	
 	This mapping converges to a projection on x.
@@ -413,7 +413,7 @@ class ReshapeMapping(BinMapping):
 	def __str__(self) -> str:
 		return f'ReshapeMapping{{nx={self.nx}, ny={self.ny}}}'
 
-ColumnMapping = ReshapeMapping
+ReshapeMapping = ColumnMapping
 
 
 class DiagonalMapping(BinMapping):
@@ -505,6 +505,9 @@ class SzudzikMapping(BinMapping):
 			np.vstack((fsqrt, indices - fsqrt**2 - fsqrt)).T,
 		)
 
+	def __str__(self) -> str:
+		return f'SzudzikMapping{{nxy={self.nxy}}}'
+
 
 class ZMapping(BinMapping):
 	"""Implements [Z-order curve](https://en.wikipedia.org/wiki/Z-order_curve)"""
@@ -525,12 +528,16 @@ class ZMapping(BinMapping):
 
 	def indices(self, F: np.ndarray, bbox: Box | None = None) -> np.ndarray:
 		indices2d = self.indices2d(F, bbox)
-		return ZMapping.part1by1_64(indices2d[:, 0]) | (ZMapping.part1by1_64(indices2d[:, 1]) << 1)
+		return ZMapping.part1by1_64(indices2d[:, 1]) | (ZMapping.part1by1_64(indices2d[:, 0]) << 1)
 
 	def indices_to_indices2d(self, indices: np.ndarray) -> np.ndarray:
 		indices2d = np.zeros((len(indices), 2), dtype='uint64')
-		indices2d[:, 0] = ZMapping.unpart1by1_64(indices)
-		indices2d[:, 1] = ZMapping.unpart1by1_64(indices >> 1)
+		# NOTE : we inverse x and y, because we define the mapping as
+		# alpha = 0.b^1_1 b^2_1 b^1_2 b^2_2 ...
+		# whereas the Z-mapping is defined as
+		# alpha = 0.b^2_1 b^1_1 b^2_2 b^1_2 ...
+		indices2d[:, 1] = ZMapping.unpart1by1_64(indices)
+		indices2d[:, 0] = ZMapping.unpart1by1_64(indices >> 1)
 		return indices2d
 
 	@staticmethod
