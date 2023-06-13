@@ -4,61 +4,89 @@
 {{< include ../macros.tex >}}
 :::
 
+In this chapter, we introduce a toy model so that we can later study the mappings of embedding spaces. We stress that this toy model serves only for illustration purposes, and our results apply to any neural field. For this reason, we only cite or give short derivations of results used to understand the model, and the influence of the mappings that are later applied to it.
+
 ## Networks of neurons to neural fields
 
-### Low-rank network of neurons
+### Low-rank networks of neurons
 
-The results we present in this thesis should hold for any neural field, but for the sake of argument we shall consider a low-rank rate neural network, for which there are informal proofs of convergence to a neural field equation  @schmutz2023convergence \[TODO : reformulate this\]. Low-rank neural networks hold their name from the rank of their connectivity matrix, defined in @eq-lrj.
-
-$$
-J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
-$$ {#eq-lrj}
-
-In the case that $\vec F_i = (F_{1,i},\cdots,F_{p,i}) \in \Rp$ sample from some $p$-dimensional distribution $\rho$, the vectors $\vec F_i$ define a "natural embedding" of neuron $i$ in $\Rp$. When the number of neurons increases, the numeric density of neurons in the embedding approaches the actual probability distribution $\rho$, and we can intuitively see the convergence towards a connectivity kernel $w(\vec z, \vec y) = \sum_{\mu=1}^p z_\mu g_\mu(y_\mu)$.
-
-start with the study of network of neurons, no external current
-
-[TODO MATH : show self-connections $\sim \frac 1N$, so we ignore them]
-
-general setting of low-rank networks
+The toy model we introduce is an instance of a low-rank rate neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) $p$. We write the connectivity matrix as
 
 $$
-\begin{aligned}
-\dot h_i(t) =& -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^N F_{\mu i} G_{\mu j} \phi(h_j(t)) \\
-F_{\mu i} =& f_\mu(z_{1 i}, \cdots, z_{p i}), \\
-G_{\mu i} =& g_\mu(z_{1 i}, \cdots, z_{p i}), \\
-&\vec{z_i} \stackrel{\text{i.i.d.}}{\sim} \rho
-\end{aligned}
-$$
+J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu i} G_{\mu j}.
+$$ {#eq-lowrankj}
 
-interpretation : each neuron has a position $\vec{z_i} \in \Rp$. $J_{ij} = \frac 1N \sum_{\mu=1}^p = F_{\mu i} G_{\mu j}$ is the weight of recurrent currents.
+The geometric view of these networks is that the recurrent currents lie in a $p$-dimensional subspace of $\R^N$ spanned by the vectors $\{\vec{F_1}, \cdots, \vec{F_p}\}$ (where $\vec{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})$), which therefore form a "natural" embedding.
+
+Recalling the notation from the introduction, $h_i(t)$ are the neuron potentials (with initial condition $h_i(0)$), $\phi : \R \mapsto \R^+$ is the monotonic increasing activation function, and we write the evolution equation for this network of neurons:
+
+$$
+\dot h_i(t) = \underbrace{-h_i(t)}_\text{exponential decay} + \underbrace{\frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} F_{\mu i} G_{\mu j} \phi(h_j(t))}_\text{recurrent current $I^\text{rec}_i(t)$}.
+$$ {#eq-lowrank-evolution}
+
+The exponential decay term describes how, in isolation, a neuron's potential tends to zero, biologically corresponding to a depolarized membrane. The recurrent current term $I^\text{rec}_i(t)$ describes the "currents" received by neuron $i$ from all the other neurons in the network.
+
+We would like to add a few remarks on the physical units of @eq-lowrank-evolution. Strictly speaking, a prefactor $\tau$ with units of $\mathrm{seconds}^{-1}$ should be multiplied with $\dot h_i(t)$ of units $\mathrm{volt}\cdot\mathrm{seconds}^{-1}$, such that the left hand side of the equation is consistent with the unit of voltage. Similarly, the activation function has units $\mathrm{seconds}^{-1}$ and the connectivity matrix units of $\mathrm{coulomb}$, and a multiplicative term $R$ with units $\mathrm{ohm}$ should multiply the recurrent currents in order to yield a voltage. By rescaling of time or connection weights both $\tau$ and $R$ can be set to one, and so we omit to write them.
+
+One last remark is that in our model, we omit to add any source of external currents: from the initial condition, the network is left to evolve in isolation.
 
 ### Gaussian $\mathcal{N}(\vec 0, \mathbb{1}_N)$ low-rank network of neurons
 
-#### Description
+Let us now specify the low-rank model introduced in the previous section, and use the model introduced in @schmutz2023convergence. This paper defines the low-rank vectors $F_{\mu i}$ such that each component independantly samples a standard gaussian (zero mean, unit variance). In other words, every neuron $i$ samples a vector $\vec{F_i} = (F_{1i}, \cdots, F_{pi})$ from the $p$-dimensional gaussian ball. We write
 
-our setting is :
+$$
+\vec{F_i} = \vec{z_i},\ \vec{z_i} \stackrel{\text{iid}}{\sim} \rho(z_1, \cdots, z_p),
+$$
+
+where
 
 $$
 \begin{aligned}
-f_\mu(z_1, \cdots, z_p) &= z_\mu \\
-g_\mu(z_1, \cdots, z_p) &= \tilde \phi(z_\mu) = \frac{\phi(z_\mu) - \avg{\phi(z_\mu)}}{\mathrm{Var}[\phi(z_\mu)]} \\
-\phi(z) &= \frac{1}{1+\mathrm{e}^{-z}} \\
-\vec{z} &= (z_1, \cdots, z_p) \sim \rho(z_1, \cdots, z_p) = \prod_{\mu=1}^p \mathcal{N}(z_\mu),\\
-&\text{where}\ \mathcal{N}(z) = \frac{1}{\sqrt{2 \pi}} \mathrm{e}^{-\frac 12 z^2}
+\rho(z_1, \cdots, z_p) &= \prod_{\mu=1}^p \mathcal{N}(z_\mu) \\
+\mathcal{N}(z) &= \frac{1}{\sqrt{2 \pi}} \mathrm{e}^{-\frac 12 z^2}.
 \end{aligned}
 $$
 
-#### Study of fixed points and their stability
+The vectors $G_{\mu i}$ are defined as
 
-* $h_i = z_{\mu,i} \quad \forall \mu = 1,\cdots,p$ (stable)
-* $h_i=0$ (unstable)
+$$
+G_{\mu i} = \tilde\phi(z_{i \mu}) \stackrel{\text{def}}{=} \frac{\phi(z_{i \mu}) - \avg{z_{i \mu}}}{\mathrm{Var}[\phi(z_{i \mu})]}.
+$$
 
-the fixed points also become more and more stable as N->oo (study of stability with eigenvalues)
+This choice be elucidated in a few paragraphs. Finally, the activation function remains to be defined. For simplicity, we take it to be the logistic function, although the following results are not sensitive to this choice.
 
-talk about since $\lambda_\nu = \avg{g^\prime_\nu(z_\nu) f_\nu(z_\nu)}-1$, the sharper the gain, the more stable to fixed points (since the bump of $\delta \phi$ becomes more concentrated)
+$$
+\phi(h) = \frac{1}{1 + \mathrm{e}^h}
+$$
 
-![spectrum of $K$ for $N=64$](figures/spectrum_N=64.png)
+Putting everything together, we get the following expression for the equation of evolution of the network of neurons:
+
+$$
+\dot h_i(t) = -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h_j(t)).
+$$ {#eq-toymodel-evolution}
+
+We note that contrary to the model introduced in @schmutz2023convergence, we ignore the self-connections term, because it introduces a vanishing correction of order $\bO(1/N)$.
+
+In order to understand this model better, we can do an analysis of its fixed points and their stability. Here we summarize the results from the derivation presented in @sec-fixedpoints. We use the notation $h^\star$ to refer to fixed points of the network. The fixed points solve the roots of the evolution equation:
+
+$$
+\dot h_i(t)\ \text{evaluated at}\ h_i^\star = -h^\star_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h^\star_j(t)) = 0
+$$
+
+* $h^\star_i = z_{\mu i}$ is a stable fixed point for all $\mu \in \{1,\cdots,p\}$. Additionally, because the Gaussian distribution is symmetric around zero, $h_i = -z_{\mu i}$ are also stable fixed points. We refer to these fixed points as the "pattern" fixed points, because the network of neurons "remembers" the vectors $\vec{F_1}, \cdots, \vec{F_p}$.
+* $h^\star_i=0$ is an unstable fixed point. It corresponds to all the neuron potentials being set to zero.
+
+The analysis of stability from @sec-fixedpoints-stability can be summarized by the study of the eigenvalues of the matrix $K_{ij} = J_{ij} \partial \phi(h^\star_j) - \mathrm{Id}_{ij}$.
+
+1. Taking Taylor expansions of the activation functions reveals that -- at least up to order 3 -- uneven powers tend to increase stability of the pattern fixed points (and reciprocally, decrease stability of the zero fixed point), and vice-versa for the even powers (with the notable exception of the constant offset, which doesn't play a role in this analysis).
+2. A steeper slope at the origin of the activation function also seems to improve stability of the pattern fixed points. This corresponds to a sharper difference between the "inactive" (low potential) and the "active" (high potential) neurons. The intuition behind this is that if the slope is stronger, then the bump of $\partial \phi$ becomes "more concentrated", which helps lower the eigenvalues associated to the pattern fixed points.
+3. The spectrum of $K$ is composed of $p$ eigenvalues that depend on the fixed point, and $N-p$ eigenvalues $\lambda_\perp = -1$ corresponding to the orthogonal complement of the pattern fixed points.
+
+In our case, this analysis in Taylor expansions was sufficient to explain the observed stability resulting from a logistic activation function.
+
+We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that already at $N=64$, the analytic eigenvalues match the numerical eigenvalues closely, and this correspondance improves when we take larger $N$ (typically we will for the rest of this Thesis take $N > 10^3$).
+
+![(TODO add spectrum for zero fixed point) Spectrum of $K$ for $N=64$ for the pattern fixed point](figures/spectrum_N=64.png){#fig-spectrum}
 
 ### Emergence of structure in the networks of neurons
 
@@ -76,7 +104,7 @@ introduce the neural field as a "smooth fitting of the scatterplot"
 
 eq of neural field
 
-## Simulations schemes for neural fields {#sec-simnf}
+## Simulation schemes for neural fields {#sec-simnf}
 
 we use the RK4 integration scheme, and the integral is decoupled into product of 1D integrals, each is estimated using a dot product
 

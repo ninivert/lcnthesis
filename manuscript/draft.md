@@ -1,3 +1,48 @@
+$$
+\def\R{\mathbb R}
+\def\RR{\R^2}
+\def\Rp{\R^p}
+\def\d{\mathrm d}
+\def\Jab{\tilde J_{\alpha\beta}}
+\def\Fab{\tilde F_{\alpha\beta}}
+\def\Gab{\tilde G_{\alpha\beta}}
+\def\Jij{J_{ij}}
+\def\Fij{F_{ij}}
+\def\gij{G_{ij}}
+\def\wu{w_\textrm{U}}
+\def\hu{h_\textrm{U}}
+\def\bO{\mathcal{O}}
+\newcommand{\avg}[1]{\langle{#1}\rangle}
+\newcommand{\norm}[1]{\lVert{#1}\rVert}
+% \def\avg#1{\langle{#1}\rangle}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+$$
+
+# General setting of low-rank networks
+
+$$
+\begin{aligned}
+\dot h_i(t) =& -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^N F_{\mu i} G_{\mu j} \phi(h_j(t)) \\
+F_{\mu i} =& f_\mu(z_{1 i}, \cdots, z_{p i}), \\
+G_{\mu i} =& g_\mu(z_{1 i}, \cdots, z_{p i}), \\
+&\vec{z_i} \stackrel{\text{i.i.d.}}{\sim} \rho(z_1, \cdots, z_p)
+\end{aligned}
+$$
+
+In the case that $\vec F_i = (F_{1,i},\cdots,F_{p,i}) \in \Rp$ sample from some $p$-dimensional distribution $\rho$, the vectors $\vec F_i$ define a "natural embedding" of neuron $i$ in $\Rp$. When the number of neurons increases, the numeric density of neurons in the embedding approaches the actual probability distribution $\rho$, and we can intuitively see the convergence towards a connectivity kernel $w(\vec z, \vec y) = \sum_{\mu=1}^p z_\mu g_\mu(y_\mu)$.
+
+Our setting is
+
+$$
+\begin{aligned}
+f_\mu(z_1, \cdots, z_p) &= z_\mu \\
+g_\mu(z_1, \cdots, z_p) &= \tilde \phi(z_\mu) = \frac{\phi(z_\mu) - \avg{\phi(z_\mu)}}{\mathrm{Var}[\phi(z_\mu)]} \\
+\phi(z) &= \frac{1}{1+\mathrm{e}^{-z}} \\
+\vec{z} &= (z_1, \cdots, z_p) \sim \rho(z_1, \cdots, z_p) = \prod_{\mu=1}^p \mathcal{N}(z_\mu),\\
+&\text{where}\ \mathcal{N}(z) = \frac{1}{\sqrt{2 \pi}} \mathrm{e}^{-\frac 12 z^2}
+\end{aligned}
+$$
+
 # RNN equation with $\tau=1, R=1, I_\textrm {ext}(t) = 0$
 
 $N$ neurons, each with potential $h_i(t), i = 1,\cdots, N$ evolve according to

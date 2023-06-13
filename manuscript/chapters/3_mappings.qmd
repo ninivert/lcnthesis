@@ -449,14 +449,14 @@ The limit is not bijective, because the bits of $v_2$ are "lost" in the $n\to\in
 
 The Z-mapping however seems to converge to a fractal curve. Numerically, there seems to be an infinite number of discontinuities, but the size of these discontinuities is overwhelmingly small, and *on average* the size of these numerical discontinuities vanishes as $n\to\infty$. We won't go further into detail about this in this section (in @sec-zcurve-lebesgue we develop the convergence to a space-filling fractal curve), but this gives some intuition for the arguments presented in @sec-locality.
 
-We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective.[^zmapping-notbijective] In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary :
+We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective.[^zmapping-notbijective] In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary:
 
 [^zmapping-notbijective]: Despite what can often be found in online resources, the Z-mapping is *not* a bijection because that would violate Netto's theorem. The reason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give proof that the Z-mapping is not injective in the $n\to\infty$ limit. However, the Z-mapping is *quasi-bijective*, in the sense that the set of points for which the Z-mapping is not injective has zero measure, and can therefore be ignored.
 
 1. condition of pointwise convergence: the LSB of the input must be mapped to the LSB of the output,
 2. condition of "no information loss": the MSB of the input must be mapped to the MSB of the output.
 
-These two conditions do not leave a lot of flexibility in the design of new mappings. We can evidently define mappings where we interleave the bits in a different order, such as $0.b^2_1 b^1_1 b^2_2 b^1_2 \cdots$; or mappings where we reorder the $k$ bits of the input, as in $0.b^1_2 b^2_2 b^1_1 b^2_1 b^1_4 b^2_4 b^1_3 b^2_3 \cdots$, but the conditions restrict the reordering to be permutations of neighboring bits. In essence, these mappings are not fundamentally different, and the Z-mapping can be seen as a "canonical representation" of the pointwise convergent mappings with bijective limits.
+These two conditions do not leave a lot of flexibility in the design of new mappings. We can evidently define mappings where we interleave the bits in a different order, such as $0.b^2_1 b^1_1 b^2_2 b^1_2 \cdots$; or mappings where we reorder the $k$ bits of the input, as in $0.b^1_2 b^2_2 b^1_1 b^2_1 b^1_4 b^2_4 b^1_3 b^2_3 \cdots$, but the conditions restrict the reordering to be permutations of neighbouring bits. In essence, these mappings are not fundamentally different, and the Z-mapping can be seen as a "canonical representation" of the pointwise convergent mappings with bijective limits.
 
 ### Visualizating the mappings of the dynamic 2D neural field
 
@@ -466,7 +466,7 @@ It is time for a little treat. Before we argue about how to simulate the dynamic
 
 ## Coarse-graining the neural field in $[0,1]$
 
-### Numerical aspects of implementing the mappings
+### Practical aspects of implementing the mappings
 
 In the previous sections, we have discussed what mappings have good properties, and have given a few hints as to how we can implement them numerically. Since the mappings we presented can be described as a binary expansion, they naturally lend themselves to numerical approximations. Furthermore, this is made especially easy since the mappings we defined simply are permutations of bits (in the $n < \infty$ case), and so we can write a one-to-one mapping between (unsigned integers).
 
@@ -501,7 +501,7 @@ The way we go from $S^n$ to $S^{n/2}$ is by averaging the segment populations by
 
 ![(TODO) Averaging $2^n$ of the $4^n$ segments populations of $S^n$ results in the $2^n = 4^{n/2}$ segments populations of $S^{n/2}$](figures/photo_2023-06-13_12-15-32.jpg){width=400px #fig-averaging}
 
-The geometrical intuition we can give for this is how the averaging of the segment populations leads to sampling the connectivity kernel at the "average" positions in the $[0,1]^2$ embedding. In @fig-averaging-geom, we color-code the square populations corresponding to the segment populations before averaging.
+The geometrical intuition we can give for this is how the averaging of the segment populations leads to sampling the connectivity kernel at the "average" positions in the $[0,1]^2$ embedding. In @fig-averaging-geom, we colour-code the square populations corresponding to the segment populations before averaging.
 
 ::: {#fig-averaging-geom layout-ncol=2}
 

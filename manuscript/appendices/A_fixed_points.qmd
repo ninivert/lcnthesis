@@ -2,7 +2,7 @@
 {{< include ../macros.tex >}}
 :::
 
-# Fixed point study in the network of neurons
+# Fixed point study in the network of neurons {#sec-fixedpoints}
 
 We recall the equation for the low-rank network of neurons :
 
@@ -96,12 +96,10 @@ The derivation of the fixed points for the neural field equation follows the sam
 
 As $N \to \infty$, the fixed points $h_i^\star$ become functions $h^\star(z_1, \cdots, z_p)$ on the $\Rp$ space :
 
--   $h_i^\star = 0 \to h^\star(z_1, \cdots, z_p) = 0$
--   $h_i^\star = F_{\nu i} = z_{\nu i} \to h^\star(z_1, \cdots, z_p) = z_\nu$ for all $\nu = 1, \cdots, p$
+* $h_i^\star = 0 \to h^\star(z_1, \cdots, z_p) = 0$
+* $h_i^\star = F_{\nu i} = z_{\nu i} \to h^\star(z_1, \cdots, z_p) = z_\nu$ for all $\nu = 1, \cdots, p$
 
-[TODO : add derivation for neural field ?]
-
-## Stability of the fixed points
+## Stability of the fixed points {#sec-fixedpoints-stability}
 
 We now study the stability of the fixed points. In the original equation, we substitute $h_i(t) = h_i^\star + \delta_i(t)$, where $\delta_i(t)$ is a small perturbation.
 
