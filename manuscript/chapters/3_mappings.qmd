@@ -193,9 +193,9 @@ Therefore, there is a one-to-one mapping between the points on the square and th
 
 These simplifications might seem too restrictive, however, we will show in the rest of this thesis that this formulation is flexible enough to express mappings that have good properties such as "locality", all while being simple enough to help build intuitions.
 
-TODO : might need to talk about how $S(v^{(n)}_1,v^{(n)}_2) = S^n(v^{(n)}_1,v^{(n)}_2)$ in appendix ? so basically the limit $n\to\infty$ is the limit where we take infinite precision in the input. Or we can drop the $n$ on the inputs, $\alpha^{(n)} = S^n(v^{(n)}_1,v^{(n)}_2) = S^n(v_1,v_2)$ (i think this true just for pointwise convergent mappings)
+TODO NOTE : might need to talk about how $S(v^{(n)}_1,v^{(n)}_2) = S^n(v^{(n)}_1,v^{(n)}_2)$ ? so basically the limit $n\to\infty$ is the limit where we take infinite precision in the input. Or we can drop the $n$ on the inputs, $\alpha^{(n)} = S^n(v^{(n)}_1,v^{(n)}_2) = S^n(v_1,v_2)$ (i think this true just for pointwise convergent mappings)
 
-TODO NOTE : talk about how we center the bins instead of taking the corners. this is not super important in the n -> oo limit, but numerically at 0 and 1 the CDF-1 goes to infty. at infinity, the connectivity kernel is infinite but we have zero neurons (zero measure) (linear growth vs exponential tail of the gaussina) : effectively the recurrent current is zero and we can safely ignore these effects.
+TODO NOTE : talk about how we center the bins instead of taking the corners. this is not super important in the $n\to\infty$ limit, but numerically at 0 and 1 the $\mathrm{CDF}^{-1}$ goes to infty. at infinity, the connectivity kernel is infinite but we have zero neurons (zero measure, linear growth of kernel vs exponential tail of the gaussian) : effectively the recurrent current is zero and we can safely ignore these effects.
 
 #### A link with space-filling curves
 
