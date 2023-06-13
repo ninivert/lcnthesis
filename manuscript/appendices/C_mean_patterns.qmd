@@ -1,6 +1,8 @@
-# "Mean patterns" in the binned connectivity
+# Binned sampling of populations {#sec-mean-patterns}
 
-[TODO]
+-> average low-rank vectors
+
+![Alt text](figures/Screenshot_2023-06-03_19-59-49.png)]
 
 derivation of $\Jab$ and mean patterns
 
@@ -33,6 +35,9 @@ Then the connectivity matrix is given by, noting $N = \sum_{\alpha} |\alpha|$,
 $$
 \tilde J_{\alpha,\beta} = \frac{|\beta|}{\sum_{\beta'} |\beta'|} \left( \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} - \delta_{\alpha,\beta} \underbrace{\sum_{\mu=1}^p \sum_{i \in \alpha} \frac{F_{\mu,i}}{|\alpha|} \frac{G_{\mu,i}}{|\alpha|}}_{\gamma_{\alpha}} \right)
 $$
+
+![](figures/sampling_R2_nogrid_kernel.png)
+
 
 Recurrent current is given by
 

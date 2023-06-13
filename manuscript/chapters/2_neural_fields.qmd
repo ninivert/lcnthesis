@@ -76,11 +76,11 @@ introduce the neural field as a "smooth fitting of the scatterplot"
 
 eq of neural field
 
-### Simulations of the low-rank neural field
+## Simulations schemes for neural fields {#sec-simnf}
 
 we use the RK4 integration scheme, and the integral is decoupled into product of 1D integrals, each is estimated using a dot product
 
-#### Sampling method (Monte-Carlo integration)
+### Sampling method (Monte-Carlo integration)
 
 Neurons are at position $\vec z = (z_1, \cdots, z_p) \in \mathbb{R}^p$, distributed according to the distribution $\frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p z_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} z_1 \cdots \mathrm d z_p = \rho(\mathrm d \vec z)$
 
@@ -117,7 +117,7 @@ $$
 
 Detail : strictly speaking, MC samples new points every timestep, here we sample once at t=0, then propagate these points
 
-#### Grid method (Trapezoidal integration) {#sec-gridmethod}
+### Grid method (Trapezoidal integration) {#sec-gridmethod}
 
 This method describes the trapezoidal method of integration. We state the result that the convergence rate is $\bO(N^{-2/p})$. For $p \geq 4$, MC shows better scaling behavior (but prefactors of error can change which method is better).
 
