@@ -74,7 +74,7 @@ For a finite number of populations $N_\text{pop}$, applying a bijective mapping 
 
 ## Defining the neural field in $[0,1]$
 
-We start by writing the neural field equation in the $[0,1]$ space. For this, we define a measurable and bijective mapping $S : [0,1]^2 \rightarrow [0, 1]$. Furthermore, we let $\lambda : [0,1]^2 \rightarrow [0, \infty]$ be a measure on the unit square (for instance, the Lebesgue measure). Taking the composition $\lambda \circ S^{-1}$ then defines a measure on $[0,1]$, which keeps track of how 2D surfaces are transformed to 1D lengths through the mapping $S$.
+We start by writing the neural field equation in the $[0,1]$ space. For this, we define a measurable and bijective mapping $S : [0,1]^2 \rightarrow [0, 1]$. Furthermore, we let $\lambda : [0,1]^2 \rightarrow [0, \infty]$ be a measure on the unit square (for instance, the Lebesgue measure, which plays the role of a uniform distribution). Taking the composition $\lambda \circ S^{-1}$ then defines a measure on $[0,1]$, which keeps track of how 2D surfaces are transformed to 1D lengths through the mapping $S$.
 
 The connectivity kernel $\tilde w$ defines the interactions between the populations in the $[0,1]$ embedding, which we define relating to the uniform kernel on $[0,1]^2$ as :
 
