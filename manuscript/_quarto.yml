@@ -48,21 +48,9 @@ format:
     toc: true
     toc-depth: 4
     fig-format: svg
-    # html-math-method: mathjax
-    # include-in-header: 
-    #   - text: |
-    #       <script src="/js/mathjax/es5/tex-chtml.js"></script>
-    #       <script>
-    #         window.MathJax = {
-    #           loader: {
-    #             // load: ['[tex]/physics']
-    #           },
-    #           tex: {
-    #             // packages: {'[+]': ['physics']}
-    #           }
-    #         };
-    #         </script>
-    #       </script>
+    # html-math-method:
+    #   method: mathjax
+    #   url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
   epub:
     toc: true
     date: last-modified

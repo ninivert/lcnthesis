@@ -2,7 +2,7 @@
 
 -> average low-rank vectors
 
-![Alt text](figures/Screenshot_2023-06-03_19-59-49.png)]
+![Alt text](../chapters/figures/Screenshot_2023-06-03_19-59-49.png)
 
 derivation of $\Jab$ and mean patterns
 
@@ -36,8 +36,7 @@ $$
 \tilde J_{\alpha,\beta} = \frac{|\beta|}{\sum_{\beta'} |\beta'|} \left( \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} - \delta_{\alpha,\beta} \underbrace{\sum_{\mu=1}^p \sum_{i \in \alpha} \frac{F_{\mu,i}}{|\alpha|} \frac{G_{\mu,i}}{|\alpha|}}_{\gamma_{\alpha}} \right)
 $$
 
-![](figures/sampling_R2_nogrid_kernel.png)
-
+![](../chapters/figures/sampling_R2_nogrid_kernel.png)
 
 Recurrent current is given by
 

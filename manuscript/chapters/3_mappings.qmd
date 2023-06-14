@@ -166,10 +166,10 @@ The intuition behind this expansion is we take a segment, split it in two, write
 We define the mapping $S^n$ that takes the $n$-bit truncations $v^{(n)}_1$ and $v^{(n)}_2$ as input, and outputs a $2n$ bit truncation $\alpha^{(n)}$ of $\alpha=S(v_1, v_2)$, where $S$ is the $n\to\infty$ limit of the sequence $S^n$.
 
 $$
-\begin{alignat}{2}
-S^n : &\{0, \tfrac{1}{2^n}, \cdots, 1-\tfrac{1}{2^n}\}^2 &&\mapsto \{0, \tfrac{1}{4^n}, \cdots, 1-\tfrac{1}{4^n}\} \\
-&(v^{(n)}_1,v^{(n)}_2)=(0.b^1_1 b^1_2 \cdots b^1_n, 0.b^2_1 b^2_2 \cdots b^2_n) &&\mapsto \alpha^{(n)}=0.b_1 b_2 \cdots b_{2n}
-\end{alignat}
+\begin{aligned}
+S^n : &\{0, \tfrac{1}{2^n}, \cdots, 1-\tfrac{1}{2^n}\}^2 \mapsto \{0, \tfrac{1}{4^n}, \cdots, 1-\tfrac{1}{4^n}\} \\
+&(v^{(n)}_1,v^{(n)}_2)=(0.b^1_1 b^1_2 \cdots b^1_n, 0.b^2_1 b^2_2 \cdots b^2_n) \mapsto \alpha^{(n)}=0.b_1 b_2 \cdots b_{2n}
+\end{aligned}
 $$ {#eq-Sn}
 
 In general, each bit $b^k$ of the image would be a binary function of the $n$ bits of $v_1$ and the $n$ bits of $v_2$, implicitly $b_k = b_k(b^1_1, b^1_2, \cdots, b^1_n, b^2_1, b^2_2, \cdots, b^2_n)$.
@@ -548,7 +548,13 @@ TODO : take cycling p=3
 
 TODO : we do z-mapping on each slice $(v_2, v_3)$ of $v_1$, and downsample. we end up with a 2d neural field, direction $v_1$ is continuous, direction $\alpha_{23}$ is fractal. now the field is not continuous anymore, it is just sufficiently regular to be L1. this shows "local mappings conserve regularity"
 
+::: {.content-visible when-format="html"}
 ![(TODO 3D -> 2D only) Equivalence of dynamics, from 3D to 2D.](figures/embedding_3d_2d_1d.mp4)
+:::
+
+::: {.content-visible when-format="pdf"}
+![(TODO PDF, 3D -> 2D only) Equivalence of dynamics, from 3D to 2D.](figures/lol7.jpg)
+:::
 
 ![(TODO 3D -> 2D only) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px}
 
@@ -556,6 +562,12 @@ TODO : we do z-mapping on each slice $(v_2, v_3)$ of $v_1$, and downsample. we e
 
 TODO : we can re-apply the z-mapping in $(v_1, \alpha_{23})$, we get a fractal 1d embedding. completely fractal, but the dynamics still work, because the mapping conserves regularity.
 
+::: {.content-visible when-format="html"}
 ![Equivalence of dynamics, from 3D to 2D to 1D.](figures/embedding_3d_2d_1d.mp4)
+:::
+
+::: {.content-visible when-format="pdf"}
+![(TODO PDF) Equivalence of dynamics, from 3D to 2D to 1D.](figures/lol7.jpg)
+:::
 
 ![(TODO) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px}

@@ -106,7 +106,13 @@ Instead of numerically computing the full connectivity matrix $J$ (which would r
 
 Initially, we set all the potentials to zero, then simulate the differential equation by using the Runge-Kutta of order 4 integration schema (see [`scipy.integrate.solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html)). In @fig-p1, we show the resulting dynamics for a few thousand neurons. We order the neurons as they appear in the numerical array (a naive "random" one-dimensional embedding), and compare this to the ordering of neurons by their sampled position $z_1 \sim \mathcal{N}$.
 
+::: {.content-visible when-format="html"}
 ![(TODO remove overlap, change notation, color for activity) Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/embedding_d=1_h0=0_phi=sigmoid.mp4){width=400px #fig-p1}
+:::
+
+::: {.content-visible when-format="pdf"}
+![(TODO PDF remove overlap, change notation, color for activity) Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/lol7.jpg){width=400px #fig-p1}
+:::
 
 The results of the simulation show that the random ordering of the neurons does not yield a smooth embedding, on contrary of the smooth surface that appears when we order the neurons by their position $z_{1i}$. The simulation serves as a demonstration that the neurons converge to the stable fixed point $h^\star_i = z_{1i}$, as well as confirming that the zero fixed point is unstable. Indeed, despite the zero initialization, the simulation did not stay there because small numerical fluctuations were amplified by the instability. 
 
@@ -122,7 +128,13 @@ Because @eq-nf-gaussian-p1 already involves a one-dimensional integral, the $[0,
 
 The question of finding a one-dimensional embedding becomes non-trivial when we consider $p>1$, here we take $p=2$. In @fig-p2, we repeat the same simulations as in the previous section. Again, the structure of the network emerges naturally as a smooth surface in $\R^2$.
 
+::: {.content-visible when-format="html"}
 ![(TODO remove overlap, change notation, scatter only) Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/embedding_d=2_h0=0.mp4){width=500px #fig-p2}
+:::
+
+::: {.content-visible when-format="pdf"}
+![(TODO PDF remove overlap, change notation, scatter only) Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/lol7.jpg){width=500px #fig-p2}
+:::
 
 We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here the network coincidentally, due to finite numerical effects, converged again to the first pattern fixed point, which we can see because the neural field is constant in the $z_2$ direction. We write the fixed point $h^\star(z_1, z_2, t) = z_1$. The neural field is now written as
 
@@ -263,7 +275,13 @@ We note however that @eq-nf-cycling-p no longer is a partial differential equati
 
 With these considerations, we simulate a $p=2$ cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$ in @fig-cycling-anim. The latent trajectory is estimated from the simulation results, and animated simultaneously to the neural field. We clearly see the oscillations between the patterns $\mu=1$ and $\mu=2$.
 
+::: {.content-visible when-format="html"}
 ![A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour.](figures/embedding_d=2_h0=0_cycling_delta=6.mp4){#fig-cycling-anim}
+:::
+
+::: {.content-visible when-format="pdf"}
+![(TODO PDF) A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour.](figures/lol7.jpg){#fig-cycling-anim}
+:::
 
 Relating to @sec-closed-system, the dynamics of the projection now read:
 
