@@ -4,104 +4,108 @@
 
 # Locality and numerical convergence {#sec-locality}
 
-## Analytical equivalence of the dynamics
+The previous chapter gave a detailed description of the mappings $S : [0,1]^2 \mapsto [0,1]$, as well as a few numerical considerations. We found that mappings that yield equivalent dynamics crucially seem to have in common the property of *locality*, that is that they conserve the regularity between the domain and the image, even if the image seems to have a fractal structure. Intuitively, we saw that the locality seems to emerge from the mapping having overwhelmingly small variations.
 
-### The case $S$ measurable and bijective
+In this chapter, we will further explore these results, and attempt to formulate a measure of this "locality". We start by showing that bijectivity and measurability is a sufficient condition for equivalent dynamics. Then, we apply the locality measure to the special cases of the Column and Z-mappings, and show how this notion can discriminate between the two. Finally, we show that the formulated measure is sufficient to ensure the numerical estimation of the integral on the fractal structure converges to the analytical integral; therefore, such embeddings are feasible to find and simulate numerically.
 
-In the previous sections, it has been obtained that a sufficient criterion for equivalent dynamics in the 2D and the 1D embedding, is that the mapping $S$ is bijective (or at least, injective from 2D in 1D, but we will use the slightly stronger assumption of bijectivity).
+## Analytical equivalence of the dynamics when $S$ is measurable and bijective
 
-We furthermore assume that the mapping $S$ is measurable. This is not a strong assumption, since the limit of pointwise convergent measurable functions is also measurable. In our case, we have written finite-precision expansions $S^n$, which by being sums of piecewise constant functions, are also measurable. Measurability of $S$ by definition allows us to write $\lambda \circ S^{-1}$ [TODO MATH : write this better. the inverse image of a set is measurable.], which defines a measure of the 1D space by first going to 2D space, then taking the measure there.
+In the previous chapter, we have introduced Cantor and Peano functions, and argued that if have to chose between the two, that the non-injective Peano functions are preferable, because by Netto's theorem, they are the only ones that can be space-filling and reach all the square populations. Despite this, let us make the simplifying assumption that $S$ is a bijective function. However, as to not break Netto's theorem, we do not make any assumptions regarding its continuity.
 
-[TODO FIG : $\lambda \circ S^{-1}$ defines a measure in 1D by going through 2D first ![](figures/Screenshot_2023-06-05_10-12-36.png)]
+We furthermore assume that the mapping $S$ is measurable. This is not a strong assumption, since the limit of pointwise convergent measurable functions is also measurable. In our case, we have written the finite-$n$ expansions $S^n$, which by being sums of piecewise constant functions, are also measurable. Measurability of $S$ allows us to write $\lambda \circ S^{-1}$, since by definition the preimage of a measurable function is measurable.
 
-With this in mind, let us prove that by defining the initial condition $\tilde h(t=0, \alpha) = h_U(t=0, S^{-1}(\alpha))$ and connectivity $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta)$, then the solution $h_U(t, \vec v)$ of the neural field equation in $[0,1]^2$ uniquely defines the solution of the neural field equation in $[0,1]$ by writing $\tilde h(t, \alpha) = h_U(t, \cdot) \circ S^{-1}(\alpha)$.
-
-We write the neural field equation in 1D and the initial condition.
-
+With these two assumptions, let us prove that by defining the initial condition and connectivity
 $$
 \begin{aligned}
-\partial_t \tilde h(t, \alpha) &= -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \\
-\tilde h(t=0, \alpha) &= h_U(t=0, S^{-1}(\alpha))
+\tilde h(\alpha, t=0) &= h_U(S^{-1}(\alpha), t=0)\\
+\tilde w(\alpha, \beta) &= w_U(S^{-1}(\alpha), S^{-1}(\beta)),
 \end{aligned}
 $$
 
-We now substitute $\tilde h(t) = h_U(t) \circ S^{-1}$, and write $\vec{v} = S^{-1}(\alpha),\, \vec{u} = S^{-1}(\beta)$.
+then the solution $h_U(\vec v, t)$ of the neural field equation in $[0,1]^2$ uniquely defines the solution of the neural field equation in $[0,1]$ by writing
+
+$$
+\tilde h(\alpha, t) = h_U(\cdot, t) \circ S^{-1}(\alpha).
+$$ {#eq-analytical-equivalence-tildeh}
+
+We start this the one-dimensional neural field, then substitute @eq-analytical-equivalence-tildeh and $\vec{v} = S^{-1}(\alpha),\, \vec{u} = S^{-1}(\beta)$.
 
 $$
 \begin{aligned}
-\partial_t h_U(t, S^{-1}(\alpha)) &= -h_U(t, S^{-1}(\alpha)) + \int_{[0,1]} w(S^{-1}(\alpha), S^{-1}(\beta)) \phi(h_U(t, S^{-1}(\beta))) \lambda \circ S^{-1}(\d \beta) \\
-\iff \partial_t h_U(t, \vec v) &= -h_U(t, \vec v) + \int_{[0,1]} w(\vec v, S^{-1}(\beta)) \phi(h_U(t, S^{-1}(\beta))) \lambda \circ S^{-1}(\d \beta) \\
-&= -h_U(t, \vec v) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(t, \vec u)) \lambda(\d \vec u)
+\partial_t \tilde h(\alpha, t) &= -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \\
+\partial_t h_U(S^{-1}(\alpha), t) &= 
+\begin{aligned}[t]
+	&-h_U(S^{-1}(\alpha), t)\\&+ \int_{[0,1]} w(S^{-1}(\alpha), S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \left[\lambda \circ S^{-1}\right](\d \beta)
+\end{aligned}\\
+&= \begin{aligned}[t]
+	&-h_U(\vec v, t)\\&+ \int_{[0,1]} w(\vec v, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \left[\lambda \circ S^{-1}\right](\d \beta)
+\end{aligned}\\
+&= -h_U(\vec v, t) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(\vec u, t)) \lambda(\d \vec u)
 \end{aligned}
 $$
 
-The measure $\lambda : [0,1]^2 \mapsto \R^+$ simply plays the role of a uniform distribution on $[0,1]^2$ [TODO MATH : $\lambda$ is the lebesgue measure ?], and we simply write
+In the last line, we have used the bijectivity of $S$. The Lebesgue measure $\lambda : [0,1]^2 \mapsto \R^+$ simply plays the role of a uniform distribution on $[0,1]^2$, and we simply write
 
 $$
-\partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(t, \vec u)) \d \vec u
+\partial_t h_U(\vec v, t) = -h_U(\vec v, t) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(\vec u, t)) \d \vec u.
 $$
 
-Therefore, if $h_U(t, \vec v)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(t) = h_U(t) \circ S^{-1}$ solves the equivalent neural field equation in $[0,1]$.
+Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(t) = h_U(t) \circ S^{-1}$ solves the equivalent neural field equation in $[0,1]$. The same reasoning applies in reverse: if $\tilde h(t, \alpha)$ solves the neural field equation in $[0,1]$, then $h_U(t) = \tilde h \circ S$ solves the neural field in $[0,1]^2$.
 
-[TODO MATH : do i need to state a theorem of existence and uniqueness of the solution ?]
-
-### Can the bijectivity condition be relaxed ?
-
-[TODO : go into more detail on the injectivity, surjectivity. how the fact that $S$ is injective forces us to have that we can't map 2 neurons to the same positino. surjecivity is not that important, we could duplicate a neuron and adjust the weights]
+[TODO : uniqueness of the solution ?]
 
 ## Locality
 
-### Intuition behind the notion of locality
-
-![](figures/distance_2d_1d.png)
-
-localité :
-1. proche in 2D -> proche in 1D (OK projection (obv., x est proche), OK zorder, PAS random)
-2. proche in 1D -> proche in 2D (PAS projection, PAS random, OK zorder)
-
-[TODO EXPLAIN : explain this better. basically the thing is we AVERAGE in 1D, so this better be meaningful]
-
-the notion of infinite number of discontinuities, but the size counts too
-
-plot distance 2D vs distance 1D
-* "close to the line y=sqrt2 x" (but fractals dont get arbitrarily close)
-* "size of the discontinuities"
-* L1 distance
-
-"resilient to some discontinuity" the notion of infinite number of discontinuities, but the size counts too
-
-![histogram of discontinuities](figures/image_20230517_2.png)
-
 ### The total variation attempt
 
-Let $S^{-1} : \mathbb R \rightarrow \mathbb R^2$, let $|| \cdot ||$ be a norm in $\mathbb R^2$ (any norm is OK, since all equivalent (i.e. equal to a constant)). Here we use the $\ell^1$ norm (absolute value).
+The previous chapter gave the intuition that local mappings map populations close in 1D to populations close in 2D. In order to verify this, we might try to compare the distance of all segment populations to the population at $\alpha=0$, to the distance of all square populations to the population at $S^{-1}(\alpha=0)$. This is done in @fig-distance-2d-1d, where the distance is taken to be the $\ell^2$ norm. If the distances matched perfectly, then we would see a line with slope $\sqrt 2$ in the graph. 
+
+![(TODO random, column and zcurve only) Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope $\sqrt 2$.](figures/distance_2d_1d.png){#fig-distance-2d-1d}
+
+For control, we also demonstrate that the random mapping has no locality: there is no correlation between the positions in 1D and the positions in 2D.
+Both Column and Z-mappings show a clear trend, the distances in 2D are correlated to the distances in 1D. The notable difference is that distances for the Column mapping seem to "oscillate" wildly, while the Z-mapping seems much more regular and matches the straight line more closely.
+
+This analysis motivates the following hypothesis: the property that sets the mappings apart, is that of total variation. The idea is to "project and sum up" all of the variations defined by the curves as they trace a path in the $[0,1]^2$ embedding. As $n\to\infty$, we expect to see that the total variation of the Z-mapping grows much more slowly than that of the Column mapping.
+
+Denoting $\alpha_i,\,i \in \{1, \cdots, 4^n\}$ the positions of the grid in the $[0,1]$ embedding, we define the total variation as the projection of all the corresponding 2D segments:[^tv]
 
 $$
 \begin{aligned}
-\mathrm{TV}(S^{-1}) &= \sup_{P \in \mathcal P} \sum_{i=1}^{n_P} || S^{-1}(z_{i}) - S^{-1}(z_{i-1}) ||_1 \\
-&= \sup_{P \in \mathcal P} \sum_{i=1}^{n_P} | S^{-1}_1(z_i) - S^{-1}_1(z_{i-1})| + | f_2(z_i) - f_2(z_{i-1}) |
+\mathrm{TV}(S^{-1}) &= \sum_{i=2}^{4^n} \norm{S^{-1}(\alpha_i) - S^{-1}(\alpha_{i-1})}_1 \\
+&= \sum_{i=2}^{4^n} |S_1^{-1}(\alpha_i) - S_1^{-1}(\alpha_{i-1})| + |S_2^{-1}(\alpha_i) - S_2^{-1}(\alpha_{i-1})|.
 \end{aligned}
+$$ {#eq-tv}
+
+[^tv]:
+  This definition is slightly different from other definitions of total variation, which involve a supremum over all partitions $P = \{0 \leq \alpha_1 < \cdots < \alpha_{N_p} \leq 1\}$.
+  <!-- The total variation is then defined as
+  $$
+  \mathrm{TV}(S^{-1}) = \sup_{P} \sum_{i=1}^{N_P} \norm{S^{-1}(\alpha_i) - S^{-1}(\alpha_{i-1})}_1.
+  $$ -->
+  We don't use the more complex definition, because our version of total variation is just used for illustration purposes. Additionally, we make use of the $\ell^1$ norm because it lends itself to the nice geometric intuition of "projecting the jumps" on the axes. This choice of the norm is irrelevant however, because analytically all norms are equivalent up to a constant.
+
+It is easy to see that $2\times 4^n$ is an upper bound of $\mathrm{TV}(S^{-1})$, since the image of $S^{-1}$ is bounded in $[0,1]^2$. In @fig-tv, we compute the total variation for different $n$ corresponding to different mappings.
+
+![(TODO $2\times 4^n$) Total variation for different mappings, as a function of $n$](figures/tv.png){#fig-tv}
+
+Dissapointingly, all mappings seem to exhibit the same growth of total variation. It seems like our notion of total variation is not adequate to help discriminate between the mappings. We need to rethink our intuition.
+
+
+<!-- In some sence, having the constraint that the mapping traces a path in the bounded space $[0,1]^2$ that can go through each point of the grid only once leaves little flexibility. For fixed $n$, there are only finitely many "large jumps" the mapping can make, and the large number of "small jumps" still add up, so that the total variation still grows at approximatively the same rate. -->
+
+### Locality as vanishing average binned variation
+
+When we do the downsampling of the mappings, we expressed that the locality helps by bounding the variation inside of each averaged bin. Therefore, what we would like to express, is that on average, the variation inside of each bin before downsampling is small. @fig-sketch-binned-variation gives an intuition of this. Even though the $[0,1]$ embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.
+
+![(TODO the variation for the lower one shoud be lesser) Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions.](figures/photo_2023-06-15_00-44-43.jpg){width=400px #fig-sketch-binned-variation}
+
+Given $n$, let us define the average binned variation as the maximum difference of the 2D positions associated to segment populations in the same bin of size $2^{-n}$:
+
 $$
+V_n(S^{-1}) = \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1
+$$ {#eq-Vn}
 
-this basically just projects the discontinuities on x and y.
-
-in a way since you need to go to each point only once, so there is only so much you can do inside the $[0,1]^2$. the tiny jumps still add up, and all mappings seem to grow $TV$ in the same way
-
-![](figures/image_20230517.png)
-
--> what we really are expression, is the fact that doing the averaging in 1D is not a big problem when the mapping is good. 
-
-### Mathematical formulation of average binned variation
-
-variation inside the bins, weak version
-
-$$
-\begin{aligned}
-V_n(S^{-1}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\delta,\delta' \in [0, \tfrac{1}{2^n}]^2} |S_1(\tfrac{i-1}{2^n}+\delta) - S_1(\tfrac{i-1}{2^n}+\delta')| + |S_2(\tfrac{i-1}{2^n}+\delta) - S_2(\tfrac{i-1}{2^n}+\delta')| \\
-&= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1
-\end{aligned}
-$$
-
+<!--
 variation inside the bins, strong version. basically we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
 
 $$
@@ -116,18 +120,17 @@ evidently,
 $$
 0 \leq V_n \leq V_\delta
 $$
+-->
 
-[TODO FIG : show the range of each bin, how each bin contains $2^n$ smaller bins. plot the bins in the 2D scatter, so we can see what we are doing]
+TODO : I have removed the definition involving the sup over all permutations, because we don't end up using it. Still mention for completeness ?
 
-[TODO MATH : the exact norm is not important. all norms are equivalent]
+TODO NOTE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This might actually be adressed by a similar todo in @sec-mappings-binary
 
-[TODO NOTE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time"]
+Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it is gives the expected results; that is $V_n$ vanishes a $n\to\infty$ for local mappings, whereas $V_n$ is lower bounded by a constant for non-local mappings. @fig-vnum shows this is indeed the case, rejoice !
 
-### Average variation of mappings
+![(TODO change title, change name of mappings) (Numerator of the) average binned variation as a function of $n$. The local mappings have a growth slower than the upper bound $2\times 2^n$.](figures/v_num.png){width=500px #fig-vnum}
 
-Numerical demonstration
-
-![](figures/v_num.png)
+### Computations of average variation
 
 In order to compute (a bound on) $V_n$ for some mappings, we consider the binary expansion of $\alpha$ and $\alpha^\prime$ which appear in the supremum. For clarity and to represent actual numerical implementations, we furthermore truncate the binary expansion to $2m$ bits (on most machines, $2m=64$ bits).
 
@@ -181,7 +184,7 @@ $$
 \end{aligned}
 $$
 
-Putting everything together, we get an upper bound for the average binned variation.
+Putting everything together, we get a vanishing upper bound for the average binned variation.
 
 $$
 V_n(Z^{-1}) \leq \frac{1}{2^n} \sum_{i=1}^{2^n} 2^{-n/2} + 2^{-n/2} = 2^{-n/2+1} \xrightarrow{n \to \infty} 0
@@ -194,7 +197,7 @@ We now consider the column mapping. Since here we consider finite-precision $\al
 $$
 \begin{aligned}
 C^{-1}_1(\alpha) &= 0.i_{n-1} i_{n-2} \cdots i_1 i_0 b_n b_{n+1} \cdots b_m \\
-C^{-1}_2(\alpha) &= 0.b_{m+1} b_{m+2} \cdots b_{2m}
+C^{-1}_2(\alpha) &= 0.b_{m+1} b_{m+2} \cdots b_{2m}.
 \end{aligned}
 $$
 
@@ -203,11 +206,11 @@ The first component can be bounded using the same trick from the previous proof 
 $$
 \begin{aligned}
 |C^{-1}_1(\alpha) - C^{-1}_1(\alpha^\prime)| &= 2^{-n} \sum_{k=1}^{m-n+1} (b_{n+k-1} - b^\prime_{n+k-1}) 2^{-k} \\
-&\leq 2^{-n}
+&\leq 2^{-n}.
 \end{aligned}
 $$
 
-However now problems arise when we compute the averge binned variation, since the second component is not well-behaved. In particular, since we take the $\sup_{\alpha,\alpha^\prime \in [\tfrac{i-1}{2^n},\tfrac{i}{2^n}]^2}$, we can pick the specific values such that $b_k=1$ and $b^\prime_k=0$ for all $k \in \{m+1, \cdots 2m\}$.
+However now problems arise when we compute the averge binned variation, since the second component is not well-behaved. In particular, since we take the supremum on $\alpha,\alpha^\prime \in \left[\tfrac{i-1}{2^n},\tfrac{i}{2^n}\right]^2$, we can pick the specific values such that $b_k=1$ and $b^\prime_k=0$ for all $k \in \{m+1, \cdots 2m\}$.
 
 $$
 \begin{aligned}
@@ -221,8 +224,13 @@ Putting both together, we can write :
 
 $$
 \begin{aligned}
-V_n(C^{-1}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)| + |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)| \\
-&\geq \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)| + \sup_{\alpha, \alpha^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)| \\
+V_n(C^{-1}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)| + |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)| \\
+&\geq
+\begin{aligned}[t]
+	\frac{1}{2^n}\sum_{i=1}^{2^n}&
+	\sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)|\\
+	&+ \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)|
+\end{aligned}\\
 &\geq \frac 12 + \bO(2^{-n})
 \end{aligned}
 $$
@@ -285,9 +293,9 @@ Once we have applied the Lipschitz property, we make use of our intuition of "lo
 $$
 \begin{aligned}
 |\mathrm{NI}_n - \mathrm{AI}| &\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \lambda \circ S^{-1}(\d \beta) \right| \\
-&\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \lambda \circ S^{-1}(\d \beta^\prime) \right| \\
-&= L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \\
-&\leq L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in [\tfrac{i-1}{2^n}, \tfrac{i}{2^n}]^2} \norm{S^{-1}(\beta^\prime) - S^{-1}(\beta)} \\
+&\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \lambda \circ S^{-1}(\d \beta^\prime) \right| \\
+&= L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \\
+&\leq L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\beta^\prime) - S^{-1}(\beta)} \\
 &= L(\cdot) V_n \\
 &\xrightarrow{n \to \infty} 0
 \end{aligned}

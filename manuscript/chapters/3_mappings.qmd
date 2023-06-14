@@ -85,7 +85,7 @@ $$ {#eq-kernel-1d}
 Defining the initial condition for the 1D neural field as $\tilde h(\alpha, t=0) = h_U(S^{-1}(\alpha), t=0)$, we have fully defined the equation of evolution in the one-dimensional embedding in @eq-nf-1d.
 
 $$
-\partial_t \tilde h(t, \alpha) = -\tilde h(t, \alpha) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta)
+\partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta)
 $$ {#eq-nf-1d}
 
 The definition of the connectivity kernel in @eq-kernel-1d might seem innocent, but the key element here is the inclusion of the inverse $S^{-1}$. We recall that in the toy model, the original connectivity kernel is written as $w(\vec z, \vec y) = \sum_{\mu=1}^p \tilde \phi(y_\mu) z_\mu$. This kernel is highly regular, by which we mean that by its continuity in each of its arguments, populations nearby in the embedding will "sense" similar connectivity functions. Since it is also differentiable, we can write this as a Taylor expansion in the first argument :
@@ -532,16 +532,30 @@ $$
 
 ## Simulations of neural fields in 3D, 2D and 1D
 
+TODO small intro
+
 ### Application of $S$ : from $[0,1]^2$ to $[0,1]$
 
-![](figures/coarsegraining.png)
+TODO : we run simulations and compare latent trajectories. first show only column and z-mapping. add quick intro to diagonal, col/row, reclocal, mention cannot be expressed by bit permutation. diagonal, col/row do not work, despite the non-zero field and recurrent currents. reclocal does work. intuition is that the recursive approach (zmapping, reclocal) seems to give locality
+
+![(TODO animation) Simulations of downsampling with different mappings from the $p=2$ embedding.](figures/coarsegraining.png){width=500px}
 
 ### Iterative application of $S$ : from $[0,1]^3$ to $[0,1]$
 
+TODO : take cycling p=3
+
 #### Continuity on one axis and fractal on the other: from $[0,1]^3$ to $[0,1]^2$
+
+TODO : we do z-mapping on each slice $(v_2, v_3)$ of $v_1$, and downsample. we end up with a 2d neural field, direction $v_1$ is continuous, direction $\alpha_{23}$ is fractal. now the field is not continuous anymore, it is just sufficiently regular to be L1. this shows "local mappings conserve regularity"
+
+![(TODO 3D -> 2D only) Equivalence of dynamics, from 3D to 2D.](figures/embedding_3d_2d_1d.mp4)
+
+![(TODO 3D -> 2D only) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px}
 
 #### From fractal to fractal : $[0,1]^2$ to $[0,1]$
 
-![Effective sampling points after averaging](figures/mapping_3d_2d_1d.png)
+TODO : we can re-apply the z-mapping in $(v_1, \alpha_{23})$, we get a fractal 1d embedding. completely fractal, but the dynamics still work, because the mapping conserves regularity.
 
-![Equivalence of dynamics, from 3D to 2D to 1D](figures/embedding_3d_2d_1d.mp4)
+![Equivalence of dynamics, from 3D to 2D to 1D.](figures/embedding_3d_2d_1d.mp4)
+
+![(TODO) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px}

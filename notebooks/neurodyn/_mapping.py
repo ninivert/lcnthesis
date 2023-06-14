@@ -12,7 +12,7 @@ __all__ = [
 	'RecursiveLocalMapping',
 	'ReshapeMapping', 'ColumnMapping',  # alias
 	'DiagonalMapping',
-	'SzudzikMapping',
+	'SzudzikMapping', 'ColRowMapping',  # alias
 	'RecursiveFarMapping', 'AntiZMapping',  # alias
 	'ZMapping',
 	'RandomMapping',
@@ -508,6 +508,7 @@ class SzudzikMapping(BinMapping):
 	def __str__(self) -> str:
 		return f'SzudzikMapping{{nxy={self.nxy}}}'
 
+ColRowMapping = SzudzikMapping
 
 class ZMapping(BinMapping):
 	"""Implements [Z-order curve](https://en.wikipedia.org/wiki/Z-order_curve)"""
