@@ -452,3 +452,7 @@ DISCUSS :
   -> yes !
 * new abstract
 * go through the manuscript to see whether the structure is OK
+
+
+FURTHER QUESTIONS
+* locality might be a side-effect from bijections ? i don't think we can formulate a mappings that is nonlocal, but still bijective. reversely, i think all mapping that are bijective (or can be made bijective by excluding a set of zero measure) also have locality, because in some sense they need the locality to be local.

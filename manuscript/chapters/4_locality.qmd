@@ -6,11 +6,11 @@
 
 The previous chapter gave a detailed description of the mappings $S : [0,1]^2 \mapsto [0,1]$, as well as a few numerical considerations. We found that mappings that yield equivalent dynamics crucially seem to have in common the property of *locality*, that is that they conserve the regularity between the domain and the image, even if the image seems to have a fractal structure. Intuitively, we saw that the locality seems to emerge from the mapping having overwhelmingly small variations.
 
-In this chapter, we will further explore these results, and attempt to formulate a measure of this "locality". We start by showing that bijectivity and measurability is a sufficient condition for equivalent dynamics. Then, we apply the locality measure to the special cases of the Column and Z-mappings, and show how this notion can discriminate between the two. Finally, we show that the formulated measure is sufficient to ensure the numerical estimation of the integral on the fractal structure converges to the analytical integral; therefore, such embeddings are feasible to find and simulate numerically.
+In this chapter, we will further explore these results, and attempt to formulate a measure of this "locality". We start by showing that bijectivity and measurability are sufficient conditions for equivalent dynamics. Then, we apply the locality measure to the special cases of the Column and Z-mappings, and show how this notion can discriminate between the two. Finally, we show that the formulated measure is sufficient to ensure the numerical estimation of the integral on the fractal structure converges to the analytical integral; therefore, such embeddings are feasible to find and simulate numerically.
 
 ## Analytical equivalence of the dynamics when $S$ is measurable and bijective
 
-In the previous chapter, we have introduced Cantor and Peano functions, and argued that if have to chose between the two, that the non-injective Peano functions are preferable, because by Netto's theorem, they are the only ones that can be space-filling and reach all the square populations. Despite this, let us make the simplifying assumption that $S$ is a bijective function. However, as to not break Netto's theorem, we do not make any assumptions regarding its continuity.
+In the previous chapter, we introduced Cantor and Peano functions, and argued that if have to choose between the two, then the non-injective Peano functions are preferable, because, by Netto's theorem, they are the only ones that can be space-filling and reach all the square populations. Despite this, let us make the simplifying assumption that $S$ is a bijective function. However, to not break Netto's theorem, we do not make any assumptions regarding its continuity.
 
 We furthermore assume that the mapping $S$ is measurable. This is not a strong assumption, since the limit of pointwise convergent measurable functions is also measurable. In our case, we have written the finite-$n$ expansions $S^n$, which by being sums of piecewise constant functions, are also measurable. Measurability of $S$ allows us to write $\lambda \circ S^{-1}$, since by definition the preimage of a measurable function is measurable.
 
@@ -28,11 +28,12 @@ $$
 \tilde h(\alpha, t) = h_U(\cdot, t) \circ S^{-1}(\alpha).
 $$ {#eq-analytical-equivalence-tildeh}
 
-We start this the one-dimensional neural field, then substitute @eq-analytical-equivalence-tildeh and $\vec{v} = S^{-1}(\alpha),\, \vec{u} = S^{-1}(\beta)$.
+We start by recalling the expression of the one-dimensional neural field, then substitute @eq-analytical-equivalence-tildeh and $\vec{v} = S^{-1}(\alpha),\, \vec{u} = S^{-1}(\beta)$.
 
 $$
 \begin{aligned}
 \partial_t \tilde h(\alpha, t) &= -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \\
+\iff&\\
 \partial_t h_U(S^{-1}(\alpha), t) &= 
 \begin{aligned}[t]
 	&-h_U(S^{-1}(\alpha), t)\\&+ \int_{[0,1]} w(S^{-1}(\alpha), S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \left[\lambda \circ S^{-1}\right](\d \beta)
@@ -50,7 +51,7 @@ $$
 \partial_t h_U(\vec v, t) = -h_U(\vec v, t) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(\vec u, t)) \d \vec u.
 $$
 
-Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(t) = h_U(t) \circ S^{-1}$ solves the equivalent neural field equation in $[0,1]$. The same reasoning applies in reverse: if $\tilde h(t, \alpha)$ solves the neural field equation in $[0,1]$, then $h_U(t) = \tilde h \circ S$ solves the neural field in $[0,1]^2$.
+Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(t) = h_U(t) \circ S^{-1}$ solves the equivalent neural field equation in $[0,1]$. The same reasoning applies in reverse: if $\tilde h(\alpha, t)$ solves the neural field equation in $[0,1]$, then $h_U(t) = \tilde h \circ S$ solves the neural field in $[0,1]^2$.
 
 [TODO : uniqueness of the solution ?]
 
@@ -58,16 +59,16 @@ Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, th
 
 ### The total variation attempt
 
-The previous chapter gave the intuition that local mappings map populations close in 1D to populations close in 2D. In order to verify this, we might try to compare the distance of all segment populations to the population at $\alpha=0$, to the distance of all square populations to the population at $S^{-1}(\alpha=0)$. This is done in @fig-distance-2d-1d, where the distance is taken to be the $\ell^2$ norm. If the distances matched perfectly, then we would see a line with slope $\sqrt 2$ in the graph. 
+The previous chapter gave the intuition that local mappings map populations close in 1D to populations close in 2D. To verify this, we might try to compare the distance between all segment populations and the population at $\alpha=0$, to the distance of all square populations to the population at $S^{-1}(\alpha=0)$. This is done in @fig-distance-2d-1d, where the 2D distance is taken to be the $\ell^2$ norm. If the distances matched perfectly, then we would see a line with slope $\sqrt 2$ in the graph. 
 
-![(TODO random, column and zcurve only) Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope $\sqrt 2$.](figures/distance_2d_1d.png){#fig-distance-2d-1d}
+![(TODO random, column and zcurve only, rename neuron to population) Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope $\sqrt 2$.](figures/distance_2d_1d.png){#fig-distance-2d-1d}
 
 For control, we also demonstrate that the random mapping has no locality: there is no correlation between the positions in 1D and the positions in 2D.
 Both Column and Z-mappings show a clear trend, the distances in 2D are correlated to the distances in 1D. The notable difference is that distances for the Column mapping seem to "oscillate" wildly, while the Z-mapping seems much more regular and matches the straight line more closely.
 
 This analysis motivates the following hypothesis: the property that sets the mappings apart, is that of total variation. The idea is to "project and sum up" all of the variations defined by the curves as they trace a path in the $[0,1]^2$ embedding. As $n\to\infty$, we expect to see that the total variation of the Z-mapping grows much more slowly than that of the Column mapping.
 
-Denoting $\alpha_i,\,i \in \{1, \cdots, 4^n\}$ the positions of the grid in the $[0,1]$ embedding, we define the total variation as the projection of all the corresponding 2D segments:[^tv]
+Denoting $\alpha_i,\,i \in \{1, \cdots, 4^n\}$ the positions of the grid in the $[0,1]$ embedding, we define the total variation as the projection of all the corresponding 2D jumps onto the axes:[^tv]
 
 $$
 \begin{aligned}
@@ -82,22 +83,21 @@ $$ {#eq-tv}
   $$
   \mathrm{TV}(S^{-1}) = \sup_{P} \sum_{i=1}^{N_P} \norm{S^{-1}(\alpha_i) - S^{-1}(\alpha_{i-1})}_1.
   $$ -->
-  We don't use the more complex definition, because our version of total variation is just used for illustration purposes. Additionally, we make use of the $\ell^1$ norm because it lends itself to the nice geometric intuition of "projecting the jumps" on the axes. This choice of the norm is irrelevant however, because analytically all norms are equivalent up to a constant.
+  We don't use the more complex definition, because our version of total variation is just used for illustration purposes. Additionally, we make use of the $\ell^1$ norm because it lends itself to the nice geometric intuition of "projecting the jumps" on the axes. This choice of the norm is irrelevant, however, because analytically all norms are equivalent up to a constant.
 
 It is easy to see that $2\times 4^n$ is an upper bound of $\mathrm{TV}(S^{-1})$, since the image of $S^{-1}$ is bounded in $[0,1]^2$. In @fig-tv, we compute the total variation for different $n$ corresponding to different mappings.
 
 ![(TODO $2\times 4^n$) Total variation for different mappings, as a function of $n$](figures/tv.png){#fig-tv}
 
-Dissapointingly, all mappings seem to exhibit the same growth of total variation. It seems like our notion of total variation is not adequate to help discriminate between the mappings. We need to rethink our intuition.
+Disappointingly, all mappings seem to exhibit the same growth of total variation. It seems like our notion of total variation is not adequate to help discriminate between the mappings. We need to rethink our intuition.
 
+<!-- In some sense, having the constraint that the mapping traces a path in the bounded space $[0,1]^2$ that can go through each point of the grid only once leaves little flexibility. For fixed $n$, there are only finitely many "large jumps" the mapping can make, and the large number of "small jumps" still add up, so that the total variation still grows at approximately the same rate. -->
 
-<!-- In some sence, having the constraint that the mapping traces a path in the bounded space $[0,1]^2$ that can go through each point of the grid only once leaves little flexibility. For fixed $n$, there are only finitely many "large jumps" the mapping can make, and the large number of "small jumps" still add up, so that the total variation still grows at approximatively the same rate. -->
-
-### Locality as vanishing average binned variation
+### Locality as vanishing average binned variation {#sec-Vn}
 
 When we do the downsampling of the mappings, we expressed that the locality helps by bounding the variation inside of each averaged bin. Therefore, what we would like to express, is that on average, the variation inside of each bin before downsampling is small. @fig-sketch-binned-variation gives an intuition of this. Even though the $[0,1]$ embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.
 
-![(TODO the variation for the lower one shoud be lesser) Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions.](figures/photo_2023-06-15_00-44-43.jpg){width=400px #fig-sketch-binned-variation}
+![(TODO the variation for the lower one should be lesser) Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions.](figures/photo_2023-06-15_00-44-43.jpg){width=400px #fig-sketch-binned-variation}
 
 Given $n$, let us define the average binned variation as the maximum difference of the 2D positions associated to segment populations in the same bin of size $2^{-n}$:
 
@@ -106,7 +106,7 @@ V_n(S^{-1}) = \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \lef
 $$ {#eq-Vn}
 
 <!--
-variation inside the bins, strong version. basically we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
+variation inside the bins, strong version. basically, we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
 
 $$
 \begin{aligned}
@@ -124,15 +124,15 @@ $$
 
 TODO : I have removed the definition involving the sup over all permutations, because we don't end up using it. Still mention for completeness ?
 
-TODO NOTE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This might actually be adressed by a similar todo in @sec-mappings-binary
+TODO NOTE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This might actually be addressed by a similar todo in @sec-mappings-binary
 
-Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it is gives the expected results; that is $V_n$ vanishes a $n\to\infty$ for local mappings, whereas $V_n$ is lower bounded by a constant for non-local mappings. @fig-vnum shows this is indeed the case, rejoice !
+Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is $V_n$ vanishes a $n\to\infty$ for local mappings, whereas $V_n$ is lower bounded by a constant for non-local mappings. @fig-vnum shows this is indeed the case, rejoice!
 
 ![(TODO change title, change name of mappings) (Numerator of the) average binned variation as a function of $n$. The local mappings have a growth slower than the upper bound $2\times 2^n$.](figures/v_num.png){width=500px #fig-vnum}
 
 ### Computations of average variation
 
-In order to compute (a bound on) $V_n$ for some mappings, we consider the binary expansion of $\alpha$ and $\alpha^\prime$ which appear in the supremum. For clarity and to represent actual numerical implementations, we furthermore truncate the binary expansion to $2m$ bits (on most machines, $2m=64$ bits).
+To compute (a bound on) $V_n$ for some mappings, we consider the binary expansion of $\alpha$ and $\alpha^\prime$ which appear in the supremum. For clarity and to represent actual numerical implementations, we furthermore truncate the binary expansion to $2m$ bits (on most machines, $2m=64$ bits).
 
 $$
 \begin{aligned}
@@ -176,10 +176,10 @@ The core of the proof relies on the fact the first $n/2$ bits of the difference 
 
 $$
 \begin{aligned}
-|Z^{-1}_1(\alpha) - Z^{-1}_1(\alpha^\prime)| &= 0.0 \cdots 0 (b_n b_{n+2} \cdots b_{2m-1} - b^\prime_n b^\prime_{n+2} \cdots b^\prime_{2m-1}) \\
-&= 2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k-1} - b^\prime_{n+2k-1}) 2^{-k} \\
+|Z^{-1}_1(\alpha) - Z^{-1}_1(\alpha^\prime)| &= \left|0.0 \cdots 0 (b_n b_{n+2} \cdots b_{2m-1} - b^\prime_n b^\prime_{n+2} \cdots b^\prime_{2m-1})\right| \\
+&= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k-1} - b^\prime_{n+2k-1}) 2^{-k}\right| \\
 &\leq 2^{-n/2} \\
-|Z^{-1}_2(\alpha) - Z^{-1}_2(\alpha^\prime)| &= 2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k} - b^\prime_{n+2k}) 2^{-k} \\
+|Z^{-1}_2(\alpha) - Z^{-1}_2(\alpha^\prime)| &= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k} - b^\prime_{n+2k}) 2^{-k}\right| \\
 &\leq 2^{-n/2}
 \end{aligned}
 $$
@@ -192,7 +192,7 @@ $$
 
 #### Column mapping
 
-We now consider the column mapping. Since here we consider finite-precision $\alpha$ and $\alpha^\prime$, the invere is well-defined and we have
+We now consider the Column mapping. Since here we consider finite-precision $\alpha$ and $\alpha^\prime$, the invere is well-defined and we have
 
 $$
 \begin{aligned}
@@ -205,16 +205,16 @@ The first component can be bounded using the same trick from the previous proof 
 
 $$
 \begin{aligned}
-|C^{-1}_1(\alpha) - C^{-1}_1(\alpha^\prime)| &= 2^{-n} \sum_{k=1}^{m-n+1} (b_{n+k-1} - b^\prime_{n+k-1}) 2^{-k} \\
+|C^{-1}_1(\alpha) - C^{-1}_1(\alpha^\prime)| &= \left| 2^{-n} \sum_{k=1}^{m-n+1} (b_{n+k-1} - b^\prime_{n+k-1}) 2^{-k} \right| \\
 &\leq 2^{-n}.
 \end{aligned}
 $$
 
-However now problems arise when we compute the averge binned variation, since the second component is not well-behaved. In particular, since we take the supremum on $\alpha,\alpha^\prime \in \left[\tfrac{i-1}{2^n},\tfrac{i}{2^n}\right]^2$, we can pick the specific values such that $b_k=1$ and $b^\prime_k=0$ for all $k \in \{m+1, \cdots 2m\}$.
+However, now problems arise when we compute the averge binned variation, since the second component is not well-behaved. In particular, since we take the supremum on $\alpha,\alpha^\prime \in \left[\tfrac{i-1}{2^n},\tfrac{i}{2^n}\right]^2$, we can pick the specific values such that $b_k=1$ and $b^\prime_k=0$ for all $k \in \{m+1, \cdots 2m\}$.
 
 $$
 \begin{aligned}
-|C^{-1}_2(\alpha) - C^{-1}_2(\alpha^\prime)| &= \sum_{k=m+1}^{2m} (b_k - b^\prime_k) 2^{-(k-m)} \\
+|C^{-1}_2(\alpha) - C^{-1}_2(\alpha^\prime)| &= \left| \sum_{k=m+1}^{2m} (b_k - b^\prime_k) 2^{-(k-m)} \right| \\
 &= \sum_{k=m+1}^{2m} 2^{-(k-m)} \\
 &> \frac 12
 \end{aligned}
@@ -241,59 +241,78 @@ $$
 V_n(C^{-1}) > \frac 12 \implies \lim_{n \to \infty} V_n > \frac 12
 $$
 
-## Numerical feasibility
+## Numerical convergence of the finite-$n$ estimations
 
-numerically, we have finitely many bits, and cannot fully represent the fractal. we therefore need the finite approximations to be already good.
+In @sec-coarse-graining we discussed how we approximate the fractal mappings numerically, and introduced the downsampling procedure, in which we average the populations in segments of length $2^{-n}$, and end up with $2^n$ "binned" segment populations, compared to the $4^n$ we started with.
 
-locality might be a side-effect from bijections
+By doing this, we were able to numerically estimate the integral on the one-dimensional fractal space, and showed that local mappings exhibited the property that they conserved the dynamics between two spaces of different dimensions. @sec-Vn introduced the analytical metric $V_n$ of this locality. Assuming that $V_n \xrightarrow{n\to\infty} 0$, is this enough to prove that the numerical estimation of the integral goes to its analytical value?
 
-Before we make the proof of numerical feasibility.
+The intuition behind the proof of convergence is that the variation, coming from the coarse-graining, inside each numerical bin vanishes as we increase the number of iterations $n$, even though the structure becomes fractal.
 
-In the evaluation of the evolution equation, the integral term in each coordinate $\alpha$ is problematic.
-
-Let us define (recall) the numerical and analytical integral (we leave a $w_U(\cdot, \beta)$ as implicit function of the first argument $\alpha$). The intuition behind this proof of convergence is that the variation inside of each numerical bin vanishes as we increase the number of iterations $n$ (even though the structure becomes fractal !). The variation comes from the coarse-graining, where we go from $4^n$ to $2^n$ samples.
-
-We define $\tilde h_i(t) = \tilde h(t, \tfrac{i-1}{2^n}) = \tilde h(t, \beta_i),\,\beta_i=\tfrac{i-1}{2^n},\,i\in\{1,\cdots,2^n\}$.
+We define the one-dimensional field on the grid:
 
 $$
+\tilde h_i(t) = \tilde h(\tfrac{i-1}{2^n}, t) = \tilde h(\beta_i, t),\,\beta_i=\tfrac{i-1}{2^n},\,i\in\{1,\cdots,2^n\}.
+$$
+
+Let us first recall the numerical and analytical integral. We leave a $\tilde w(\cdot, \beta)$ as an implicit function of the first argument $\alpha$. 
+$$
 \begin{aligned}
-\mathrm{NI}_n &= \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) \\
-\mathrm{AI} &= \int_{[0,1]} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta)
+\mathrm{NI}_n &= \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i(t)) \\
+\mathrm{AI} &= \int_{[0,1]} \tilde w(\cdot, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta)
 \end{aligned}
 $$
 
-We wish to prove that $|\mathrm{NI}_n - \mathrm{AI}| \xrightarrow{n \to \infty} 0$ (implicitly : this is valid for all $\alpha \in [0,1]$).
+We wish to prove that $|\mathrm{NI}_n - \mathrm{AI}| \xrightarrow{n \to \infty} 0$, and implicitly, that this is valid for all $\alpha \in [0,1]$.
 
 The first part of the proof involves splitting the integral on $[0,1]$ into $2^n$ integral over segments of length $2^{-n}$, and using the triangle inequality.
 
 $$
 \begin{aligned}
-|\mathrm{NI}_n - \mathrm{AI}| &= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \int_{0}^{1} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
-&= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \sum_{i=1}^{2^n} \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
-&= \left| \sum_{i=1}^{2^n} \frac{1}{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
-&\leq \sum_{i=1}^{2^n} \left| \frac{1}{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \lambda \circ S^{-1}(\d \beta) \right| \\
+|\mathrm{NI}_n - \mathrm{AI}| &= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i(t)) - \int_{0}^{1} \tilde w(\cdot, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i(t)) - \sum_{i=1}^{2^n} \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&= \left| \sum_{i=1}^{2^n} \frac{1}{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i(t)) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&\leq \sum_{i=1}^{2^n} \left| \frac{1}{2^n} \tilde w(\cdot, \beta_i) \phi(\tilde h_i(t)) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\cdot, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
 \end{aligned}
 $$
 
-We now want to prove that evaluating the integrand at $\beta_i = \tfrac{i-1}{2^n}$ gives a good approximation of the integral. Since $\int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \lambda \circ S^{-1}(\d \beta) = \tfrac{1}{2^n}$ [TODO MATH : is this true ? this is obvious when we consider the binary expansion of $S^{-1}$], we write
+We now want to prove that evaluating the integrand at $\beta_i = \tfrac{i-1}{2^n}$ gives a good approximation of the integral. Because $S$ is measurable and bijective, we have $\int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \left[\lambda \circ S^{-1}\right](\d \beta) = \tfrac{1}{2^n}$, and we write
 
 $$
 \begin{aligned}
-|\mathrm{NI}_n - \mathrm{AI}| &\leq \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \left[ \tilde w(\cdot, \beta_i) \phi(\tilde h_i) - \tilde w(\cdot, \beta) \phi(\tilde h(t, \beta)) \right] \lambda \circ S^{-1}(\d \beta) \right| \\
-&= \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \left[ w_U(\cdot, S^{-1}(\beta_i)) \phi(h_U(t, S^{-1}(\beta_i))) - w_U(\cdot, S^{-1}(\beta)) \phi(h_U(t, S^{-1}(\beta))) \right] \lambda \circ S^{-1}(\d \beta) \right|
+|\mathrm{NI}_n - \mathrm{AI}| &\leq \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \Delta(\beta) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+\text{where}\ \Delta(\beta) &= \tilde w(\cdot, \beta_i) \phi(\tilde h_i(t)) - \tilde w(\cdot, \beta) \phi(\tilde h(\beta, t))\\
+&= w_U(\cdot, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\cdot, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t))
 \end{aligned}
 $$
 
-The main source of variance inside the integrand is the term $S^{-1}$, since $w_U$ and $h_U$ are "nice" functions. We express this regularity by the added assumption that $w_U(\cdot, \vec z) h_U(t, \vec z)$ is Lipschitz in $\vec z$, with Lipschitz constant $L(\cdot)$, and $\norm{\cdot}$ the corresponding norm on $[0,1]^2$. [TODO : argue on the niceness of $I_rec$, add $\phi$]
+The main source of variance inside the integrand $\Delta(\beta)$ is the term $S^{-1}$, since $w_U$ and $h_U$ are "nice" functions. We express this regularity by the added assumption that $w_U(\cdot, \vec u) \phi(h_U(t, \vec u))$ is Lipschitz in $\vec u$, with Lipschitz constant $L(\cdot)$, and $\norm{\cdot}$ the corresponding norm on $[0,1]^2$. We argue this is not a strong assumption, because this is just expressing the regularity of the integrand in the integral over $[0,1]^2$.
 
-Once we have applied the Lipschitz property, we make use of our intuition of "locality" : points close in $[0,1]$ should be (on average) mapped to points close in $[0,1]^2$. Therefore, taking the sup inside each $2^{-n}$ segment does not introduce a too large error.
+A more pragmatic justification of this is to notice that the recurrent currents are expressed as:
 
-[TODO MATH : prove that it is indeed Lipschitz. The main problem I've enountered with this is that these functions are $\textrm{regular function} \circ \textrm{CDF}^{-1}$, and the inverse CDF goes to infinity at 0 and 1].
+$$
+I^\text{rec}_U(\vec v) = w_U(\vec v, \vec u) \phi(h_U(t, \vec u)),
+$$
+
+and that in @sec-cyling-nf, numerical simulations showed that $I^\text{rec}_U(\vec v)$ is a well-behaved function.
+
+<!-- [TODO MATH : prove that it is indeed Lipschitz. The main problem I've encountered with this is that these functions are $\textrm{regular function} \circ \textrm{CDF}^{-1}$, and the inverse CDF goes to infinity at 0 and 1]. -->
+
+Applying the Lipschitz property yields the following inequality on the integrand:
 
 $$
 \begin{aligned}
-|\mathrm{NI}_n - \mathrm{AI}| &\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \lambda \circ S^{-1}(\d \beta) \right| \\
-&\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \lambda \circ S^{-1}(\d \beta^\prime) \right| \\
+\Delta(\beta) &= w_U(\cdot, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\cdot, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \\
+&\leq L(\cdot) \norm{S^{-1}(\beta_i) - S^{-1}(\beta)}
+\end{aligned}
+$$
+
+We now make use of our intuition of "locality": points close in $[0,1]$ should be (on average) mapped to points close in $[0,1]^2$. Therefore, taking the sup inside each $2^{-n}$ segment does not introduce a too large error.
+
+$$
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&\leq L(\cdot) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \left[\lambda \circ S^{-1}\right](\d \beta^\prime) \right| \\
 &= L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \\
 &\leq L(\cdot) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\beta^\prime) - S^{-1}(\beta)} \\
 &= L(\cdot) V_n \\
@@ -305,12 +324,15 @@ We see that it is the notion of "locality" of the mapping $S$ that allowed us to
 
 ## Generalizing to $[0,1]^p \mapsto [0,1]$
 
-ironing out details : here we considered $[0,1]^2 \mapsto [0,1]$, but the mappings can be generalized to any number of dimensions.
+We finish this thesis by tying up the loose ends. In the abstract, we wrote that any $p$-dimensional neural field equation is equivalent to a neural field equation in $[0,1]$, but we only gave demonstrations for $[0,1]^2$ to $[0,1]$. @sec-simulations-3d-2d-1d showed that it is possible to iteratively apply the mapping $Z : [0,1]^2 \mapsto [0,1]$ to reduce dimensionality of the neural field, but it might be more practical to have a direct mapping $Z_p : [0,1]^p \mapsto [0,1]$.
 
-Example for the Z-mapping. Let $\vec \alpha = (\alpha_1, \cdots, \alpha_p)$, and $\alpha_\mu = \sum_{k=1}^{n} b^\mu_k 2^{-k}$. Then 
+Let us give a generalization of the Z-mapping. Defining $\vec{v^{(n)}} = (v^{(n)}_1, \cdots, v^{(n)}_p)$, and the finite binary expansions $v^{(n)}_\mu = \sum_{k=1}^{n} b^\mu_k 2^{-k}$, we can define $Z^n_p$ as
 
 $$
-Z^n(\alpha_1, \cdots, \alpha_p) = \sum_{k=1}^{n} \sum_{\mu=1}^p b^{\mu}_k 2^{-(p(k-1)+\mu)}
+\begin{aligned}
+Z_p^n(\vec{v^{(n)}}) &= \sum_{k=1}^{n} \sum_{\mu=1}^p b^{\mu}_k 2^{-(p(k-1)+\mu)} \\
+&= 0.b^1_1 b^2_1 \cdots b^p_1 b^1_2 b^2_2 \cdots b^p_{n-1} b^1_n b^2_n \cdots b^p_n
+\end{aligned}
 $$
 
-also should work with any neural field, here low-rank cycling was just for the purpose of demonstration
+The same arguments apply to show that this generalized Z-mapping converges pointwise to $Z_p$, has the locality property, and that $V_n(Z_p) \xrightarrow{n\to\infty} 0$. Then the proof of convergence, albeit more laborious, can be repeated using the same procedure.

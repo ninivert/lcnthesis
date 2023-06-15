@@ -1,5 +1,7 @@
+::: {.content-visible when-format="html"}
 ::: {.content-hidden}
 # Home {.unnumbered}
 :::
 
-[TODO : a nice illustration for this, maybe some cool animation ?]
+![Smooth neural fields in $p$ dimensions can be mapped to equivalent neural fields in one dimension, and the dynamics are equivalent.](chapters/figures/photo_2023-06-15_13-51-39.jpg)
+:::

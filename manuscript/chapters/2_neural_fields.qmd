@@ -50,7 +50,7 @@ $$
 The vectors $G_{\mu i}$ are defined as
 
 $$
-G_{\mu i} = \tilde\phi(z_{i \mu}) \stackrel{\text{def}}{=} \frac{\phi(z_{i \mu}) - \avg{z_{i \mu}}}{\mathrm{Var}[\phi(z_{i \mu})]}.
+G_{\mu i} = \tilde\phi(z_{\mu i}) \stackrel{\text{def}}{=} \frac{\phi(z_{\mu i}) - \avg{z_{\mu i}}}{\mathrm{Var}[\phi(z_{\mu i})]}.
 $$
 
 This choice be elucidated in a few paragraphs. Finally, the activation function remains to be defined. For simplicity, we take it to be the logistic function, although the following results are not sensitive to this choice.
@@ -73,18 +73,18 @@ $$
 \dot h_i(t)\ \text{evaluated at}\ h_i^\star = -h^\star_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h^\star_j(t)) = 0
 $$
 
-* $h^\star_i = z_{\mu i}$ is a stable fixed point for all $\mu \in \{1,\cdots,p\}$. Additionally, because the Gaussian distribution is symmetric around zero, $h_i = -z_{\mu i}$ are also stable fixed points. We refer to these fixed points as the "pattern" fixed points, because the network of neurons "remembers" the vectors $\vec{F_1}, \cdots, \vec{F_p}$.
+* $h^\star_i = z_{\mu i}$ is a stable fixed point for all $\mu \in \{1,\cdots,p\}$. Additionally, because the Gaussian distribution is symmetric around zero, $h^\star_i = -z_{\mu i}$ are also stable fixed points. We refer to these fixed points as the "pattern" fixed points, because the network of neurons "remembers" the vectors $\vec{F_1}, \cdots, \vec{F_p}$.
 * $h^\star_i=0$ is an unstable fixed point. It corresponds to all the neuron potentials being set to zero.
 
 The analysis of stability from @sec-fixedpoints-stability can be summarized by the study of the eigenvalues of the matrix $K_{ij} = J_{ij} \partial \phi(h^\star_j) - \mathrm{Id}_{ij}$.
 
 1. Taking Taylor expansions of the activation functions reveals that -- at least up to order 3 -- uneven powers tend to increase stability of the pattern fixed points (and reciprocally, decrease stability of the zero fixed point), and vice-versa for the even powers (with the notable exception of the constant offset, which doesn't play a role in this analysis).
-2. A steeper slope at the origin of the activation function also seems to improve stability of the pattern fixed points. This corresponds to a sharper difference between the "inactive" (low potential) and the "active" (high potential) neurons. The intuition behind this is that if the slope is stronger, then the bump of $\partial \phi$ becomes "more concentrated", which helps lower the eigenvalues associated to the pattern fixed points.
+2. A steeper slope at the origin of the activation function also seems to improve stability of the pattern fixed points. This corresponds to a sharper difference between the "inactive" (low potential) and the "active" (high potential) neurons.
 3. The spectrum of $K$ is composed of $p$ eigenvalues that depend on the fixed point, and $N-p$ eigenvalues $\lambda_\perp = -1$ corresponding to the orthogonal complement of the pattern fixed points.
 
 In our case, this analysis in Taylor expansions was sufficient to explain the observed stability resulting from a logistic activation function.
 
-We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that already at $N=64$, the analytic eigenvalues match the numerical eigenvalues closely, and this correspondence improves when we take larger $N$ (typically we will for the rest of this Thesis take $N > 10^3$).
+We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that already at $N=64$, the analytic eigenvalues match the numerical eigenvalues closely, and this correspondence improves when we take larger $N$ (typically we will for the rest of this thesis take $N > 10^3$).
 
 ![(TODO add spectrum for zero fixed point) Spectrum of $K$ for $N=64$ for the pattern fixed point](figures/spectrum_N=64.png){#fig-spectrum}
 
@@ -94,7 +94,7 @@ In the introduction, we introduced the convergence of a network of neurons to a 
 
 #### Numerical aspects of simulating a low-rank network of neurons
 
-We first demonstrate what happens with numerical simulations in the simple case of $p=1$. We generate a network of 50,000 neurons, where each neuron samples a one-dimensional Gaussian to get its position. The function $\tilde \phi$ is computed by rescaling $\phi$ with the numerically computed mean and variance.[^code1]
+We first demonstrate what happens with numerical simulations in the simple case of $p=1$. We generate a network of 50,000 neurons, where each neuron samples a one-dimensional Gaussian to get its position in the embedding. The function $\tilde \phi$ is computed by rescaling $\phi$ with the numerically computed mean and variance.[^code1]
 
 Instead of numerically computing the full connectivity matrix $J$ (which would require storing $N^2 = 50,000^2 \sim 10^{10}$ entries, taking about 40 GiB if we use 32-bit floating point numbers... yikes !), we take advantage of its low-rank structure to compute recurrent currents, therefore only storing $p \times N$ numbers instead of $N^2$.[^code2]
 
@@ -136,7 +136,7 @@ The question of finding a one-dimensional embedding becomes non-trivial when we 
 ![(TODO PDF remove overlap, change notation, scatter only) Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/lol7.jpg){width=500px #fig-p2}
 :::
 
-We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here the network coincidentally, due to finite numerical effects, converged again to the first pattern fixed point, which we can see because the neural field is constant in the $z_2$ direction. We write the fixed point $h^\star(z_1, z_2, t) = z_1$. The neural field is now written as
+We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here, the network coincidentally converged again to the first pattern fixed point. The network is in the $\mu=1$ pattern, which we can see because the neural field is constant in the $z_2$ direction. We write the fixed point $h^\star(z_1, z_2, t) = z_1$. The neural field is now written as
 
 $$
 \begin{aligned}
@@ -166,7 +166,7 @@ The essence of this method is the use of the Central Limit Theorem, where we tak
 
 $$
 \begin{aligned}
-\mathcal{I}(\vec z) &= \int_{\Rp} \underbrace{w(\vec z, \vec y) \phi(h(t, \vec y))}_{I(\vec z, \vec y)} \rho(\d \vec y) \\
+\mathcal{I}(\vec z) &= \int_{\Rp} \underbrace{w(\vec z, \vec y) \phi(h(\vec y, t))}_{I(\vec z, \vec y)} \rho(\d \vec y) \\
 \hat{\mathcal{I}}(\vec z) &= \frac 1N \sum_{i=1}^N I(\vec z, \vec{y_i}), \, \vec{y_i} \stackrel{\text{iid}}{\sim} \rho
 \end{aligned}
 $$ {#eq-mc}
@@ -181,17 +181,17 @@ $$
 
 The attentive reader might have noticed by now that the Monte-Carlo method just reduces to simulating the network of neurons @eq-toymodel-evolution. Effectively, the network of neurons converges to the neural field with rate $\bO(1/\sqrt{N})$.
 
-One small nuance we should add is that strictly speaking, Monte-Carlo integration should resample the integrand at every timestep, but the network of neurons samples the neurons once, and propagates these points through time.
+One small nuance we should add, is that strictly speaking, Monte-Carlo integration should resample the integrand at every timestep, but the network of neurons samples the neurons once, and propagates these points through time.
 
 ### Grid method (Trapezoidal integration) {#sec-gridmethod}
 
-Another method to estimate an integral numerically is by regularly sampling the integrand on a fixed grid. We simply state the result that the convergence rate of the estimation is $\bO(N^{-2/p})$. Interestingly, the convergence rate depends on the dimension $p$ of the integral. For $p \geq 4$, Monte-Carlo integration shows better scaling behaviour (but depending on the use case, prefactors of the error can change which method is better).
+Another method to estimate an integral numerically is by discretizing the integrand on a regular grid. We simply state the well-known result that the convergence rate of the estimation is $\bO(N^{-2/p})$. Interestingly, the convergence rate depends on the dimension $p$ of the integral. For $p \geq 4$, Monte-Carlo integration shows better scaling behaviour (but depending on the use case, prefactors of the error can change which method is better).
 
 In our case, since the distribution $\rho(z_1, \cdots, z_p)$ can be factorized into the product of $p$ independent Gaussian distributions, we can decouple the $p$-dimensional integral into the product of $p$ one-dimensional integrals. Then the error estimation of the integral scales as $\bO(N^{-2})$. For this reason, we use the grid method for the remainder of this thesis.
 
 ## Characterizing dynamics of the low-rank neural field
 
-We now introduce some tools that will help us to understand the toy model. We stress that in general, other neural field models might not have this luxury, and that we only make use of these tools to help explain the dynamics of the neural fields. Computationally, the overlaps and projections introduced here are only computed from the results of the simulation (see [`overlap.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_overlap.py) in the source code).
+We now introduce some tools that will help us understand the toy model. We stress that in general, other neural field models might not have this luxury, and that we only make use of these tools to help explain the dynamics of the simulated neural fields. The overlaps and projections introduced here are only computed from the results of the simulation (see [`overlap.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_overlap.py) in the source code).
 
 ### Overlap variables
 
@@ -202,7 +202,7 @@ For the network for neurons, we write the overlap with the pattern $\mu$ as
 $$
 \begin{aligned}
 m_\mu(t) &= \frac 1N \sum_{i=1}^N \tilde \phi(z_{\mu i}) \phi(h_i(t)) \\
-&\xrightarrow{N \to \infty} \int_{\Rp} \tilde \phi(z_\mu) \phi(h(\vec z, t)) \rho(\d \vec z)
+&\xrightarrow{N \to \infty} \int_{\Rp} \tilde \phi(z_\mu) \phi(h(\vec z, t)) \mathcal{N}^p(\d \vec z)
 \end{aligned}
 $$ {#eq-overlap}
 
@@ -212,7 +212,7 @@ $$
 \partial_t h(\vec z, t) = -h(\vec z, t) + \sum_{\mu=1}^p z_\mu m_\mu(t).
 $$ {#eq-overlap-evolution}
 
-This formulation "hides" the integral inside the overlap variables, but one should not forget that the overlaps depend on the neural field at a given time.
+This formulation "hides" the integral inside the overlap variables, but one should not forget that the overlaps depend on the neural field at any given time.
 
 ### Low-rank neural fields as $p$-dimensional closed systems {#sec-closed-system}
 
@@ -221,7 +221,7 @@ This formulation "hides" the integral inside the overlap variables, but one shou
 We cite @veltz2009localglobal, section 4.3 for the reduction of general low-rank networks to $p$-dimensional closed systems, and give the equations applied to our toy model. Defining the projections $\kappa_\mu(t)$ of the neural field onto the patterns
 
 $$
-\kappa_\mu(t) = \int_{\Rp} y_\mu h(\vec y, t) \rho(\d \vec y),
+\kappa_\mu(t) = \int_{\Rp} y_\mu h(\vec y, t) \mathcal{N}^p(\d \vec y),
 $$ {#eq-kappa}
 
 we can decompose the neural field onto the basis of patterns (mathematically, the patterns form an orthonormal basis of functions):
@@ -234,8 +234,8 @@ The orthonormal component $h^\perp(\vec z, t)$ is independent of the rest of the
 
 $$
 \begin{aligned}
-\dot \kappa_\mu(t) &= -\kappa_\mu(t) + \int_{\Rp} \tilde\phi(y_\mu) \phi(h(\vec y, t)) \rho(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t) \\
-\kappa_\mu(0) &= \int_{\mathbb{R}^p} y_\mu h(\vec y, 0) \rho(\mathrm d \vec y),
+\dot \kappa_\mu(t) &= -\kappa_\mu(t) + \int_{\Rp} \tilde\phi(y_\mu) \phi(h(\vec y, t)) \mathcal{N}^p(\mathrm d \vec y) = -\kappa_\mu(t) + m_\mu(t) \\
+\kappa_\mu(0) &= \int_{\mathbb{R}^p} y_\mu h(\vec y, 0) \mathcal{N}^p(\mathrm d \vec y),
 \end{aligned}
 $$
 
@@ -250,9 +250,9 @@ $$
 
 The set of $\kappa_\mu(t)$ defines a trajectory in a $p$-dimensional *latent space*. We note that similarly to @eq-overlap-evolution, the overlaps intervene in the equations of evolution, and carry the information on the neural field.
 
-Additionally, it can be seen from the expression of the overlaps in @eq-overlap, that in the case of a linear activation function $\phi(h) = c_0 + c_1 h$, then $m_\mu(t) = \kappa_\mu(t)$.
+Additionally, it can be seen from the expression of the overlaps in @eq-overlap, that in the case of a linear activation function $\phi(h) = c_0 + c_1 h$, we have the equality $m_\mu(t) = \kappa_\mu(t)$.
 
-## A cycling neural field
+## A cycling neural field {#sec-cyling-nf}
 
 In @sec-networks-of-neurons-to-neural-fields we introduced a simple toy model a neural field with a natural embedding on the $p$-dimensional Gaussian ball. Analytical derivations accompanied by numerical simulations showed the dynamics of this model can be summarized by the convergence to pattern fixed points. In this section, we modify the toy model minimally, such that we can observe more interesting behaviour in the form of cycling.
 
@@ -271,9 +271,9 @@ The geometric intuition behind this formulation is that now the recurrent curren
 
 ![(TODO animation in 3D, rename non-cycling to original) Intuition for the cycling behavior by considering the recurrent currents](figures/cycling_recurrent.png){#fig-cycling-irec}
 
-We note however that @eq-nf-cycling-p no longer is a partial differential equation, but rather a delayed differential equation, which are in general much more complicated to solve. A simplifying assumption that we make is that we extend the initial condition back in time, such that $h(\vec z, t < 0) = h(\vec z, 0)$ is a constant function. Numerically, this also means that we have to store a history of the neural fields instead of only the current one. Since the `solve_ivp` method dynamically adapts the timestep of integration, we use linear interpolation between two known points in the stored neural field states to estimate $h(\vec z, t-\delta)$ (see [`lagging.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_lagging.py) and [its use](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L334)).
+We note however that @eq-nf-cycling-p no longer is a partial differential equation, but rather a delayed differential equation, which are in general much more complicated to solve. A simplifying assumption that we make is we extend the initial condition back in time, such that $h(\vec z, t < 0) = h(\vec z, 0)$ is a constant function. Numerically, this also means that we have to store a history of the neural fields instead of only the current one. Since the [`solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html) method dynamically adapts the timestep of integration, we use linear interpolation between two known points in the stored neural field states to estimate $h(\vec z, t-\delta)$ (see [`lagging.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_lagging.py) and [its use](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L334)).
 
-With these considerations, we simulate a $p=2$ cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$ in @fig-cycling-anim. The latent trajectory is estimated from the simulation results, and animated simultaneously to the neural field. We clearly see the oscillations between the patterns $\mu=1$ and $\mu=2$.
+With these considerations, we simulate a $p=2$ cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$ in @fig-cycling-anim. The latent trajectory is estimated from the simulation results, and animated simultaneously with the neural field. We clearly see the oscillations between the patterns $\mu=1$ and $\mu=2$.
 
 ::: {.content-visible when-format="html"}
 ![A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour.](figures/embedding_d=2_h0=0_cycling_delta=6.mp4){#fig-cycling-anim}
@@ -304,7 +304,7 @@ With this, we see that the projections "alternate" back and forth with period $\
 
 ## Mapping $\R^2$ to $[0,1]^2$ using the CDF {#sec-mapping-cdf}
 
-In preparation for mapping of $[0,1]^2$ to $[0,1]$, we first map the 2-dimensional neural field equation in $\R^2$ to $[0,1]^2$, and, in general $\Rp$ to $[0,1]^p$. There are many ways to do this by using functions $\R \mapsto [0,1]$, but a practical choice is the Gaussian CDF (Cumulative Density Function), because it has the benefit of absorbing the density in the kernel, in the sense that the integral $[0,1]^p$ becomes weighted by the uniform distribution. The one-dimensional Gaussian CDF is defined as
+In preparation to the next chapter, we first map the 2-dimensional neural field equation in $\R^2$ to $[0,1]^2$, and, in general $\Rp$ to $[0,1]^p$. There are many ways to do this by using functions $\R \mapsto [0,1]$, but a practical choice is the Gaussian CDF (Cumulative Density Function), because it has the benefit of absorbing the density into the kernel, in the sense that the integral $[0,1]^p$ becomes weighted by the uniform distribution. The one-dimensional Gaussian CDF is defined as
 
 $$
 \CDF(z) = \int_{-\infty}^z \mathcal{N}(\d y)
@@ -335,7 +335,7 @@ Defining the neural field in $[0,1]^p$ also addresses the problem that we tried 
 
 ![(TODO) A grid in $[0,1]^2$ and the corresponding samples in $\R^2$. The numeric density of points in $\R^2$ approaches the normal distribution as the grid becomes finer.](figures/sampling_R2_01.png){#fig-sampling-R2-012}
 
-We make the final remark that this method of mapping $\Rp$ to $[0,1]^p$ does not work for any neural field. In our case, we use the fact that the distribution factorizes into $\rho(z_1, \cdots, z_p) = \rho_1(z_1) \cdots \rho_p(z_p)$, such that the components of $\vec{v}$ are sampled independently. We can then define the "componentwise CDF" that relates to the total CDF via
+We make the final remark that this method of mapping $\Rp$ to $[0,1]^p$ by using the CDF does not work for any neural field. In our case, we use the fact that the distribution factorizes into $\rho(z_1, \cdots, z_p) = \rho_1(z_1) \cdots \rho_p(z_p)$, such that the components of $\vec{v}$ are independent. We can then define the "componentwise CDF" that relates to the total CDF via
 
 $$
 \begin{aligned}

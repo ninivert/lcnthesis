@@ -20,7 +20,7 @@ $$
 
 ## Derivation of fixed points
 
-In order to find the fixed points, one has to solve in general $\dot h_i(t) = 0$ for all $i = 1, \cdots, N$. Because of the non-linearity $\phi(h_j(t))$, this is difficult, but we can guess the fixed points $h^\star_i$ and verify them by substituting into the equation that $\dot h_i(t) = 0$.
+To find the fixed points, one has to solve in general $\dot h_i(t) = 0$ for all $i = 1, \cdots, N$. Because of the non-linearity $\phi(h_j(t))$, this is difficult, but we can guess the fixed points $h^\star_i$ and verify them by substituting into the equation that $\dot h_i(t) = 0$.
 
 ### Zero fixed point
 
@@ -39,7 +39,7 @@ $$
 
 To write the last line, we make a slight abuse of notation in order to avoid notation problems when taking the $N \to \infty$ limit of $F_{\mu i}$.
 
-In the case of the network studied in this work, the find that
+In the case of the network studied in this work, we find that
 
 $$
 \avg{g_\mu(\vec{z})} = \avg{\tilde \phi(z_\mu)} = \avg{\frac{\phi(z_\mu) - \avg{\phi(z_\mu)}}{\mathrm{Var}[\phi(z_\mu)]}} = 0
@@ -123,9 +123,9 @@ $$
 \end{aligned}
 $$
 
-The fixed point is stable if $\vec\delta(t) \to 0$ as $t \to \infty$, in other words if all the eigenvalues of $K$ are negative.
+The fixed point is stable if $\vec\delta(t) \to 0$ as $t \to \infty$, in other words, if all the eigenvalues of $K$ are negative.
 
-Before we study the spectrum of $K$, we cite the following result : if $\lambda$ is an eigenvalue of $A$, then $\lambda-1$ is an eigenvalue of $A-\mathrm{Id}$. This follows simply from the equation for the eigenvalues $\lambda_i$ and eigenvectors $\vec{v_i}$ of $A$. If $A \vec{v_i} = \lambda_i \vec{v_i}$, then $(A-\mathrm{Id})\vec{v_i}=\lambda_i \vec{v_i} - \vec{v_i} = (\lambda_i - 1)\vec{v_i}$. Therefore to study $K$ it suffices to study the eigenvalues of $J^\prime$.
+Before we study the spectrum of $K$, we cite the following result: if $\lambda$ is an eigenvalue of $A$, then $\lambda-1$ is an eigenvalue of $A-\mathrm{Id}$. This follows simply from the equation for the eigenvalues $\lambda_i$ and eigenvectors $\vec{v_i}$ of $A$. If $A \vec{v_i} = \lambda_i \vec{v_i}$, then $(A-\mathrm{Id})\vec{v_i}=\lambda_i \vec{v_i} - \vec{v_i} = (\lambda_i - 1)\vec{v_i}$. Therefore to study $K$ it suffices to study the eigenvalues of $J^\prime$.
 
 Since $J^\prime$ is low-rank, its image is spanned by the vectors $\{\vec{F_\nu} = (F_{\nu 1}, \cdots, F_{\nu N}) | \nu=1,\cdots,p\}$, which motivates the Ansatz of eigenvectors $\vec{v_\nu} = \vec{F_\nu}$ in the $N \to \infty$ limit.
 
@@ -137,7 +137,7 @@ $$
 \end{aligned}
 $$
 
-We study each term separately. Additionally (and similarly as before), we make the assumption that the functions $g_\mu$ and the functions $f_\mu$ are component-wise, and that the distribution $\rho$ factorises.
+We study each term separately. Additionally (and similarly as before), we assume that the functions $g_\mu$ and the functions $f_\mu$ are component-wise, and that the distribution $\rho$ factorises.
 
 $$
 \begin{aligned}
@@ -174,7 +174,7 @@ $$
 
 When $\phi$ is the logistic function, the pattern fixed points are stable, whereas the zero fixed point is unstable.
 
-We now consider a Taylor expansion of the rate function $\phi(h)$ up to order 3, and cite results obtained from symbolic computation and known moments of the gaussian distribution.
+We now consider a Taylor expansion of the rate function $\phi(h)$ up to order 3, and cite results obtained from symbolic computation and known moments of the Gaussian distribution.
 
 $$
 \begin{aligned}
@@ -211,9 +211,10 @@ $$
 
 What a mess ! We summarize the results from the Taylor expansion :
 
-* When $\phi$ is linear, we see that all the eigenvalues are zero, therefore the first order stability is unconclusive. Numerically, we see that when $\phi$ is linear, the convergence to the fixed points is very slow.
+* When $\phi$ is linear, we see that all the eigenvalues are zero, therefore the first order stability is inconclusive. Numerically, we see that when $\phi$ is linear, the convergence to the fixed points is very slow.
 * When $\phi$ is quadratic, the zero fixed point is stable, and the pattern fixed point is unstable, regardless of the sign of the coefficients.
 * When $\phi$ is cubic, the sign of the eigenvalues depends primarily on $c_3$ (negative $c_1$ breaks the assumption that $\phi$ must be monotonically increasing). The intuition is that we require $c_1$ to be large enough (in other words, the growth of the firing rate when $h$ becomes positive) and $c_3 < 0$ such that $3 c_1 c_3 + 15 c_3^2 < 0$.
+  The intuition behind this is that if the slope $c_1$ is stronger, then the bump of $\partial \phi$ becomes "more concentrated", which helps lower the eigenvalues associated with the pattern fixed points.
   The magnitude of the second order term $c_2$ only contributes to adding instability to the pattern fixed point, and stability to the zero fixed point, which leads to the conclusion it is best set to $c_2=0$ if we want the network to be stable at the pattern fixed points.
 
 [TODO FIG : might be nice to have a phase plot of $c_1, c_3$ and the value of the eigenvalue to illustrate the previous illustration]
@@ -222,4 +223,4 @@ The study of the Taylor expansion therefore instructs us that stability is impro
 
 We finish the study of eigenvalues by noting that in the $N \to \infty$ limit, the remaining $N-p$ eigenvalues of $J^\prime$ are zero. The corresponding eigenvectors span the orthogonal complement of the vectors $\vec{G^\prime_\nu} = (G^\prime_{\nu 1}, \cdots, G^\prime_{\nu N})$, formally $\vec{v} \in \mathrm{span}(\vec{G^\prime_1}, \cdots,\vec{G^\prime_p})^\perp$.
 
-In conclusion, the spectrum of $K$ is composed of $p$ eigenvalues $\lambda_\nu = \avg{g_\nu(z_\nu) f_\nu(z_\nu) \partial \phi(h^\star)}-1$, and $N-p$ eigenvalues $\lambda_\perp = -1$. For the network considered in this work, the interpretation of this is that components of the field aligned with the patterns $z_\nu$ converge to the fixed point, and the orthogonal components decay as $t \to \infty$. The fixed point $h_i^\star=0$ is therefore unstable, and the pattern fixed points $h_i^\star = z_{\nu i}$ are stable. We also note that since the normal distribution is centered around zero and symmetric, $h_i^\star = -z_{\nu i}$ are also stable fixed points.
+In conclusion, the spectrum of $K$ is composed of $p$ eigenvalues $\lambda_\nu = \avg{g_\nu(z_\nu) f_\nu(z_\nu) \partial \phi(h^\star)}-1$, and $N-p$ eigenvalues $\lambda_\perp = -1$. For the network considered in this work, the interpretation of this is that components of the field aligned with the patterns $z_\nu$ converge to the fixed point, and the orthogonal components decay as $t \to \infty$. The fixed point $h_i^\star=0$ is therefore unstable, and the pattern fixed points $h_i^\star = z_{\nu i}$ are stable. We also note that since the normal distribution is centred around zero and symmetric, $h_i^\star = -z_{\nu i}$ are also stable fixed points.

@@ -16,7 +16,7 @@ book:
 
     Decoupling the embedding space from the physical position of neurons on the cortical sheet leads to asking the question of uniqueness of the embedding space. Given an embedding space and neural dynamics thereon, do there exist other embedding spaces which can express the same behavior ? Is there a "natural" choice for the embedding space ?
 
-    In this work, we show that the answer to the second question is highly nontrivial because given some neural dynamics, we can find multiple equivalent embedding spaces in different dimensions. We illustrate this using a toy example of a 2 (or 3)-dimensional embedding that is mapped to an equivalent 1-dimensional embedding. This is done by applying measurable bijective mappings $S : [0,1]^2 \mapsto [0,1]$, which we additionally show are well-behaved under numerical simulation schemes. In this, we exploit the key concept of "locality", which expresses the property of (not necessarily continuous, or possibly fractal) neural fields, in which neighbouring neurons in the embedding space *tend* to have similar functions.
+    In this work, we show that the answer to the second question is highly nontrivial because given some neural dynamics, we can find multiple equivalent embedding spaces in different dimensions. We illustrate this using a toy example of a 2 (or 3)-dimensional embedding that is mapped to an equivalent 1-dimensional embedding. This is done by applying measurable bijective mappings $S : [0,1]^2 \mapsto [0,1]$, which we additionally show are well-behaved under numerical simulation schemes. In this, we exploit the key concept of "locality", which expresses the property of (possibly fractal) neural fields, in which neighbouring neurons in the embedding space *tend* to have similar functions.
   chapters:
     - index.qmd
     - chapters/1_intro.qmd
@@ -54,8 +54,9 @@ format:
   epub:
     toc: true
     date: last-modified
+    # TODO math
   pdf:
-    pdf-engine: pdflatex
+    pdf-engine: xelatex
     documentclass: scrreprt
     classoption: abstract
     papersize: a4
