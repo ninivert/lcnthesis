@@ -142,9 +142,9 @@ Functions of $[0,1]$ into $[0,1]^2$ are extensively discussed in chapter 1 of @k
 
 In light of these results, we might be tempted to search for expressions of Cantor-type functions, since having a bijection would allow us to have a direct mapping between the square and the segment populations. Unfortunately, these functions are discontinuous which breaks the regularity of the kernel.
 
-Peano functions seem like good candidates for the mapping $S^{-1}$, and are extensively studied in the literature around space-filling curves (we refer for instance to [@sagan_space-filling_1994]). They have the nice property that they are continuous and surjective, so we the segment populations can "reach" the entirety of the square populations. All things considered, non-injectivity is not a problem, since it just means that two segment populations can "refer" to the same square population, which does not break the regularity of the kernel, since the two segment populations can just have their own neighborhoods. Furthermore, we will see that in our examples, the non-injectivity can be ignored because the mapping is "quasi-bijective".
+Peano functions seem like good candidates for the mapping $S^{-1}$, and are extensively studied in the literature around space-filling curves (we refer for instance to [@sagan_space-filling_1994]). They have the nice property that they are continuous and surjective, so we the segment populations can "reach" the entirety of the square populations. All things considered, non-injectivity is not a problem, since it just means that two segment populations can "refer" to the same square population (see @fig-non-injection), which does not break the regularity of the kernel, since the two segment populations can just have their own neighbourhoods.
 
-![Non-injectivity of $S^{-1}$ means that two segment populations can refer to the same square population.](figures/photo_2023-06-12_00-46-26.jpg)
+![Non-injectivity of $S^{-1}$ means that two segment populations can refer to the same square population.](figures/photo_2023-06-12_00-46-26.jpg){#fig-non-injection}
 
 ### Sequences of bijective mappings
 
@@ -341,7 +341,7 @@ display(fig)
 
 The attentive reader might however object to this treatment of locality, since in some sense the Column mapping is local, but from 2D to 1D. This can be seen from the definition of $\alpha^{(n)}=C(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n$, since small variations of order $2^{-n}$ in $v^{(n)}_1$ result in small variations also of order $2^{-n}$ in $\alpha^{(n)}$. Similarly, small variations of order $2^{-n}$ in $v^{(n)}_1$ result in even smaller variations also of order $2^{-2n}$ in $\alpha^{(n)}$ ! We therefore seem to have two notions of locality: from 1D to 2D, and from 2D to 1D; and the Column mapping shows that they are not equivalent.
 
-However, we argue that in our case only the notion of locality from 1D to 2D matters. In essence, the dynamics in the 2D embedding are already known, and we ask the question of whether it is possible to write an equivalent neural field 1D (in the sense that it has identical latent trajectories). Without repeating the intuition given in @sec-intro-simnf, if neighboring populations in 1D have similar potentials, then this allows us to write a neural field equation in $[0,1]$. Therefore we would like to have the property that populations close in 1D are (inversely) mapped to populations close in 2D, which already have similar potentials.
+However, we argue that in our case only the notion of locality from 1D to 2D matters. In essence, the dynamics in the 2D embedding are already known, and we ask the question of whether it is possible to write an equivalent neural field 1D (in the sense that it has identical latent trajectories). Without repeating the intuition given in @sec-intro-simnf, if neighbouring populations in 1D have similar potentials, then this allows us to write a neural field equation in $[0,1]$. Therefore we would like to have the property that populations close in 1D are (inversely) mapped to populations close in 2D, which already have similar potentials.
 
 <!-- note for me : find a formulation for the recursive local mapping. it is not trivial, since it has
 
@@ -418,7 +418,7 @@ fig, ax = plot_trace(AntiZMapping, nrec=4, do_trace=False, do_numbers=False)
 display(fig)
 ```
 
-@fig-anti-z gives some insight into the problem of this mapping. For a fixed input $(v_1,v_2)$, we see that the output point position jumps around when $n$ is changed, and that these jumps seem to always be of order 1. The intuition behind pointwise convergence is that as $n$ increases, the image of a point by $S^n$ is continually refined.
+@fig-anti-z gives some insight into the problem of this mapping. For a fixed input $(v_1,v_2)$, we see that the output point position jumps around when $n$ changes, and that these jumps seem to always be of order 1. The intuition behind pointwise convergence is that as $n$ increases, the image of a point by $S^n$ is continually refined.
 
 Consider how $\alpha^{(n)}$ fluctuates as the precision of the input increases with $n \to \infty$. As we refine the input with fluctuations of order $2^{-n}$, the output $\alpha^{(n)} = b^1_n 4^{-1} + b^2_n 4^{-2} + b^1_{n-1} 4^{-3} + b^2_{n-1} 4^{-4} \cdots$ fluctuates (at least) with amplitude $\sim 4^{-2}$ independantly of $n$. Therefore the output never converges, and the mapping $A^{n}$ is not pointwise convergent.
 
@@ -457,11 +457,11 @@ $$
 
 The limit is not bijective, because the bits of $v_2$ are "lost" in the $n\to\infty$ limit, and the inverse $C_2^{-1}(\alpha)$ is not well-defined, since it "takes bits between $\infty$ and $2\infty$".
 
-The Z-mapping seems to converge to a fractal curve. Numerically, there seems to be an infinite number of discontinuities, but the size of these discontinuities is overwhelmingly small, so that *on average* they vanish as $n\to\infty$. We won't go further into detail about this in this section (in @sec-zcurve-lebesgue we develop the convergence to a space-filling fractal curve), but this gives some intuition for the arguments presented in @sec-locality.
+The Z-mapping seems to converge to a fractal curve. Numerically, there seems to be an infinite number of discontinuities, but the size of these discontinuities is overwhelmingly small, so that *on average* they vanish as $n\to\infty$. We won't go further into detail about this (we refer to @Sagan1994 for an in-depth study), but this gives some intuition for the arguments presented in @sec-locality.
 
 We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective.[^zmapping-notbijective] In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary:
 
-[^zmapping-notbijective]: Despite what can often be found in online resources, the Z-mapping is *not* a bijection because that would violate Netto's theorem. The reason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give proof that the Z-mapping is not injective in the $n\to\infty$ limit. However, the Z-mapping is *quasi-bijective*, in the sense that the set of points for which the Z-mapping is not injective has zero measure, and can therefore be ignored.
+[^zmapping-notbijective]: Despite what can often be found in online resources, the Z-mapping is *not* a bijection because that would violate Netto's theorem. For every point in $[0,1]^2$, there are at most 4 distinct preimages in $[0,1]$. The reason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give proof that the Z-mapping is not injective in the $n\to\infty$ limit.
 
 1. condition of pointwise convergence: the LSB of the input must be mapped to the LSB of the output,
 2. condition of "no information loss": the MSB of the input must be mapped to the MSB of the output.

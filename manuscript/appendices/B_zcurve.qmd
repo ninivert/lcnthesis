@@ -1,33 +1,132 @@
-::: content-hidden
+::: {.content-hidden}
 {{< include ../macros.tex >}}
 \def\C{\mathcal{C}}
+\def\P{\mathcal{P}}
+\def\B{\mathcal{B}}
 :::
 
-# On the quasi-bijectivity and continuity of the Z-mapping
+# The Z-curve is not injective {#sec-zcurve-noninjective}
 
-We study the Z-curve $Z^{-1}$
+Let us study, in a bit more detail, the properties of the Z-curve $Z^{-1}$ introduced in @sec-local, and, by extension, the properties of the Z-mapping $Z$.
 
-## The Z-curve is not injective {#sec-zcurve-noninjective}
+## Ambiguity of binary expansions
 
-this is common misconception, and people write it is a bijection, when really it is not
+Although it might seem that the Z-curve defines a bijection (this is often falsely relayed in online resources, and was even initially believed by Cantor when he discovered this function, before being corrected by Dedekind @fleron1994cantorhistory), this is not the case.
 
-The Z-curve : [0,1] -> [0,1]^2 is not injective since the binary expansion is ambiguous
+The problem with the definition is the ambiguity of (binary) expansions. If we allow infinite sum expansions, then the two representations of $\tfrac 12$ are equivalent:
 
-x = 0.10000... = 0.011111...
+$$
+\begin{aligned}
+\frac 12 &= 0.1000 \cdots = \sum_{l=1}^\infty b_l 2^{-l},\ \text{where}\ b_1=1, b_{l>1}=0 \\
+&= 0.0111 \cdots = \sum_{l=1}^\infty b^\prime_l 2^{-l},\ \text{where}\ b^\prime_1=0, b^\prime_{l>1}=1
+\end{aligned}
+$$
 
-=> alpha = 0.1y0y0y0  !=   alpha = 0.0y1y1y1y1
+Although $Z^n$ are still bijections, this ambiguity is problematic for the $n\to\infty$ limit, since we can find multiple pre-images for the same $\alpha$ mapped by $Z$. This illustrate this, let us take a finite integer $m$, and write a counter-example of bijectivity. Similarly to the main text, we define the binary expansions of $v_1$ and $v_2$:
 
+$$
+\begin{aligned}
+v_1 &= \sum_{l=1}^\infty b^1_l 2^{-l} = 0.b^1_1b^1_2 \cdots b^1_{m} b^1_{m+1} \cdots \\
+v_2 &= \sum_{l=1}^\infty b^2_l 2^{-l} = 0.b^2_1b^2_2 \cdots b^2_{m} b^2_{m+1} \cdots
+\end{aligned}
+$$
 
-but the point on which the expansion is ambiguous form a set of zero measure, so the integral is still ok
+We now consider the $l > m$ binary digits of $v_1$ to give ambiguous representations of $v_1^{(m)} + 2^{-m-1}$, where $v_1^{(m)}$ is the finite-$m$ truncation of $v_1$.
 
-on the set [0,1] \ {problems}, Z-curve is bijective
+$$
+\begin{aligned}
+v_1 &= 0.b^1_1b^1_2 \cdots b^1_{m} 1000 \cdots \\&\qquad\implies \alpha = 0.b^1_1 b^2_1 \cdots b^1_m b^2_m 1 b^2_{m+1} 0 b^2_{m+2} 0 b^2_{m+3} \cdots \\
+&= 0.b^1_1b^1_2 \cdots b^1_{m} 0111 \cdots \\&\qquad\implies \alpha^\prime = 0.b^1_1 b^2_1 \cdots b^1_m b^2_m 0 b^2_{m+1} 1 b^2_{m+2} 1 b^2_{m+3} \cdots\\
+\end{aligned}
+$$
 
-injectivity is the property that f(x) != f(y)  iff  x != y,  (equiv f(x) == f(y) iff x == y)
+This shows the injectivity is broken, the same point $(v_1, v_2)$ can be mapped to by (at least) two different $\alpha \neq \alpha^\prime$. The Z-curve $Z^{-1}$ therefore no longer defines a one-to-one mapping, and is not injective.
 
-Z^{-1} defines a space-filling curve
+For a point $(v_1, v_2) \in [0,1]^2$ which can be written as a finite binary expansion (that is, a $1$ followed by an infinite string of $0$'s), there might as much as 4 pre-images in $[0,1]$:
 
-not a problem because we are just repeating the same population twice
+$$
+\begin{aligned}
+(v_1, v_2) &= (0.b^1_1 \cdots b^1_{m_1} 1000 \cdots, 0.b^2_1 \cdots b^2_{m_2} 1000 \cdots) \\
+&= (0.b^1_1 \cdots b^1_{m_1} 1000 \cdots, 0.b^2_1 \cdots b^2_{m_2} 0111 \cdots) \\
+&= (0.b^1_1 \cdots b^1_{m_1} 0111 \cdots, 0.b^2_1 \cdots b^2_{m_2} 1000 \cdots) \\
+&= (0.b^1_1 \cdots b^1_{m_1} 0111 \cdots, 0.b^2_1 \cdots b^2_{m_2} 0111 \cdots) \\
+\end{aligned}
+$$
 
+has the following pre-images (supposing without loss of generality $m_1 \leq m_2$):
+
+$$
+\begin{aligned}
+\alpha_1 &= 0.b^1_1 b^2_1 \cdots b^1_{m_1} b^2_{m_1} 1 b^2_{m_1+1} 0 b^2_{m_1+2} 0 \cdots b^2_{m_2} 010000 \cdots \\
+\alpha_2 &= 0.b^1_1 b^2_1 \cdots b^1_{m_1} b^2_{m_1} 1 b^2_{m_1+1} 0 b^2_{m_1+2} 0 \cdots b^2_{m_2} 010101 \cdots \\
+\alpha_3 &= 0.b^1_1 b^2_1 \cdots b^1_{m_1} b^2_{m_1} 0 b^2_{m_1+1} 1 b^2_{m_1+2} 1 \cdots b^2_{m_2} 101010 \cdots \\
+\alpha_4 &= 0.b^1_1 b^2_1 \cdots b^1_{m_1} b^2_{m_1} 0 b^2_{m_1+1} 1 b^2_{m_1+2} 1 \cdots b^2_{m_2} 101111 \cdots
+\end{aligned}
+$$
+
+## The set of points with multiples preimages in $[0,1]$ is dense in $[0,1]^2$ 
+
+The Z-curve is not injective from $[0,1]$ into $[0,1]^2$, and furthermore, we cannot ignore the points for which it is not injective, because the set of points with multiple preimages in $[0,1]$ is dense in $[0,1]^2$. We begin the study by considering only the first coordinate $v_1$, since the same arguments apply to $v_2$.
+
+The set $\P$ is defined as the set of $v_1$ which have multiple pre-images in $[0,1]$:
+
+$$
+\P = \{ 0.b_1 b_2 \cdots b_m 1000 \cdots \ |\ m \in \mathbb{N} \}.
+$$ {#eq-P}
+
+We wish to prove that $\P$ is dense in $[0,1]$. For this, we will prove that any point $v_1 \in [0,1]$ is either in $\P$, or is the limit point of $\P$. If $v_1 \in \P$, we are done. Else, we consider $v_1 \notin \P$.
+
+We define an expansion of $v_1 = \sum_{l=1}^\infty b_l 2^{-l}$ (we note $b_l$ are not unique, but this does not matter for the rest of this proof). We also define the truncation $v_1^{(m)} = \sum_{l=1}^m b_l 2^{-l}$, such that $v_1^{(m)} \xrightarrow{m\to\infty} v_1$. The trick is now to define the sequence of $v_1^\prime{^{(m)}}$ as:
+
+$$
+v_1^\prime{^{(m)}} = v_1^{(m)} + \frac{1}{2^{m+1}} \in \P.
+$$
+
+Therefore, the sequence $\{v_1^\prime{^{(m)}}\}$ is a subset of $\P$, and its limit is:
+
+$$
+\lim_{m\to\infty} v_1^\prime{^{(m)}} = \lim_{m\to\infty} v_1^{(m)} + \lim_{m\to\infty} \frac{1}{2^{m+1}} = v_1.
+$$
+
+Therefore, $v_1$ is a limit point of $\P$. This concludes the proof that $\P$ is dense in $[0,1]$.
+
+By extension, the same arguments apply to $v_2$, and the set $\P \times \P$ is dense in $[0,1]\times [0,1]$. Therefore, the set of points with multiple preimages in $[0,1]$ is dense in $[0,1]^2$.
+
+<!-- 
+For this, we adopt a counting argument and look at the scaling behavior of $\P_n$, the finite-$n$ truncations of $\P$.
+
+Let us take $n > m$, and the finite-$n$ truncations $v_1^{(n)}$ of $v_1 \in \P$. Because of the ambiguity of representation, we need to consider two different finite-$n$ truncations, that both converge to $v_1$ as $n\to\infty$. This defines the sequence of sets $\P_n$ as:
+
+$$
+\P_n = \{ 0.\underbrace{b_1 b_2 \cdots b_m}_{m\ \text{bits}} \underbrace{1000 \cdots 0}_{n-m\ \text{bits}} \ |\ m < n \} \cup \{b_1 b_2 \cdots b_m 0111\cdots 1\ |\ m < n\}.
+$$ {#eq-Pn}
+
+At finite $n$, we can define the complement, that is, the set of non-problematic points as:
+
+$$
+\begin{aligned}
+\P_n^c &= \B_n \backslash \P_n \\
+\text{where}\ \B_n &= \left\{ \frac{k}{2^n} \ |\ k \in \{0, \cdots, 2^{n}-1\}\right\}
+\end{aligned}
+$$ {#eq-Pnc}
+
+We now argue based on the size of $\P$ and $\P^c$. From its definition, we directly see that $|\B_n| = 2^n$. To compute $|\P_n|$, it is easier to rewrite $\P_n$ as the union of $m$ *disjoint* sets $\P_{n,m}$:
+
+$$
+\begin{aligned}
+\P_n &= \bigcup_{m=1}^n \P_{n,m} \\
+&= \bigcup_{m=1}^n \left\{ \frac{k}{2^m} + \frac{1}{2^{m+1}}, \frac{k}{2^m} + \frac{2^{m+1}-1}{2^{m+1}}\ |\ k \in \{0, \cdots, 2^{m} - 1\},  \right\}.
+\end{aligned}
+$$
+
+Since each set $\P_{n,m}$ is of size $|\P_{n,m}| = 2 \times 2^{m}$, the size of $|\P_n|$ can be computed as:
+
+$$
+|\P_n| = \sum_{m=1}^n |\P_{n,m}| = 2 \sum_{m=1}^n 2^m = 2 (2^n - 1)
+$$
+
+uh oh... -->
+<!-- 
 ## $Z^{-1}$ defines a space-filling curve on a subset of $[0,1]$ {#sec-zcurve-lebesgue}
 
 ### The Cantor set $\C$
@@ -43,4 +142,4 @@ the cantor set has measure 0, but has the same cardinality of the continuum
 we would also relax and say the Z-curve is discontinuous, because lim alpha ->0.5+ Z(alpha) != lim alpha -> 0.5- Z(alpha)
 -> NO ! because we linearly interpolate between the quadrants. we say the curve is continuous, in the sense that it is connected. but it is allowed to jump around !
 
-talk about the fact we have other space filling curves, such as hilbert curve or peano curve, that are continuous and surjective [0,1] -> [0,1]^2. we use the Z-curve because it's easy to implement numerically
+talk about the fact we have other space filling curves, such as hilbert curve or peano curve, that are continuous and surjective [0,1] -> [0,1]^2. we use the Z-curve because it's easy to implement numerically -->

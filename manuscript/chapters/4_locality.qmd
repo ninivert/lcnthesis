@@ -55,6 +55,8 @@ Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, th
 
 [TODO : uniqueness of the solution ?]
 
+<!-- TODO : we may argue that the Z-curve is not bijective. This complicates the proof. Though, the pre-image of (v_1, v_2) is composed of at most 4 points, and the measurability compensates. -->
+
 ## Locality
 
 ### The total variation attempt

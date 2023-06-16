@@ -159,7 +159,7 @@ $$ {#eq-nf-gaussian-p}
 
 Now that we have introduced the analytical neural fields, let us discuss how we can simulate them numerically, more specifically how we can estimate the $p$-dimensional integral.
 
-### Sampling method (Monte Carlo integration)
+### Sampling method (Monte Carlo integration) {#sec-mc}
 
 Due to the formulation of the neural field weighed by a probability distribution $\rho(y_1, \cdots, y_p)$, a natural way to estimate the integral is by Monte Carlo integration.
 The essence of this method is the use of the Central Limit Theorem, where we take $N$ independent samples $\vec{y_i} = (y_{1i}, \cdots, y_{pi})$ from the distribution $\rho$, and use them to estimate the integrand.

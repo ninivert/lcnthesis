@@ -1,51 +1,116 @@
-# Binned sampling of populations {#sec-mean-patterns}
+::: {.content-hidden}
+{{< include ../macros.tex >}}
+\def\A{\mathcal{A}}
+\def\B{\mathcal{B}}
+:::
 
--> average low-rank vectors
+# Binned sampling of populations and visualization of kernels {#sec-mean-patterns}
 
-![Alt text](../chapters/figures/Screenshot_2023-06-03_19-59-49.png)
+## Mean field derivation
 
-derivation of $\Jab$ and mean patterns
-
-For finite number of recursive quadrant iterations $n$, we can do a "mean-field approximation" inside each of the $4^n$ segments. Let $\alpha = \{i_1,\cdots,i_{|\alpha|}\}$ be the multi-index corresponding to all neurons of which the embedding in $\mathbb R^p$ gets mapped to the segment $\alpha$ in $[0,1]$. Let $H_\alpha(t) = \frac 1 {|\alpha|} \sum_{i \in \alpha} h_i(t)$ be the (mean) RNN potential of the segment $\alpha$. The connectivity matrix $\tilde J_{\alpha,\beta}$ satisfies
-
-$$
-\dot H_\alpha(t) = -H_\alpha(t) + \sum_{\beta \in \text{segments of length } 4^{-n}} \tilde J_{\alpha,\beta} \phi(H_\beta(t))
-$$
-
-By substituting the original $h_i(t)$, we find the correct rescaling is given by
+Let us start by taking $N$ samples of the distribution $\rho(z_1, z_2)$. As established in @sec-mc, this defines a network of neurons $i \in \{1,\cdots,N\}$ with connectivity matrix $J_{ij} = w_U(\vec{v_i}, \vec{v_j})$. We recall the evolution equation for the network of neurons:
 
 $$
-\tilde J_{\alpha,\beta} = \frac 1 {|\alpha|} \sum_{i \in \alpha} \sum_{j \in \beta} J_{ij}
-$$
+\dot h_i(t) = -h_i(t) + \sum_{j=1}^N J_{ij} \phi(h_j(t)).
+$$ {#eq-evolution-network}
 
-In the low-rank case, we have
+For now, we do not use the fact that in our setting, $J_{ij}$ is low-rank.
+Applying the finite-$n$ mapping $S^n$,[^details] the neurons $\A = \{i_1, \cdots, i_{|\A |}\}$ will end up in the same 1D bin at position $\alpha$. There are 1D $4^n$ bins, each of length $4^{-n}$.
 
-$$
-J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu,i} G_{\mu,j}
-$$
+[^details]: We are glossing over the fact that $S^n : [0,1]^2 \mapsto [0,1]$, but the positions $\vec{z_i} \in \R^2$. In the code, we can deal with these by either applying the inverse CDF (as described in @sec-mapping-cdf), or considering a bounding box $[\min_i(z_{1,i}), \max_i(z_{1,i})] \times [\min_i(z_{2,i}), \max_i(z_{2,i})]$ of the sampled points, which is then rescaled to $[0,1] \times [0,1]$ (see implementation for [`Box`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L24)). Both approaches are equivalent, in the sense that they give rise to the same dynamics as $n$ becomes large, although the obtained connectivity matrix $\tilde J_{\alpha\beta}$ may not be the identical.
 
-We can define the "mean pattern" inside each bin :
-
-$$
-\tilde F_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} F_{\mu,i}, \; \tilde G_{\mu,\alpha} = \frac{1}{|\alpha|} \sum_{i \in \alpha} G_{\mu,i}
-$$
-
-Then the connectivity matrix is given by, noting $N = \sum_{\alpha} |\alpha|$,
+As explained in the main text, we average the neurons together in a bin, and we write the corresponding potential of the segment population at location $\alpha$:
 
 $$
-\tilde J_{\alpha,\beta} = \frac{|\beta|}{\sum_{\beta'} |\beta'|} \left( \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} - \delta_{\alpha,\beta} \underbrace{\sum_{\mu=1}^p \sum_{i \in \alpha} \frac{F_{\mu,i}}{|\alpha|} \frac{G_{\mu,i}}{|\alpha|}}_{\gamma_{\alpha}} \right)
-$$
+H_\alpha(t) = \frac{1}{|\A|} \sum_{i \in \A} h_i(t).
+$$ {#eq-H}
 
-![](../chapters/figures/sampling_R2_nogrid_kernel.png)
-
-Recurrent current is given by
+The segment populations interact via the connectivity kernel $\tilde J_{\alpha\beta}$, and we write the equation of evolution as:
 
 $$
-I^\text{rec}_\alpha(t) = \sum_\beta \tilde J_{\alpha,\beta} \phi(H_\beta(t)) = \frac{1}{\sum_{\beta'} |\beta'|} \left( \sum_\beta |\beta| \sum_{\mu=1}^p \tilde F_{\mu,\alpha} \tilde G_{\mu,\beta} \phi(H_\beta(t)) - |\alpha| \tilde \gamma_\alpha \phi(H_\alpha(t)) \right)
+\dot H_\alpha(t) = -H_\alpha(t) + \sum_{\beta=1}^{4^n} \tilde J_{\alpha\beta} \phi(H_\beta(t)).
+$$ {#eq-H-evolution}
+
+Since the neurons in $\A$ receive recurrent currents from neurons in $\B$, it might seem natural to take $\tilde J_{\alpha\beta}$ to be the average connectivity between the neurons in $\A$ and $\B$. Furthermore, the neurons in $\A$ receive recurrent currents from all the neurons in $\B$, which adds a weighing term $|\B|$:
+
+$$
+\tilde J_{\alpha\beta} = |\B| \frac{1}{|\B| |\A|} \sum_{i \in \A} \sum_{j \in \B} J_{ij} = \frac{1}{|\A|} \sum_{i \in \A} \sum_{j \in \B} J_{ij}.
+$$ {#eq-Jab}
+
+We now verify that our intuition is correct. We substitute the definition of the mean field @eq-H and the our guess @eq-Jab into @eq-H-evolution:
+
+$$
+\begin{aligned}
+\frac{1}{|\A|} \sum_{i \in \A} h_i(t) &= \frac{1}{|\A|} \sum_{i \in \A} h_i(t) + \sum_{\beta=1}^{4^n} \frac{1}{|\A|} \sum_{i \in \A} \sum_{j \in \B} J_{ij} \phi(H_\beta(t)) \\
+\iff&\\
+\sum_{i \in \A} h_i(t) &= \sum_{i \in \A} h_i(t) + \sum_{i \in \A} \underbrace{\sum_{\beta=1}^{4^n} \sum_{j \in \B}}_{=\sum_{j=1}^N} J_{ij} \phi(H_\beta(t)) \\
+&= \sum_{i \in \A} h_i(t) + \sum_{i \in \A} \sum_{j=1}^N J_{ij} \phi(H_\beta(t)).
+\end{aligned}
 $$
 
-The overlaps can be computed as
+We now make the mean-field approximation by dropping $\sum_{i \in \A}$, that is, that all the neurons inside of each bin are the same (or at least, sufficiently similar so that the mean-field is not a big mistake). Doing so, we recover @eq-evolution-network, which concludes the proof.
+
+## Sampling populations conserves the low-rank structure
+
+In @eq-Jab, we defined the connectivity of the binned segment populations as the average connectivity of the corresponding neurons sampled in the 2D embedding. In the case of low-rank $J_{ij}$, we can show the resulting $\tilde J_{\alpha\beta}$ also has a low-rank structure.
 
 $$
-\tilde m_\mu(t) = \frac{1}{\sum_{\alpha} |\alpha|} \sum_\alpha |\alpha| G_{\mu,\alpha} \phi(H_\alpha(t))
+\begin{aligned}
+\tilde J_{\alpha\beta} &= \frac{1}{|\A|} \sum_{i \in \A} \sum_{j \in \B} J_{ij} \\
+&= \frac{1}{|\A|} \sum_{i \in \A} \sum_{j \in \B} \frac 1N \sum_{\mu=1}^p F_{\mu i} G_{\mu j} \\
+&= \frac{1}{|\A| N} \sum_{\mu=1}^p \left(\sum_{i \in \A} F_{\mu i} \right) \left(\sum_{j \in \B} G_{\mu j} \right)
+\end{aligned}
 $$
+
+The form of the connectivity motivates the definition of *mean low-rank vectors*:
+
+$$
+\tilde F_{\mu\alpha} = \frac{1}{|\A|} \sum_{i \in \A} F_{\mu i},\quad \tilde G_{\mu\beta} = \frac{1}{|\B|} \sum_{j \in \B} G_{\mu j}.
+$$ {#eq-mean-lr-vectors}
+
+Additionally, we note that $N = \sum_{\beta^\prime} |\B^\prime|$, and substituting, we find that:
+
+$$
+\tilde J_{\alpha\beta} = \frac{|\B|}{\sum_{\beta^\prime} |\B^\prime|} \sum_{\mu=1}^p \tilde F_{\mu\alpha} \tilde G_{\mu\beta},
+$$ {#eq-Jab-mean-lr}
+
+which shows that $\tilde J_{\alpha\beta}$ has a low-rank structure.[^selfconnections]
+
+[^selfconnections]:
+  We note that if we exclude self-connections (as is done in @schmutz2023convergence), that is we redefine $J_{ij} \mapsto (1 - \mathrm{Id}_{ij}) J_{ij}$, then we can show that $\tilde J_{\alpha\beta}$ becomes
+  $$
+  \tilde J_{\alpha\beta} = \frac{|\B|}{\sum_{\beta^\prime} |\B^\prime|} \sum_{\mu=1}^p \tilde F_{\mu\alpha} \tilde G_{\mu\beta} - \mathrm{Id}_{\alpha\beta} \frac{|\B|}{\sum_{\beta^\prime} |\B^\prime|} \sum_{\mu=1}^p \sum_{i \in \A} \frac{F_{\mu i}}{|\A|} \frac{G_{\mu i}}{|\A|}.
+  $$
+  We see that the correction is still of order $\bO(\tfrac{1}{N})$, and therefore can be again ignored in the $N \to \infty$ limit.
+
+@eq-Jab-mean-lr also nicely complements the intuition that the more neurons are in each bin, the more "important" this bin should be. This is expressed through the weights $\frac{|\B|}{\sum_{\beta^\prime} |\B^\prime|}$. 
+
+<!-- The weighting also shows up if we express the overlap with respect to the mean-field $H_\alpha(t)$:
+$$
+\tilde m_\mu(t) = \frac{1}{\sum_{\alpha} |\A|} \sum_\alpha |\A| G_{\mu,\alpha} \phi(H_\alpha(t))
+$$ -->
+
+We have hereby shown that sampling neurons in the 2D embeddings, and binning the correponding mappings (downsampling), yields the concept of "mean patterns" from @eq-mean-lr-vectors.
+
+## Numerical examples of methods for estimating the $[0,1]$ connectivity kernel
+
+For the sake of illustration, let us compare the connectivity kernels obtained using different methods in @fig-kernels.
+
+* @fig-kernels-samplingR2 is the method described in this appendix, based on sampling $N$ neurons in the PDF space $\R^2$, applying the mapping on the obtained positions $\vec{z_i}$, the applying the binning (downsampling). We see, through the empty rows in the connectivity, that due to finite-$N$ effect, locations where $\rho$ is small are not represented, and, as a consequence, no neurons are present in the corresponding 1D bin. When this happens, we set these rows to zero.
+* To obtain @fig-kernels-gridR2, we make the approximation that the support of $\rho(z_1, z_2)$ is compact in $[-4,4]\times[-4,4]$, which of course is not true, but in the case of a Gaussian distribution this is a reasonable approximation, because $\CDF(4) \approx 0.999968$. Defining $\tilde \rho = \rho \circ S^{-1}$, the grid is numerically renormalized so that despite the compact support approximation, the probabilities sum up to one, and the connectivity matrix is modified so that the columns are weighed by $\tilde \rho(\beta)$:
+  $$
+  \tilde J_{\alpha\beta} = \tilde \rho(\beta) \sum_{\mu=1}^p \tilde F_{\mu \alpha} \tilde G_{\mu \beta}
+  $$
+  We see that compared to @fig-kernels-samplingR2, using the grid method allows us to "sample" the locations where the density is small, and this results in less "whited-out" rows. The vertical bands of white correspond to the reweighing of the columns with $\tilde \rho(\beta)$.
+* Finally, @fig-kernels-grid01 shows the kernel obtained from applying the grid method in the CDF $[0,1]^2$ described in @sec-mapping-cdf. We see that the connectivity seems much more "uniform", because each point of the grid has "equal weight" in the CDF space.
+
+::: {#fig-kernels layout-ncol=3}
+
+![Sampling neurons $\vec{z_i} \sim \rho(z_1, z_2)$ and binning the corresponding mappings](../chapters/figures/sampling_R2_nogrid_kernel.png){#fig-kernels-samplingR2}
+
+![Grid method in a subset of the PDF space $[-4,4]\times[-4,4] \subset \R^2$](../chapters/figures/sampling_R2_kernel.png){#fig-kernels-gridR2}
+
+![Grid method in the CDF space $[0,1]^2$](../chapters/figures/sampling_R2_01_kernel.png){#fig-kernels-grid01}
+
+(TODO) Comparison of methods for computing the connectivity matrices $\tilde J_{\alpha\beta}$ approximating the kernel $\tilde w(\alpha,\beta)$.
+:::
