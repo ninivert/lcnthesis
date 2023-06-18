@@ -456,3 +456,44 @@ DISCUSS :
 
 FURTHER QUESTIONS
 * locality might be a side-effect from bijections ? i don't think we can formulate a mappings that is nonlocal, but still bijective. reversely, i think all mapping that are bijective (or can be made bijective by excluding a set of zero measure) also have locality, because in some sense they need the locality to be local.
+
+
+
+
+
+FEEDBACK Valentin
+
+Chapter 2:
+
+V: Doesn't that depend on the steepness of the sigmoid? If so, should you add a steepness parameter in the definition of the sigmoid above?
+N: for the sigmoid with steepness parameter beta=1, numerical estimations show that it is stable. c.f. appendix
+
+V: I would remove these two paragraphs. Also, the statement "the network of neurons converges to the neural field with rate O(1/\sqrt{N})" actually depends on how exactly we define the converge. For example, in Chevallier, Duarte, Löcherbach, and Ost, the rate of convergence depends on the dimensionality p because they study the convergence of the empirical measures of all neurons (which is stronger than looking at a single neuron, which would indeed converge at rate 1/\sqrt{N}). 
+N: I would still like to at least say something about network of neurons ~ MC
+
+V: comment for Nicole: for finite N, the patterns are not exactly orthogonal.
+N: Yes ! I talk about this in the appendix :)
+
+V: I am not convinced by the work "cycling". Why not oscillating? But I let you choose...
+N: "cycling", because the p=3 reprentation clearly shows the cycle. in p=2, we just go back and forth, and so there is no real way to distinguish the cycling and the oscillations
+
+V: continuity and the differentiability of the kernel is conserved
+N: no, this would be misleading, because ~w is not continuous, nor differentiable
+
+V: Here, should you add:
+"While Peano functions are interesting candidate for mapping neural field equations in [0,1]^2 to neural field equations on the interval [0,1], in this work, we will focus on bijective functions, i.e. Cantor functions."
+N: we _don't_ study cantor functions, these are peano functions !
+   cantor functions are non-continuous bijections,
+   peano functions are continuous surjections,
+   jordan curves are continuous injections.
+   NETTO's theorem implies that jordan curves cannot have a jordan measure of 2, i.e. it cannot be surjective
+   DEF "space-filling ": continuous curve from [0,1] to [0,1]², with stricly positive Jordan measure.
+   the Column mapping is not space-filling, because it is not continuous.
+   the Z-curve is an approximation of the Lebesgue curve, which is a continuous surjection.
+   in our work, we WANT curves because we want to be able to enumerate the square populations by the corresponding segment populations in [0,1]. we WANT continuity because otherwise it will break the regularity of the kernel
+
+V: keep the section 3.4.1 ?
+N: idk, discuss ? I have also modified the discussion of coarse-graining
+
+V: I'm confused, why do you start by what seems like the least significant bit?
+N: we would define it as \sum_{k=0}^{n-1} i_k 2^{n-k-1}, in which case we would have i_0 i_1 ... i_{n-1} instead of i_{n-1} ... i_1 i_0, but this is not a standard way of writing binary integers.

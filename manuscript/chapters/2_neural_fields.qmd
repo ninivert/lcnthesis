@@ -10,29 +10,29 @@ In this chapter, we introduce a toy model so that we can later study the mapping
 
 ### Low-rank networks of neurons {#sec-low-rank-network}
 
-The toy model we introduce is an instance of a low-rank rate neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) $p$. We write the connectivity matrix as
+The toy model we introduce is an instance of a low-rank neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) $p$. We write the connectivity matrix as
 
 $$
 J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu i} G_{\mu j}.
 $$ {#eq-lowrankj}
 
-The geometric view of these networks is that the recurrent currents lie in a $p$-dimensional subspace of $\R^N$ spanned by the vectors $\{\vec{F_1}, \cdots, \vec{F_p}\}$ (where $\vec{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})$), which therefore form a "natural" embedding.
+The geometric view of these networks is that the recurrent currents lie in a $p$-dimensional subspace of $\R^N$ spanned by the vectors $\{\vec{F_1}, \cdots, \vec{F_p}\}$ (where $\vec{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})$), which therefore define a "natural" linear embedding (in the sense of @JazOst21) of the neural population activity.
 
-Recalling the notation from the introduction, $h_i(t)$ are the neuron potentials (with initial condition $h_i(0)$), $\phi : \R \mapsto \R^+$ is the monotonic increasing activation function, and we write the evolution equation for this network of neurons:
+Recalling the notation from the introduction, the $h_i(t)$ are neuron potentials (with initial condition $h_i(0)$), $\phi : \R \mapsto \R^+$ is the monotonic increasing activation function, and we write the evolution equation for this network of neurons:
 
 $$
 \dot h_i(t) = \underbrace{-h_i(t)}_\text{exponential decay} + \underbrace{\frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} F_{\mu i} G_{\mu j} \phi(h_j(t))}_\text{recurrent current $I^\text{rec}_i(t)$}.
 $$ {#eq-lowrank-evolution}
 
-The exponential decay term describes how, in isolation, a neuron's potential tends to zero, biologically corresponding to a depolarized membrane. The recurrent current term $I^\text{rec}_i(t)$ describes the "currents" received by neuron $i$ from all the other neurons in the network.
+The exponential decay term describes how, in isolation, a neuron's potential tends to zero, biologically corresponding to the decay of the membrane potential to its value at rest. The recurrent current term $I^\text{rec}_i(t)$ describes the "currents" received by neuron $i$ from all the other neurons in the network.
 
 We would like to add a few remarks on the physical units of @eq-lowrank-evolution. Strictly speaking, a prefactor $\tau$ with units of $\mathrm{seconds}^{-1}$ should be multiplied with $\dot h_i(t)$ of units $\mathrm{volt}\cdot\mathrm{seconds}^{-1}$, such that the left-hand side of the equation is consistent with the unit of voltage. Similarly, the activation function has units $\mathrm{seconds}^{-1}$ and the connectivity matrix units of $\mathrm{coulomb}$, and a multiplicative term $R$ with units $\mathrm{ohm}$ should multiply the recurrent currents in order to yield a voltage. By rescaling time or connection weights, both $\tau$ and $R$ can be set to one, and so we omit to write them.
 
-One last remark is that in our model, we omit to add any source of external currents: from the initial condition, the network is left to evolve in isolation.
+One last remark is that in our model, there is no external current; we only study the autonomous dynamics of the system.
 
 ### Gaussian $\mathcal{N}(\vec 0, \mathbb{1}_N)$ low-rank network of neurons
 
-Let us now specify the low-rank model introduced in the previous section, and use the model introduced in @schmutz2023convergence. This paper defines the low-rank vectors $F_{\mu i}$ such that each component independently samples a standard Gaussian (zero mean, unit variance). In other words, every neuron $i$ samples a vector $\vec{F_i} = (F_{1i}, \cdots, F_{pi})$ from the $p$-dimensional gaussian ball. We write
+Let us now specify the low-rank model introduced in the previous section, and use the model introduced in @schmutz2023convergence, which can be seen as a simple example of a "Gaussian mixture low-rank network" @Beiran2021. This paper defines the low-rank vectors $F_{\mu i}$ such that each component independently samples a standard Gaussian (zero mean, unit variance). In other words, every neuron $i$ samples a vector $\vec{F_i} = (F_{1i}, \cdots, F_{pi})$ from the $p$-dimensional gaussian. We write
 
 $$
 \vec{F_i} = \vec{z_i},\ \vec{z_i} \stackrel{\text{iid}}{\sim} \rho(z_1, \cdots, z_p),
@@ -50,28 +50,34 @@ $$
 The vectors $G_{\mu i}$ are defined as
 
 $$
-G_{\mu i} = \tilde\phi(z_{\mu i}) \stackrel{\text{def}}{=} \frac{\phi(z_{\mu i}) - \avg{z_{\mu i}}}{\mathrm{Var}[\phi(z_{\mu i})]}.
+G_{\mu i} = \tilde\phi(z_{\mu i}) \stackrel{\text{def}}{=} \frac{\phi(z_{\mu i}) - \avg{\phi(z_{\mu i})}}{\mathrm{Var}[\phi(z_{\mu i})]}.
 $$
 
-This choice be elucidated in a few paragraphs. Finally, the activation function remains to be defined. For simplicity, we take it to be the logistic function, although the following results are not sensitive to this choice.
+The motivation for this choice will be presented in a few paragraphs. Finally, the activation function remains to be defined. For simplicity, we take it to be the logistic function, although the following results are not sensitive to this choice,
 
 $$
-\phi(h) = \frac{1}{1 + \mathrm{e}^h}
+\phi(h) = \frac{1}{1 + \mathrm{e}^h}.
 $$
 
 Putting everything together, we get the following expression for the equation of evolution of the network of neurons:
 
 $$
-\dot h_i(t) = -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h_j(t)).
+\dot h_i(t) = -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h_j(t)) =: \mathrm{RHS}(h_1, \cdots, h_N).
 $$ {#eq-toymodel-evolution}
 
 We note that contrary to the model introduced in @schmutz2023convergence, we ignore the self-connections term, because it introduces a vanishing correction of order $\bO(1/N)$.
 
 To understand this model better, we can analyze its fixed points and their stability. Here we summarize the results from the derivation presented in @sec-fixedpoints. We use the notation $h^\star$ to refer to fixed points of the network. The fixed points solve the roots of the evolution equation:
 
+<!--
 $$
 \dot h_i(t)\ \text{evaluated at}\ h_i^\star = -h^\star_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h^\star_j(t)) = 0
+$$ 
+-->
+
 $$
+\mathrm{RHS}(h^\star_1, \cdots, h^\star_N) = -h^\star_i + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h^\star_j) = 0
+$$ 
 
 * $h^\star_i = z_{\mu i}$ is a stable fixed point for all $\mu \in \{1,\cdots,p\}$. Additionally, because the Gaussian distribution is symmetric around zero, $h^\star_i = -z_{\mu i}$ are also stable fixed points. We refer to these fixed points as the "pattern" fixed points, because the network of neurons "remembers" the vectors $\vec{F_1}, \cdots, \vec{F_p}$.
 * $h^\star_i=0$ is an unstable fixed point. It corresponds to all the neuron potentials being set to zero.
@@ -90,7 +96,7 @@ We should however note that the results obtained in @sec-fixedpoints are valid i
 
 ### Emergence of structure in the networks of neurons
 
-In the introduction, we introduced the convergence of a network of neurons to a smooth neural field when the embedding space is well-chosen. For our toy model, it seems natural to try to embed the neurons according to their positions on the $p$-dimensional Gaussian ball.
+In the introduction, we introduced the convergence of a network of neurons to a smooth neural field when the embedding space is well-chosen. For our toy model, it seems natural to try to embed the neurons according to their positions on the $p$-dimensional Gaussian.
 
 #### Numerical aspects of simulating a low-rank network of neurons
 
@@ -114,7 +120,7 @@ Initially, we set all the potentials to zero, then simulate the differential equ
 ![(TODO PDF remove overlap, change notation, color for activity) Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/lol7.jpg){width=400px #fig-p1}
 :::
 
-The results of the simulation show that the random ordering of the neurons does not yield a smooth embedding, on contrary of the smooth surface that appears when we order the neurons by their position $z_{1i}$. The simulation serves as a demonstration that the neurons converge to the stable fixed point $h^\star_i = z_{1i}$, as well as confirming that the zero fixed point is unstable. Indeed, despite the zero initialization, the simulation did not stay there because small numerical fluctuations were amplified by the instability. 
+The results of the simulation show that the random ordering of the neurons does not yield a smooth embedding, in contrast to the smooth surface that appears when we order the neurons by their position $z_{1i}$. The simulation serves as a demonstration that the neurons converge to the stable fixed point $h^\star_i = z_{1i}$, as well as confirming that the zero fixed point is unstable. Indeed, despite the zero initialization, the simulation did not stay there because small numerical fluctuations were amplified by the instability. 
 
 The observed smooth surface corresponds to the activation function $\phi(h^\star) = \phi(z_1)$. Therefore, the Gaussian patterns define a natural embedding of the network, and the neural field at the fixed point reads $h^\star(z_1, t) = z_1$. We can write the neural field equation for $p=1$ in the Gaussian embedding as 
 
@@ -162,7 +168,7 @@ Now that we have introduced the analytical neural fields, let us discuss how we 
 ### Sampling method (Monte Carlo integration) {#sec-mc}
 
 Due to the formulation of the neural field weighed by a probability distribution $\rho(y_1, \cdots, y_p)$, a natural way to estimate the integral is by Monte Carlo integration.
-The essence of this method is the use of the Central Limit Theorem, where we take $N$ independent samples $\vec{y_i} = (y_{1i}, \cdots, y_{pi})$ from the distribution $\rho$, and use them to estimate the integrand.
+The essence of this method is to use the Central Limit Theorem, where we take $N$ independent samples $\vec{y_i} = (y_{1i}, \cdots, y_{pi})$ from the distribution $\rho$, and use them to estimate the integrand.
 
 $$
 \begin{aligned}
@@ -179,9 +185,9 @@ $$
 \end{aligned}
 $$
 
-The attentive reader might have noticed by now that the Monte-Carlo method just reduces to simulating the network of neurons @eq-toymodel-evolution. Effectively, the network of neurons converges to the neural field with rate $\bO(1/\sqrt{N})$.
+<!-- The attentive reader might have noticed by now that the Monte-Carlo method just reduces to simulating the network of neurons @eq-toymodel-evolution. Effectively, the network of neurons converges to the neural field with rate $\bO(1/\sqrt{N})$.
 
-One small nuance we should add, is that strictly speaking, Monte-Carlo integration should resample the integrand at every timestep, but the network of neurons samples the neurons once, and propagates these points through time.
+One small nuance we should add, is that strictly speaking, Monte-Carlo integration should resample the integrand at every timestep, but the network of neurons samples the neurons once, and propagates these points through time. -->
 
 ### Grid method (Trapezoidal integration) {#sec-gridmethod}
 
@@ -195,7 +201,7 @@ We now introduce some tools that will help us understand the toy model. We stres
 
 ### Overlap variables
 
-Overlap variables were introduced by @Gerstner_1992 in the context of the study of the Hopfield network, which can be seen as a low-rank network with discrete variables instead of our continuous $\vec{z}$. The overlap variables measure the correlation between the state of the network (the value of the potential $h(\vec z, t)$ at each point in space) and the pattern fixed point.
+Overlap variables in continuous time variables were introduced by @Gerstner_1992 to study spiking networks models of associative memory (Hopfield-type networks), which can be seen as a low-rank network with discrete spatial structure instead of our continuous $\vec{z}$. The overlap variables measure the correlation between the state of the network (the value of the potential $h(\vec z, t)$ at each point in space) and the pattern fixed point.
 
 For the network for neurons, we write the overlap with the pattern $\mu$ as
 
@@ -218,7 +224,7 @@ This formulation "hides" the integral inside the overlap variables, but one shou
 
 @eq-overlap-evolution hints towards the possibility of writing the dynamics of the low-rank system as a closed system of $p$ variables. As explained in @sec-low-rank-network, the recurrent currents span a $p$-dimensional subspace, and the orthogonal component behaves independently. This motivates the formulation of a $p$-dimensional closed system.
 
-We cite @veltz2009localglobal, section 4.3 for the reduction of general low-rank networks to $p$-dimensional closed systems, and give the equations applied to our toy model. Defining the projections $\kappa_\mu(t)$ of the neural field onto the patterns
+We refer to @veltz2009localglobal, section 4.3 for the reduction of general low-rank networks to $p$-dimensional closed systems, and give the equations applied to our toy model. Defining the projections $\kappa_\mu(t)$ of the neural field onto the patterns
 
 $$
 \kappa_\mu(t) = \int_{\Rp} y_\mu h(\vec y, t) \mathcal{N}^p(\d \vec y),
@@ -254,12 +260,12 @@ Additionally, it can be seen from the expression of the overlaps in @eq-overlap,
 
 ## A cycling neural field {#sec-cyling-nf}
 
-In @sec-networks-of-neurons-to-neural-fields we introduced a simple toy model a neural field with a natural embedding on the $p$-dimensional Gaussian ball. Analytical derivations accompanied by numerical simulations showed the dynamics of this model can be summarized by the convergence to pattern fixed points. In this section, we modify the toy model minimally, such that we can observe more interesting behaviour in the form of cycling.
+In @sec-networks-of-neurons-to-neural-fields we introduced a simple toy model of a neural field with a natural embedding on the $p$-dimensional Gaussian. Analytical derivations accompanied by numerical simulations showed the dynamics of this model can be summarized by the convergence to pattern fixed points. In this section, we modify the toy model minimally, such that we can observe more interesting behaviour in the form of cycling.
 
 We modify @eq-nf-gaussian-p in two ways:
 
 1. We define a time delay $\delta$ with which a neuron will "wait" before reacting to a change in its potential.
-2. We define "rolling" as the response of a neuron to shift towards the "next" pattern given its state matching a current pattern. This is done by adding a shift $\mu+1$ in the connectivity kernel, with the convention $p+1=1$.
+2. We define "rolling" as the response of a neuron to shift towards the "next" pattern given its state matching a current pattern. This is done by adding a shift $\mu+1$ in the connectivity kernel, with the convention $p+1=1$ (see @Ami89, Chapter 5).
 
 The resulting cycling neural field is written as such:
 
@@ -269,11 +275,11 @@ $$ {#eq-nf-cycling-p}
 
 The geometric intuition behind this formulation is that now the recurrent currents are "rotated by half a turn" (around the axis normal to the plane $(z_\mu, z_{\mu+1})$) in the embedding. When the network is at a pattern fixed point $\mu$, the recurrent drive will then push it towards the pattern $\mu+1$. @fig-cycling-irec shows the difference in the behaviour of the original and the cycling neural field.
 
-![(TODO animation in 3D, rename non-cycling to original) Intuition for the cycling behavior by considering the recurrent currents](figures/cycling_recurrent.png){#fig-cycling-irec}
+![(TODO animation in 3D, rename non-cycling to original, number from one) Intuition for the cycling behavior by considering the recurrent currents](figures/cycling_recurrent.png){#fig-cycling-irec}
 
 We note however that @eq-nf-cycling-p no longer is a partial differential equation, but rather a delayed differential equation, which are in general much more complicated to solve. A simplifying assumption that we make is we extend the initial condition back in time, such that $h(\vec z, t < 0) = h(\vec z, 0)$ is a constant function. Numerically, this also means that we have to store a history of the neural fields instead of only the current one. Since the [`solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html) method dynamically adapts the timestep of integration, we use linear interpolation between two known points in the stored neural field states to estimate $h(\vec z, t-\delta)$ (see [`lagging.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_lagging.py) and [its use](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L334)).
 
-With these considerations, we simulate a $p=2$ cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$ in @fig-cycling-anim. The latent trajectory is estimated from the simulation results, and animated simultaneously with the neural field. We clearly see the oscillations between the patterns $\mu=1$ and $\mu=2$.
+With these considerations, we simulate a $p=2$ cycling neural field with $\delta=6$ (since the membrane time constant has been fixed to one, this means that $\delta = 6\tau = 6$) and initial condition $h(z_1, z_2, t < 0) = z_1$ in @fig-cycling-anim. The latent trajectory is estimated from the simulation results, and animated simultaneously with the neural field. We clearly see the oscillations between the patterns $\mu=1$ and $\mu=2$.
 
 ::: {.content-visible when-format="html"}
 ![A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour.](figures/embedding_d=2_h0=0_cycling_delta=6.mp4){#fig-cycling-anim}
@@ -289,7 +295,7 @@ $$
 \dot \kappa_\mu(t) = -\kappa_\mu(t) + m_{\mu+1}(t - \delta).
 $$
 
-This system of equations can be solved by steps of $\delta$, iteratively plugging in the previous solution to solve each cycle.
+<!-- This system of equations can be solved by steps of $\delta$, iteratively plugging in the previous solution to solve each cycle. -->
 
 <!-- When the neural field starts in the pattern $\nu$, that is $h(\vec z, 0) = z_\nu$, this translates to $\kappa_\nu(t \leq \delta) = 1$, and all other $\kappa_\mu(t \leq \delta) = 0,\,\mu\neq\nu$. Additionally, let us suppose that $\phi$ is linear, so that $m_\mu(t) = \kappa_\mu(t)$, and let us take $p=2$. Then we can solve the equation for the "first cycle" $0 < t \leq \delta$:
 
@@ -316,7 +322,7 @@ and maps $\R$ to $[0,1]$,[^R-to-01] as pictured in @fig-gaussian-cdf.
 
 [^R-to-01]: Strictly speaking the image of $\R$ is in $(0,1)$, but for simplicity we consider $\R \cup \{-\infty, +\infty\}$ which maps to $[0,1]$. This is not fundamentally important, because numerically the infinities are never touched, and analytically the recurrent currents given by the integration vanish at infinity due to the Gaussian weighting.
 
-Defining the change of variables $v_\mu=\CDF(z_\mu), u_\mu=\CDF(y_\mu)$, we can define the uniform neural field and uniform connectivity kernel as 
+Defining the change of variables $v_\mu=\CDF(z_\mu), u_\mu=\CDF(y_\mu)$, we can define the neural field $h_U$ and the connectivity kernel $w_U$ for the uniform distribution as
 
 $$
 \begin{aligned}

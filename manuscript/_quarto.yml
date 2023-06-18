@@ -5,11 +5,10 @@ project:
     port: 4200
 
 book:
-  title: "Neural field dynamics and equivalence of embeddings in different dimensions"
+  title: "Equivalence of neural field dynamics with different embedding dimensionality"
   author:
     - name: Nicole Vadot
-    # - name: Valentin Schmutz
-    #   acknowledgements: Thesis Supervisor
+    - name: (Supervisor) Valentin Schmutz
   date: last-modified
   abstract: |
     Literature around the study of biological networks of neurons shows evidence that neurons can be spatially structured, leading to the developement of neural field models. In early papers, this structure emerges from the observation that functionally similar neurons tend to share similar positions in the cortex. Later it has been shown that not only the physical position of the neurons can be used to parametrize their function, but also their location in more abstract "embedding spaces", for example a space of "neuron celltypes".

@@ -6,11 +6,11 @@
 
 ## Neural field models in neuroscience
 
-Early recordings of the cat's somatosensory visual cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons @Mou57.
+Early recordings of cat's somatosensory @Mou57 and visual @HubWie62 cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons.
 
 The putative columnar organization of the cortex motivated the design of spatially structured models of neural population dynamics, namely neural field models [@WilCow73;@Nun74;@Ama77], where the spatial dimensions corresponded to the two dimensions of the cortical sheet. 
 
-As models of spatiotemporal neural population dynamics on the cortical sheet, neural field models can be used to explain experimentally observed patterns of cortical activity, such as travelling waves in visual [@SatNau12;@MulRey14], somatosensory [@PetHah03;@FerBol06], motor [@RubRob06;@TakKim15], and hippocampal [@LubSia09;@PatFuj12;@PatSch13] cortices (see @MulCha18 for a review), and are used to model large-scale brain signals, such as electroencephalography (EEG) recordings @Bre17. See also @DipRan18 for an example of neural field modelling of calcium imaging recording of the visual cortex.
+As models of spatiotemporal neural population dynamics on the cortical sheet, neural field models can be used to explain experimentally observed patterns of cortical activity, such as travelling waves in visual [@SatNau12;@MulRey14], somatosensory [@PetHah03;@FerBol06], motor [@RubRob06;@TakKim15], and hippocampal [@LubSia09;@PatFuj12;@PatSch13] cortices (see @MulCha18 for a review), and are used to model large-scale brain signals, such as electroencephalography (EEG) recordings @Bre17 (see also @DipRan18 for an example of neural field modelling of calcium imaging recording of the visual cortex).
 
 More recent recording methods, especially in rodents, have provided evidence of low-dimensional organization of neuronal activity that does not depend on the physical locations of neurons on the cortical sheet. For example, contrary to the cat's visual cortex, the orientation selectivity of pyramidal neurons in a rat's visual cortex does not depend on their locations, that is, orientation selectivity is heterogeneous at any given location @OhkChu05. Moreover, the activity of interneurons in any small volume of the visual cortex is also heterogeneous and seems to be structured by a low-dimensional transcriptomic manifold of fine cell subtypes @BugDuf22. The local functional heterogeneity of neuronal activity in the cortex challenges the old concept of functionally homogeneous cortical columns and, with it, classical neural field models. 
 
@@ -18,19 +18,20 @@ While, historically, the spatial dimensions in neural field models have been the
 
 If we consider neural fields in abstract embedding spaces, which embedding space should we choose? More fundamentally, given some spatiotemporal dynamics, is there a "natural" choice for the embedding space?
 
-The goal of this Master Thesis is to show that the answer to the second question is highly nontrivial because even the dimensionality of the embedding space, for some given spatiotemporal dynamics, is not clearly defined. This means that it is possible to find two embeddings (and connectivity kernels) of different dimensions that give rise to identical dynamics; *contradicting the intuition that the embedding dimension should at least be as high as the dimensionality of the dynamics* (the number of variables needed to fully describe the dynamical system).
+The goal of this Master Thesis is to show that the answer to the second question is highly nontrivial because even the dimensionality of the embedding space, for some given spatiotemporal dynamics, is not clearly defined. This means that it is possible to find two embeddings (and connectivity kernels) of different dimensions that give rise to identical dynamics.
+<!-- ; *contradicting the intuition that the embedding dimension should at least be as high as the dimensionality of the dynamics* (the number of variables needed to fully describe the dynamical system). -->
 
-In particular, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation on the interval, where the embedding space is simply the interval $[0,1]$, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not (and can't be) diffeomorphisms. Also, we show that although the connectivity kernel of the one-dimensional equation seems to have a fractal structure, it is sufficiently regular for its solution to be numerically approximated using standard mesh-based simulations.
+In particular, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation, where the embedding space is simply the interval $[0,1]$, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not (and can't be) diffeomorphisms. Also, we show that although the connectivity kernel of the one-dimensional equation seems to have a fractal structure, it is sufficiently regular for its solution to be numerically approximated using standard grid-based simulations.
 
 Our results suggest that the notion of (spatial) dimensionality in neural field dynamics is not well-defined if not associated with a constraint on the regularity of the neural fields (and the connectivity kernel). Thereby, by studying a simple toy model, this work illustrates the importance of the analytic notion of regularity when neural population dynamics over abstract continuous spaces are considered. 
 
 ## Neural fields as the limit of spatially-structured networks of neurons
 
-Let us now give a short introduction to the mathematical formulation of neural fields. Neural field equations emerge from the structure of networks of rate neurons when the number of neurons $N$ becomes large. Positions $\vec z_i \in \Rp$ are attributed to each neuron, which defines the *embedding space*. Each neuron has a potential $h_i(t)$ that evolves in time, and the weight with which the neurons interact with each other is given by the components of the connectivity matrix $J_{ij} \in \R^{N \times N}$. Additionally, the activation function $\phi(h)$ describes the firing rate of a given neuron with potential $h$. Then, the product $J_{ij} \phi(h_j)$ gives the *recurrent current* of neuron $j$ on neuron $i$.
+Let us now give a short introduction to the mathematical theory of neural fields. Neural field equations emerge from the spatial structure of networks of rate neurons (or Poisson spiking neurons [@Ger95;@CheDua19]) when the number of neurons $N$ becomes large. Positions $\vec z_i \in \Rp$ are attributed to each neuron, where $\Rp$ is the *embedding space*. Each neuron has a potential $h_i(t)$ that evolves in time, and the weight with which the neurons interact with each other is given by the entries of the connectivity matrix $J_{ij} \in \R^{N \times N}$. Additionally, the activation function $\phi(h)$ describes the firing rate of a given neuron with potential $h$. Then, the product $J_{ij} \phi(h_j)$ gives the *recurrent current* of neuron $j$ on neuron $i$.
 
 ![(TODO add phi, add z instead of xi) Every neuron in a rate neural network has a position in the $p$-dimensional embedding space](figures/neural_field_discrete.png)
 
-If the embedding is well-chosen,[^1] the connectivity matrix $J_{ij}$ approaches a connectivity kernel $w(\vec y, \vec z)$ as $N \rightarrow \infty$, and neurons close in the embedding space tend to have similar potentials, such that we can write the continuous *neural field* $h(\vec z, t)$ of neuron potentials. Before we write down the neural field equation which describes how the field evolves in time, we need to introduce the neuron density $\rho(\vec z)$, which measures the number of neurons per unit volume of the embedding space. The neural field equation is then written as such:
+If the embedding is well-chosen,[^1] the connectivity matrix $J_{ij}$ approaches a connectivity kernel $w(\vec y, \vec z)$ as $N \rightarrow \infty$, and neurons close in the embedding space tend to have similar potentials, such that we can write the continuous *neural field* $h(\vec z, t)$ of neuron potentials. Before we write down the neural field equation which describes how the field evolves in time, we need to introduce the neuron density $\rho(\vec z)$, which measures the number of neurons per unit volume of the embedding space. The neural field equation writes:
 
 [^1]: Rigorous proofs of convergence are still an active area of study @CheDua19 and are not the subject of this thesis.
 
@@ -38,13 +39,15 @@ $$
 \partial_t h(\vec z, t) = -h(\vec z, t) + \int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\mathrm d \vec y).
 $$ {#eq-nf}
 
-![(TODO add phi, add z instead of xi) The connectivity kernel defines the influence between neural densities in the embedding space](figures/connectivity_kernel.png)
+![(TODO add phi, add z instead of xi) The connectivity kernel defines the influence between localized neural populations in the embedding space](figures/connectivity_kernel.png)
 
 ## Motivation for a one-dimensional neural field
 
-This work was inspired by recent mathematical development in mean-field theories involving the theory of graphons @JabPoy21. Their main result is that under some boundedness assumptions of the connectivity between the components of a system, the equation of evolution incorporates only an integral over $[0,1]$. This is indeed the case in the toy model described next chapter, where weights scale as $J_{ij} \sim \frac 1N$, which motivates the search for a formulation of a one-dimensional neural embedding.
+This work was inspired by recent mathematical development in mean-field theories involving the theory of graphons @JabPoy21.
+Informally, these recent results suggest that, even in the absence of any explicit spatial structure, as long as weights scale as $1/N$, the dynamics of large networks can be described, as $N \to \infty$, by a neural field equation where the embedding is simply the interval $[0,1]$, which motivates the search for a formulation of a one-dimensional neural embedding.
+<!-- Their main result is that under some boundedness assumptions of the connectivity between the components of a system, the equation of evolution incorporates only an integral over $[0,1]$. This is indeed the case in the toy model described next chapter, where weights scale as $J_{ij} \sim \frac 1N$, which motivates the search for a formulation of a one-dimensional neural embedding. -->
 
-The main idea is to define a measurable bijective mapping $S : \Rp \mapsto [0,1]$ and a measure $\lambda : [0,1]^2 \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel loosely defined as $\tilde w = w \circ S^{-1}$.
+The main idea is to define a measurable bijective mapping $S : \Rp \mapsto [0,1]$ and a measure $\lambda : \Rp \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel loosely defined as $\tilde w = w \circ S^{-1}$.
 
 <!--
 $$
@@ -56,7 +59,7 @@ $$
 \partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta)
 $$
 
-This change of variable in the kernel seems counter-intuitive: how is it possible to map a higher dimension to a lower dimension without losing information? And even if mathematically such a change of variables is possible, is it even feasible to simulate it numerically?
+This change of variable in the kernel seems counter-intuitive: how is it possible to map dynamics in the embedding space $\Rp$ to dynamics in the lower dimensional embedding space $[0,1]$ without losing information? And even if mathematically such a change of variables is possible, is it even feasible to numerically simulate the dynamics in the lower dimensional embedding space?
 
 ## Numerical simulations of neural fields {#sec-intro-simnf}
 
@@ -64,11 +67,13 @@ The goal of this thesis is to not only give an intuition on the mappings between
 
 We distinguish two types of numerical simulations for the neural field in @eq-nf:
 
-1. A neuron-based simulation of $N$ neurons. Each neuron samples the probability distribution $\rho(z_1, \cdots, z_p)$ independantly. This case then just reduces to simulating the network of rate neurons. In other words, we are simulating the full network of rate neurons, and the simulation converges to the true mathematical neural field equation as $N$ becomes large.
+1. A neuron-based simulation of $N$ neurons. The location of each neuron is an independent sample from the distribution $\rho(z_1, \cdots, z_p)$. This case then just reduces to simulating the network of rate neurons. In other words, we are simulating the full network of rate neurons, and the simulation converges to the true mathematical neural field equation as $N$ becomes large.
 
 2. A discretization-based simulation. In the $\Rp$ space, we discretize each dimension, forming a grid of $p$-dimensional bins. Each bin effectively corresponds to an infinite population of neurons, which are approximated to be the same (this is a mean-field approximation). This works because by continuity of the field, neurons which are close in $\Rp$ also have similar potentials. As we increase the number of bins, the simulation becomes more precise and the dynamics approach that of the true mathematical neural field.
 
-With this in mind, we can try to understand why simulating a neural field in $[0,1]$ might be difficult. Suppose we take bins in the $\Rp$ space, and map each bin to a random position in $[0,1]$. Intuitively, this won't work (in the sense that the dynamics in $[0,1]$ will not be the same as the dynamics in $\Rp$), because the hypothesis of continuity is not longer true: the mapping is random, so the nearby populations in $[0,1]$ will no longer have similar potentials, and the error of the mean-field approximation will no longer vanish as we take increasingly many bins.
+With this in mind, we can try to understand why simulating a neural field in $[0,1]$ might be difficult. Suppose we take bins in the $\Rp$ space, and map each bin to a random position in $[0,1]$. Intuitively, this won't work (in the sense that the dynamics in $[0,1]$ will not be the same as the dynamics in $\Rp$), because the hypothesis of continuity is not longer true: the mapping is random, so the nearby neurons in $[0,1]$ will no longer have similar potentials, and the error of the mean-field approximation will no longer vanish as we take increasingly many (and smaller) bins.
+<!-- NOTE : was "populations" before, this is explained later in the thesis. but OK, for the introduction, maybe we should use neurons
+the mapping is random, so the nearby populations in $[0,1]$ -->
 
 ![(TODO) Good mappings from $\Rp$ to $[0,1]$ should maintain some sense of "locality"](figures/photo_2023-06-13_18-15-50.jpg){width=500px}
 
