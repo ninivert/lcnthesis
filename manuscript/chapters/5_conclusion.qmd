@@ -1,6 +1,17 @@
+::: {.content-hidden}
+{{< include ../macros.tex >}}
+:::
+
 # Conclusion
 
-look a litlle kityt !! it goe s bapb aap bap bap !! 
+In this thesis, we have constructed an example of neural field dynamics in $\R^2$, that can be mapped to a neural field equation in $[0,1]$, via well-known mappings (such as the Z-curve) between $[0,1]^2$ and $[0,1]$. To illustrate this, we have introduced a coarse-graining procedure in which numerical simulations of $2^n$ segment populations in $[0,1]$ converge to the same dynamics obtained from simulations of $4^n$ square populations in $[0,1]^2$. Additionally, we showed that the reduction of dimensionality using the mappings can be repeated, even if the starting neural field has a fractal structure. To help quantify how the mapping conserves the regularity between neural fields, we introduced a measure of locality, based on "average variation". Locality guarantees that the neural field equation on $[0,1]$ can be numerically approximated using classical grid-based methods.
+
+This thesis has been illustrated with simulations of low-rank networks, however, to demonstrate the generality of our result, future work would try to numerically study an example of neural field dynamics that does not have a low-rank structure. This would also avoid confusion between the linear dimensionality of the dynamics and the dimensionality of the embedding, which are the same in the context of low-rank networks.
+While we have presented some mathematical arguments for (1) the equivalence of the neural field dynamics in 2D and 1D, and (2) the convergence of the numerical approximation of the 1D neural field dynamics using locality, we could use these arguments to make rigorous proofs of both statements.
+
+The use of the notion of regularity for the analysis of large-scale neuronal recordings is in its infancy @Stringer2019. This purely theoretical thesis gives a concrete example of an important conceptual fact: if we want to analyse large-scale neuronal recordings via nonlinear dimensionality reduction techniques (e.g. if we want to model neuronal activity as neural fields evolving on some abstract latent embedding space) the notion of dimensionality is meaningless without the notion of regularity. Indeed, our example shows that some neural field dynamics (neuronal population dynamics) can be equivalently expressed as dynamics on the embedding space $\R^2$ and the embedding space $[0,1]$ (but the regularity of the corresponding neural fields are different).
+
+<!-- look a litlle kityt !! it goe s bapb aap bap bap !! 
 
 ```{=html}
 <div style="font-family: Monapo, Mona, 'MS Pgothic', 'MS P繧ｴ繧ｷ繝�け', IPAMonaPGothic, 'IPA 繝｢繝翫� P繧ｴ繧ｷ繝�け', submona !important;
@@ -12,4 +23,4 @@ margin-top: 0em;
 line-height: 21px;">
 　　　　　　　　　　　　　　　　＿ 　　　　bap<br>　　　　　　　　 　　　　　　／´　　｀フ　　__ ヾ<br>　　　　　　　　　,　'' ｀ ｀ / 　　　　　,!　;'',,_,,) 　 bap　　　bap<br>.　　　　　　　 , ' 　　　　 レ 　 _,　 rミ,;'　ﾉ　)))<br>　　　　　　　 ; 　 　 　 　 　`ミ __,xノﾞ､,r''　 ,,_,,)　　　　bap<br>　　　 　　　　i　 　　　ﾐ　　　; ,､､､、　ヽ､//,,_,,)/_,,))<br>　　　 　　,.-‐! 　 　 　 ﾐ　　i　　　　｀ヽ.._,,)),,_<br>　　 　　//´｀｀､　　　　 ミ　ヽ　　　　 / ;' 3　 `ヽｰっ　<br>.　　　　| l　　 　｀ ｰｰ -‐''ゝ､,,))　　　l　　 ⊃　⌒_つ<br>　　　 　ヽ.ー─'´) 　 　　 　　　　　　`'ｰ---‐''''" 　　　　　　　
 </div>
-```
+``` -->
