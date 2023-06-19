@@ -201,16 +201,23 @@ In the following, we will restrict ourselves to mappings where the functions $b_
 The constant functions are ignored, since they effectively just restrict the output domain to a subset of $[0,1]$; and since only $2n$ bits are allowed for the output, they are a "waste" by ignoring information of the input.
 Because they don't add information to the output (they just "swap" the values of the output bits at known locations), inversion functions are also not considered.
 
-All this mathematical formalism expresses, in essence, that the mapping $S^n$ is just a *reordering* of the input bits. $S^n$ takes $4^n$ points embedded in $[0,1]^2$, and reorders them onto $4^n$ points in $[0,1]$.
+All this mathematical formalism expresses, in essence, that the mapping $S^n$ is just a *reordering* of the input bits. $S^n$ takes $4^n$ points embedded in $[0,1]^2$, and reorders them onto $4^n$ points in $[0,1]$.[^edges]
 
-Therefore, there is a one-to-one mapping between the points on the square and the points on the segment, and the mapping $S^n$ is bijective.
+[^edges]:
+  We note that strictly speaking, $S^n$ maps $(0., 0.)$ onto $0$, and the point
+  $$
+  S^n(1., 1.) = S^n(0.111\cdots, 0.111\cdots) = 0.111\cdots = 1
+  $$
+  is never reached at finite $n$. Numerically, we encounter the problem that the inverse of the Gaussian CDF, used to compute the connectivity, goes to infinity when $v_\mu$ (one of the components of $(v_1, v_2) = S^{-1}(\alpha)$) goes to $0$ or $1$. To avoid this, we offset the squares (by $2^{-n-1}$ along each dimension), so that geometrically their position is not indexed by their lower-left corner, but rather their center. Analytically, this is not a problem, because the kernel defined in @eq-hu-wu diverges only linearly, compared to the exponential cutoff of the Gaussian distribution, so that the integrand still vanishes at infinity.
+
+<!-- TODONE NOTE : talk about how we center the bins instead of taking the corners. this is not super important in the $n\to\infty$ limit, but numerically at 0 and 1 the $\mathrm{CDF}^{-1}$ goes to infty. at infinity, the connectivity kernel is infinite but we have zero neurons (zero measure, linear growth of kernel vs exponential tail of the gaussian) : effectively the recurrent current is zero and we can safely ignore these effects. -->
+
+Therefore, there is a one-to-one mapping between the points on the square and the points on the segment, and the mapping $S^n$ is bijective. In the following, we will, for ease of notation and when it is clear in the context, drop the index $n$ when writing $S^n$. This is often justified (particularly with the Z-mapping and Column mapping introduced later), because the finite-$n$ truncations $(v_1^{(n)}, v_2^{(n)})$ result in finite truncations of $S$, therefore $S(v_1^{(n)}, v_2^{(n)}) = S^n(v_1^{(n)}, v_2^{(n)})$.
+
+<!-- TODONE NOTE : might need to talk about how $S(v^{(n)}_1,v^{(n)}_2) = S^n(v^{(n)}_1,v^{(n)}_2)$ ? so basically the limit $n\to\infty$ is the limit where we take infinite precision in the input. Or we can drop the $n$ on the inputs, $\alpha^{(n)} = S^n(v^{(n)}_1,v^{(n)}_2) = S^n(v_1,v_2)$ (i think this true just for pointwise convergent mappings) -->
 
 <!-- These simplifications might seem too restrictive, however, -->
 We will show in the rest of this thesis that this simple formulation is flexible enough to express mappings that have good properties such as "locality", while being simple enough to help build intuitions.
-
-TODO NOTE : might need to talk about how $S(v^{(n)}_1,v^{(n)}_2) = S^n(v^{(n)}_1,v^{(n)}_2)$ ? so basically the limit $n\to\infty$ is the limit where we take infinite precision in the input. Or we can drop the $n$ on the inputs, $\alpha^{(n)} = S^n(v^{(n)}_1,v^{(n)}_2) = S^n(v_1,v_2)$ (i think this true just for pointwise convergent mappings)
-
-TODO NOTE : talk about how we center the bins instead of taking the corners. this is not super important in the $n\to\infty$ limit, but numerically at 0 and 1 the $\mathrm{CDF}^{-1}$ goes to infty. at infinity, the connectivity kernel is infinite but we have zero neurons (zero measure, linear growth of kernel vs exponential tail of the gaussian) : effectively the recurrent current is zero and we can safely ignore these effects.
 
 <!-- #### A geometric view relating to space-filling curves
 Let's not mention space-filling curves, because the Column mapping is not space-filling (no continuity 1D -> 2D), and because we would need a whole lot more formalism, see @Sagan1994
@@ -485,10 +492,14 @@ The Z-mapping seems to converge to a fractal curve. Numerically, there seems to 
 We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective. In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary:
 
 [^zmapping-notbijective]:
-  We refer to @Sagan1994 for an in-depth study, and in particular chapter 6, in which the author shows that the Z-curve converges to the continuous and surjective Lebesgue curve, which is a Peano-type function.<br>
-  Despite what can often be found in online resources, the Z-curve is *not* a bijection because the added injectivity would violate Netto's theorem. For every point in $[0,1]^2$, there are at most 4 distinct preimages in $[0,1]$. The reason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give proof that the Z-curve is not injective in the $n\to\infty$ limit.<br>
+  We refer to @Sagan1994 for an in-depth study, and in particular chapter 6, in which the author shows that the Z-curve converges to the Lebesgue curve.<br> 
+  <!-- which is a Peano-type function (continuous and surjective from $[0,1]$ into $[0,1]^2$).<br> -->
+  Despite what can often be found in online resources, the Z-curve is *not* a bijection.
+  <!-- because the added injectivity would violate Netto's theorem. -->
+  For every point in $[0,1]^2$, there are at most 4 distinct preimages in $[0,1]$. The reason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give proof that the Z-curve is not injective in the $n\to\infty$ limit.<br>
   For the following, we will consider the Z-curve to be bijective by disallowing expansions of the type $0.1000\cdots=0.0111\cdots$.
   <!-- We note that in @Sagan1994 many other Peano curves (continuous surjections $[0,1]\mapsto [0,1]^2$) are presented (albeit more difficult to implement numerically). -->
+  <!-- Nicole: I don't say that the Lebesgue curve is continuous, because that opens up a whole other can of worms that I don't want to go into -->
 
 1. condition of pointwise convergence: the LSB of the input must be mapped to the LSB of the output,
 2. condition of "no information loss": the MSB of the input must be mapped to the MSB of the output.
@@ -502,14 +513,6 @@ It is time for a little treat. Before we argue about how to simulate the dynamic
 ![(TODO) Animation showing the image of the dynamics 2D neural field through different mappings $S : [0,1]^2 \mapsto [0,1]$](figures/photo_2023-06-10_17-21-19.jpg)
 
 ## Coarse-graining the neural field in $[0,1]$ {#sec-coarse-graining}
-
-### Practical aspects of implementing the mappings
-
-In the previous sections, we have discussed what mappings have good properties, and have given a few hints as to how we can implement them numerically. Since the mappings we presented can be written as a binary expansion, they naturally lend themselves to numerical approximations. Furthermore, this is made especially easy since the mappings we defined are simply permutations of bits (in the $n < \infty$ case), and so we can write a one-to-one correspondence between unsigned integers.
-
-Without going into too much detail on the programming, we have implemented the mappings as all inheriting from the same abstract class, and each mapping simply has to define a method `indices_to_indices2d(indices: array[int, 1]) -> array[int, 2]` to go from 1D to 2D ($S^{-1}$), and a method `indices2d_to_indices(indices2d: array[int, 2]) -> array[int, 1]` to go from 2D to 1D.[^indices] The abstract class simply defines additional quality-of-life functionality, which makes use of these two methods.
-
-[^indices]: In the source code, only the method `indices(v12: array[float, 2]) -> array[int, 1]` is defined. This is because some mappings are implemented (for instance, the `RecursiveLocalMapping`, that we don't discuss here), which don't lend themselves to the simple permutation of bits formulation.
 
 ### Naive simulations of the neural field on $[0,1]$
 
@@ -582,42 +585,51 @@ For Nicole: This is adressed by the argument of mesh size !!
 
 ## Simulations of neural fields in 3D, 2D and 1D
 
-TODO small intro
+In this section, we show numerical simulations of the neural field in $[0,1]$, obtained from mapping higher-dimensional neural fields in $[0,1]^p,\,p\geq 2$. We see that the coarse-graining procedure works when applied from $[0,1]^2$ to $[0,1]$. Then, we demonstrate that it can be applied iteratively, to map from $[0,1]^3$ to $[0,1]^2$, and from $[0,1]^2$ to $[0,1]$.
+
+### Practical aspects of implementing the simulations of the one-dimensional neural field
+
+We give a quick overview of the numerical details that go into implementing the methods presented above. Since the mappings (Z-mapping, Column mapping) can be written as binary expansions, they naturally lend themselves to numerical approximations. Furthermore, this is made especially easy since the mappings we defined are simply permutations of bits (in the $n < \infty$ case), and so we can write a one-to-one correspondence between unsigned integers.
+
+We have implemented the mappings as all inheriting from the same abstract class, and each mapping simply has to define a method `indices_to_indices2d(indices: array[int, 1]) -> array[int, 2]` to go from 1D to 2D ($S^{-1}$), and a method `indices2d_to_indices(indices2d: array[int, 2]) -> array[int, 1]` to go from 2D to 1D.[^indices] The abstract class simply defines additional quality-of-life functionality, which makes use of these two methods.
+
+[^indices]: In the source code, only the method `indices(v12: array[float, 2]) -> array[int, 1]` is defined. This is because some mappings are implemented (for instance, the [`RecursiveLocalMapping`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L244), that we don't discuss here), which don't lend themselves to the simple permutation of bits formulation.
+
+Finally, the coarse-graining is easily implemented as the combination of a reshape operation (to bring all consecutive sequences of $2^n$ populations together), followed by averaging (see the [implementation here](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L186))
 
 ### Application of $S$ : from $[0,1]^2$ to $[0,1]$
 
-TODO : we run simulations and compare latent trajectories. first show only column and z-mapping. add quick intro to diagonal, col/row, reclocal, mention cannot be expressed by bit permutation. diagonal, col/row do not work, despite the non-zero field and recurrent currents. reclocal does work. intuition is that the recursive approach (zmapping, reclocal) seems to give locality
+To demonstrate the coarse-graining, we start with the cycling neural field presented in @sec-cycling-nf. The kernel $\tilde w$ of the one-dimensional neural field is numerically approximated using the coarse-graining procedure of different mappings. Simulations are presented in @fig-cg-2d-1d (we again set $\delta=6$ and the initial condition $h(z_1, z_2, t < 0) = z_1$), showing the activity levels, recurrent currents, and the latent trajectory $(\kappa_1(t), \kappa_2(t))$. In order, we discuss:
 
-![(TODO animation) Simulations of coarse-graining with different mappings from the $p=2$ embedding.](figures/coarsegraining.png){width=500px}
+1. The random mapping can be numerically evaluated as a trivial case of a mapping that does not have locality. The coarse-graining averages out all the structure of the activity, and the recurrent currents are zero, because the contributions from excitatory and inhibitory populations cancel out. This results in the erasure of the cycling behavior in the latent trajectory.
+2. The Column mapping shows the projection of the initial condition onto the $z_1$ axis, yielding the sigmoid in the $[0,1]$ embedding. Again, the current currents cancel out and yield zero, and the latent trajectory quickly decays towards $(\kappa_1, \kappa_2) = (0,0)$.
+3. The Z-mapping shows that despite the fractal structure of the activity, there is still regularity in the $[0,1]$ embedding, resulting in non-zero recurrent currents. In consequence, the latent trajectory shows a clear cycling behavior, that closely matches that of the 2D neural field.
 
-### Iterative application of $S$ : from $[0,1]^3$ to $[0,1]$ {#sec-simulations-3d-2d-1d}
+<!-- TODONE : we run simulations and compare latent trajectories. first show only column and z-mapping. add quick intro to diagonal, col/row, reclocal, mention cannot be expressed by bit permutation. diagonal, col/row do not work, despite the non-zero field and recurrent currents. reclocal does work. intuition is that the recursive approach (zmapping, reclocal) seems to give locality
 
-TODO : take cycling p=3
+Nicole: we don't show the other mappings, because they are not as nice examples, and essentially they work the same
+-->
 
-#### Continuity on one axis and fractal on the other: from $[0,1]^3$ to $[0,1]^2$
+![(TODO animation, higher N, remove all the other mappings) Simulations of coarse-graining with different mappings from the $p=2$ embedding.](figures/coarsegraining.png){width=500px #fig-cg-2d-1d}
 
-TODO : we do z-mapping on each slice $(v_2, v_3)$ of $v_1$, and downsample. we end up with a 2d neural field, direction $v_1$ is continuous, direction $\alpha_{23}$ is fractal. now the field is not continuous anymore, it is just sufficiently regular to be L1. this shows "local mappings conserve regularity"
+### Iterative application of $S$ : from $[0,1]^3$ to $[0,1]^2$, then to $[0,1]$ {#sec-simulations-3d-2d-1d}
+
+<!-- #### Continuity on one axis and fractal on the other: from $[0,1]^3$ to $[0,1]^2$ -->
+
+In the previous section, we showed that the coarse-graining procedure works from $[0,1]^2$ to $[0,1]$. However, one might argue that the reason why it worked, is not the mapping, but also the continuity of the neural field in $[0,1]^2$. To show the generality of our results, we show that coarse-graining works, even when the original neural field is fractal.
+
+For this, we again consider the same cycling field, but with $p=3$, such that the natural embedding space is $\R^3$, with the equivalent formulation on $[0,1]^3$. We again consider a grid with a mesh size of $2^{-n}$ along each spatial dimension, resulting in $2^n \times 2^n \times 2^n = 8^n$ "cube populations", at positions $(v_1, v_2, v_3) \in [0,1]^3$.
+
+To go from $[0,1]^3$ to $[0,1]^2$, we consider a slice $(v_2, v_3)$ at constant $v_1$, map $(v_2, v_3)$ to $\alpha_{23}$, then perform coarse-graining, which brings down the number of square populations in $[0,1]^2$ from $8^n$ to $4^n$. The result of this is an embedding of the neural field on $(v_1, \alpha_{23}) \in [0,1]^2$. The corresponding neural field is continuous in its $v_1$ component, but fractal in $\alpha_{23}$. This is visualized in @fig-cg-3d-2d-1d, where we see that in the state $h(z_1, z_2, z_3) = z_1$, the corresponding 2D neural field is constant along the $\alpha_{23}$ component, since the slice $(v_2, v_3)$ has a constant activity level. However, as soon as $h$ evolves to a new state, non-orthogonal to $z_2$ and $z_3$, the fractal structure becomes clear, because the slice $(v_2, v_3)$ is no longer constant.
 
 ::: {.content-visible when-format="html"}
-![(TODO 3D -> 2D only) Equivalence of dynamics, from 3D to 2D.](figures/embedding_3d_2d_1d.mp4)
+![Equivalence of dynamics, from 3D to 2D to 1D.](figures/embedding_3d_2d_1d.mp4){#fig-cg-3d-2d-1d}
 :::
 
 ::: {.content-visible when-format="pdf"}
-![(TODO PDF, 3D -> 2D only) Equivalence of dynamics, from 3D to 2D.](figures/lol7.jpg)
+![(TODO PDF. initial state and final state) Equivalence of dynamics, from 3D to 2D to 1D.](figures/lol7.jpg){#fig-cg-3d-2d-1d}
 :::
 
-![(TODO 3D -> 2D only) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px}
+We close this chapter by repeating the process to go from $[0,1]^2$ to $[0,1]$, mapping $(v_1, \alpha_{23})$ to $\alpha_{123}$, and coarse-graining. In total, we have coarse-grained two times: once from $[0,1]^3$ ($8^n$ cube populations) to $[0,1]^2$ ($4^n$ square populations), and again from $[0,1]^2$ to $[0,1]$ ($2^n$ segment populations). The corresponding 1D neural field is now fully fractal, and again exhibits the same dynamics. This shows that "local mappings conserve regularity": we started with a fully continous neural field in $[0,1]^3$, and obtained a partially fractal neural field in $[0,1]^2$. Despite the fractal structure, the 2D neural field is still regular enough that the dynamics are conserved, but more importantly that it can *again* be mapped to an equivalent 1D neural field. In @fig-averaging-geom-3d, we repeat a similar geometric view as @fig-averaging-geom: we see the Z-mapping in the slice $(v_2, v_3)$, how after coarse-graining the kernel is still effectively "sampled" at averaged locations, and crucially, how repeating the coarse-graining still leads to average locations that span the entire $[0,1]^3$ box (instead of being constrained to a plane embedded in $[0,1]^3$, as would have been the case with the Column mapping).
 
-#### From fractal to fractal : $[0,1]^2$ to $[0,1]$
-
-TODO : we can re-apply the z-mapping in $(v_1, \alpha_{23})$, we get a fractal 1d embedding. completely fractal, but the dynamics still work, because the mapping conserves regularity.
-
-::: {.content-visible when-format="html"}
-![Equivalence of dynamics, from 3D to 2D to 1D.](figures/embedding_3d_2d_1d.mp4)
-:::
-
-::: {.content-visible when-format="pdf"}
-![(TODO PDF) Equivalence of dynamics, from 3D to 2D to 1D.](figures/lol7.jpg)
-:::
-
-![(TODO) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px}
+![(TODO what $n$) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px #fig-averaging-geom-3d}

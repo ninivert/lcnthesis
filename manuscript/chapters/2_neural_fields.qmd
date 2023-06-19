@@ -329,7 +329,7 @@ $$
 h_U(\vec v, t) &= h(\CDF^{-1}(\vec v), t) = h(\CDF^{-1}(v_1), \cdots, \CDF^{-1}(v_p)) \\
 w_U(\vec v, \vec u) &= w(\CDF^{-1}(\vec v), \CDF^{-1}(\vec u)).
 \end{aligned}
-$$
+$$ {#eq-hu-wu}
 
 After the change of variables, the neural field in $[0,1]^p$ is equivalent to the neural field in $\Rp$, and its equation reads
 

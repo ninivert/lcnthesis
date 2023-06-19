@@ -137,12 +137,12 @@ $$
 $$
 -->
 
-<!-- TODO : I have removed the definition involving the sup over all permutations, because we don't end up using it. Still mention for completeness ? 
+<!-- TODONE : I have removed the definition involving the sup over all permutations, because we don't end up using it. Still mention for completeness ? 
 
 Valentin: For the master thesis, it is ok to not mention it.
 -->
 
-TODO NOTE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This might actually be addressed by a similar todo in @sec-mappings-binary
+<!-- TODONE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This is adressed by a footnote in @sec-mappings-binary -->
 
 Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is $V_n$ vanishes a $n\to\infty$ for local mappings, whereas $V_n$ is lower bounded by a constant for non-local mappings. @fig-vnum shows this is indeed the case, rejoice!
 
