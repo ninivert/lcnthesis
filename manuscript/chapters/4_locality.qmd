@@ -116,7 +116,7 @@ $$
 V_n(S^{-1}) = \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1
 $$ {#eq-Vn}
 
-The definition of locality can essentially be seen as a weakened version of continuity; since from definition the image of a small neighbourhood through a continuous function is also a small neighbourhood. Therefore, continuity of a function $f$ implies that $V_n(f) \xrightarrow{n \to \infty} 0$. The reverse is obviously not true, since for instance the metric $V_n$ vanishes when applied to a step function, which is only piecewise continuous.
+The definition of locality can essentially be seen as a weakened version of continuity, or "continuity on average". A continuous function $f$ evidently verifies $V_n(f) \xrightarrow{n \to \infty} 0$, since small neighbourhoods are mapped to small neighbourhoods. The reverse is obviously not true, since for instance the metric $V_n$ vanishes when applied to a step function, which is only piecewise continuous.
 
 <!--
 variation inside the bins, strong version. basically, we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.

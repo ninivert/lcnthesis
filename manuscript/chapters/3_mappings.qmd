@@ -131,22 +131,21 @@ However, this again fails because the joint cumulative function is not bijective
 
 Perhaps these examples are a bit too naive, and we need to look for more complex mappings. We might ask the question of whether a diffeomorphism (a differentiable bijection with a differentiable inverse) even exists between the unit square and the unit segment. Unfortunately, results from topology give a negative answer, and even worse, it can be shown that there is no homeomorphism (a continuous bijection with continuous inverse) between the unit square and the unit segment. This is stated by Netto's theorem, which imposes continuous bijections to conserve the dimensionality between the domain and the image.
 
-### Mappings of $[0,1]$ into $[0,1]^2$
+@fig-venn shows a visual representation of Netto's theorem. The 3-way intersection of the Venn diagram represents that functions which are both bijective (surjective and injective) and continuous do not exist. For the three remaining 2-way intersections, we annotate, without going into detail, the types of functions which they represent (see [@kharazishvili_strange_2017] for Cantor and Peano functions, [@sagan_space-filling_1994] for Peano and Jordan functions).
 
-TOOD : merge with previous
+<!-- ### Mappings of $[0,1]$ into $[0,1]^2$
 
-Since in the composition $w_U \circ S^{-1}$ we work with the inverse mapping, we contextualize our study by first considering the types of functions from $[0,1]$ into $[0,1]^2$. We have already established that there is no homeomorphism between those spaces, and need to relax one of the conditions. Since bijections are functions that are both injective and surjective, we can represent Netto's theorem as a 3-way Venn diagram in @fig-venn.
+Since in the composition $w_U \circ S^{-1}$ we work with the inverse mapping, we contextualize our study by first considering the types of functions from $[0,1]$ into $[0,1]^2$. We have already established that there is no homeomorphism between those spaces, and need to relax one of the conditions. Since bijections are functions that are both injective and surjective, we can represent Netto's theorem as a 3-way Venn diagram in @fig-venn. -->
 
 ![(TODO) Venn diagram reprensenting the properties of functions $[0,1] \mapsto [0,1]^2$ which are allowed by Netto's theorem.](figures/photo_2023-06-18_21-32-45.jpg){width=400px #fig-venn}
 
-The 3-way intersection of the Venn diagram represents that functions which are both bijective (surjective and injective) and continuous do not exist.
-
-For the three remaining 2-way intersections, we cite, without going into detail, the types of functions which they represent (see [@kharazishvili_strange_2017] for Cantor and Peano functions, [@sagan_space-filling_1994] for Peano and Jordan functions):
-
+<!--
 * Cantor functions are bijections $[0,1] \mapsto [0,1]^2$. However, they are not continuous, and thereby break the continuity of the kernel.
+<!-- Nicole: ACTUALLY NO THIS IS NOT A PROBLEM !! OUR Z-MAPPING IS NOT CONTINUOUS, BUT LOCALITY STILL SAVES US, SO THAT IT IS CONTINUOUS "ON AVERAGE"
 * Jordan curves are continuous injections $[0,1] \mapsto [0,1]^2$. Since they are not surjective, these curves cannot entirely "fill" the $[0,1]^2$ space, and we will not use them.
-<!-- Nicole : see my notebook about Jordan functions and their nonzero Jordan measure -->
+<!-- Nicole : see my notebook about Jordan functions and their nonzero Jordan measure
 * Peano curves are continuous surjections $[0,1] \mapsto [0,1]^2$. Their non-injectivity however is not a problem, since it just means that two segment populations can "refer" to the same square population (see @fig-non-injection). Therefore, Peano functions seem like good candidates for the mapping $S^{-1}$.
+-->
 
 <!-- 
 Functions of $[0,1]$ into $[0,1]^2$ are extensively discussed in chapter 1 of @kharazishvili_strange_2017, and we cite two classes of such functions :
