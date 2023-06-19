@@ -103,7 +103,7 @@ When we do the change of variables with the CDF, we don't encounter problems bec
 
 [^inversecdf]: Strictly speaking, we have the problem that $\textrm{CDF}^{-1}(v) \xrightarrow{v \to 1} \infty$, and so the derivative diverges when $v \to 1$ (and similarly, when $v \to 0$). However, this is not a problem, since these limits correspond to $z \to \pm \infty$, where the density vanishes.
 
-For these reasons, we can see why the composition of $w_U$ with a possibly non-differentiable mapping $S$ might be problematic. Since the only thing we know about $S$ is that it is measurable and bijective, *there is no guarantee that the regularity of the kernel is conserved through composition with the mapping $S$.*
+For these reasons, we can see why the composition of $w_U$ with a possibly non-differentiable mapping $S$ might be problematic. Since the only thing we know about $S$ is that it is measurable and bijective, *there is no guarantee that the regularity (continuity and the differentiability) of the kernel is conserved through composition with the mapping $S$.*
 
 ## Mappings of $[0,1]^2$ to $[0,1]$
 
@@ -132,6 +132,8 @@ However, this again fails because the joint cumulative function is not bijective
 Perhaps these examples are a bit too naive, and we need to look for more complex mappings. We might ask the question of whether a diffeomorphism (a differentiable bijection with a differentiable inverse) even exists between the unit square and the unit segment. Unfortunately, results from topology give a negative answer, and even worse, it can be shown that there is no homeomorphism (a continuous bijection with continuous inverse) between the unit square and the unit segment. This is stated by Netto's theorem, which imposes continuous bijections to conserve the dimensionality between the domain and the image.
 
 ### Mappings of $[0,1]$ into $[0,1]^2$
+
+TOOD : merge with previous
 
 Since in the composition $w_U \circ S^{-1}$ we work with the inverse mapping, we contextualize our study by first considering the types of functions from $[0,1]$ into $[0,1]^2$. We have already established that there is no homeomorphism between those spaces, and need to relax one of the conditions. Since bijections are functions that are both injective and surjective, we can represent Netto's theorem as a 3-way Venn diagram in @fig-venn.
 
@@ -204,17 +206,9 @@ Because they don't add information to the output (they just "swap" the values of
 All this mathematical formalism expresses, in essence, that the mapping $S^n$ is just a *reordering* of the input bits. $S^n$ takes $4^n$ points embedded in $[0,1]^2$, and reorders them onto $4^n$ points in $[0,1]$.[^edges]
 
 [^edges]:
-  We note that strictly speaking, $S^n$ maps $(0., 0.)$ onto $0$, and the point
-  $$
-  S^n(1., 1.) = S^n(0.111\cdots, 0.111\cdots) = 0.111\cdots = 1
-  $$
-  is never reached at finite $n$. Numerically, we encounter the problem that the inverse of the Gaussian CDF, used to compute the connectivity, goes to infinity when $v_\mu$ (one of the components of $(v_1, v_2) = S^{-1}(\alpha)$) goes to $0$ or $1$. To avoid this, we offset the squares (by $2^{-n-1}$ along each dimension), so that geometrically their position is not indexed by their lower-left corner, but rather their center. Analytically, this is not a problem, because the kernel defined in @eq-hu-wu diverges only linearly, compared to the exponential cutoff of the Gaussian distribution, so that the integrand still vanishes at infinity.
-
-<!-- TODONE NOTE : talk about how we center the bins instead of taking the corners. this is not super important in the $n\to\infty$ limit, but numerically at 0 and 1 the $\mathrm{CDF}^{-1}$ goes to infty. at infinity, the connectivity kernel is infinite but we have zero neurons (zero measure, linear growth of kernel vs exponential tail of the gaussian) : effectively the recurrent current is zero and we can safely ignore these effects. -->
+  We note that in our definition, $S^n$ maps $(0., 0.)$ onto $0$. Numerically, we encounter the problem that the inverse of the Gaussian CDF, used to compute the connectivity, goes to infinity when $v_\mu$ (one of the components of $(v_1, v_2) = S^{-1}(\alpha)$) goes to $0$ (or $1$). To avoid this, we offset the squares (by $2^{-n-1}$ along each dimension), so that geometrically their position is not indexed by their lower-left corner, but rather their center. Analytically, this is not a problem, because the kernel defined in @eq-hu-wu diverges only linearly, compared to the exponential cutoff of the Gaussian distribution, so that the integrand still vanishes at infinity.
 
 Therefore, there is a one-to-one mapping between the points on the square and the points on the segment, and the mapping $S^n$ is bijective. In the following, we will, for ease of notation and when it is clear in the context, drop the index $n$ when writing $S^n$. This is often justified (particularly with the Z-mapping and Column mapping introduced later), because the finite-$n$ truncations $(v_1^{(n)}, v_2^{(n)})$ result in finite truncations of $S$, therefore $S(v_1^{(n)}, v_2^{(n)}) = S^n(v_1^{(n)}, v_2^{(n)})$.
-
-<!-- TODONE NOTE : might need to talk about how $S(v^{(n)}_1,v^{(n)}_2) = S^n(v^{(n)}_1,v^{(n)}_2)$ ? so basically the limit $n\to\infty$ is the limit where we take infinite precision in the input. Or we can drop the $n$ on the inputs, $\alpha^{(n)} = S^n(v^{(n)}_1,v^{(n)}_2) = S^n(v_1,v_2)$ (i think this true just for pointwise convergent mappings) -->
 
 <!-- These simplifications might seem too restrictive, however, -->
 We will show in the rest of this thesis that this simple formulation is flexible enough to express mappings that have good properties such as "locality", while being simple enough to help build intuitions.
@@ -286,7 +280,7 @@ This way of enumerating the square populations might be familiar to people who h
 
 Research in computer science and efficient data structures has given rise to other ways of storing 2-dimensional information in a 1-dimensional memory.
 A problem in GPU computing is that of texture locality: sampling textures often involves reading data corresponding to a small 2D region, and therefore to improve speed (minimize cache misses), the 2D data should be packed close together in the 1D memory.
-One way of ordering the 2D texture data in the 1D memory is by using the Z-order curve (also known as "Morton mapping" or "Lebesgue curve" @Sagan1994). In this way, points close in 1D *tend* to be tightly packed in 2D. We can define the Z-order curve (Z-mapping) in the following way:[^zcurve]
+One way of ordering the 2D texture data in the 1D memory is by using the Z-order curve (also known as "Morton mapping", and similar to the "Lebesgue curve" @Sagan1994). In this way, points close in 1D *tend* to be tightly packed in 2D. We can define the Z-order curve (Z-mapping) in the following way:[^zcurve]
 
 [^zcurve]: The Z-curve is often defined in a transpose manner, putting first the bits of $v_2$ (vertical component) then the bits of $v_1$, instead of $v_1$ then $v_2$. By doing this, we get the "upright" Z shapes, as [shown here](https://en.wikipedia.org/wiki/Z-order_curve#/media/File:Four-level_Z.svg).
 
@@ -315,7 +309,7 @@ display(fig)
 
 To illustrate this notion of locality, we take a few consecutive populations in 1D and show where the corresponding populations fall in the 2D embedding. This is done in @fig-locality, in which we see that the Z-mapping seems to conserve locality from 1D to 2D: populations close in 1D seem to be close in 2D.
 
-We also see that the Column mapping is not local in this sense, since there is a large variation along the vertical direction, which seems to always be "of order one". This can be explained by looking at the expression for $C^{-1}_2(\alpha^{(n)}) = 0.b_{n+1} b_{n+2} \cdots b_{2n}$ : small variations of the order of $2^{-n}$ in the value of $\alpha$ always result in variations of order one in $C^{-1}_2$.
+We also see that the Column mapping is not local in this sense, since there is a large variation along the vertical direction, which seems to always be "of order one". This can be explained by looking at the expression for $C^{-1}_2(\alpha^{(n)}) = 0.b_{n+1} b_{n+2} \cdots b_{2n}$ : small variations of the order of $2^{-n}$ in the value of $\alpha$ always result in variations of order one in $C^{-1}_2$.e
 
 ```{python}
 #| label: fig-locality
@@ -487,30 +481,37 @@ $$
 
 The limit is not bijective, because the bits of $v_2$ are "lost" in the $n\to\infty$ limit, and the inverse $C_2^{-1}(\alpha)$ is not well-defined, since it "takes bits between $\infty$ and $2\infty$".
 
-The Z-mapping seems to converge to a fractal curve. Numerically, there seems to be an infinite number of discontinuities, but the sizes of these discontinuities are, for the most part, small, so that *on average* they vanish as $n\to\infty$. We won't go further into detail about this,[^zmapping-notbijective] but this gives some intuition for the arguments presented in @sec-locality.
+The Z-mapping seems to converge to a fractal curve. Numerically, there seems to be an infinite number of discontinuities, but the sizes of these discontinuities are, for the most part, small, so that *on average* they vanish as $n\to\infty$. We won't go further into detail about this, but this gives some intuition for the arguments presented in @sec-locality.
 
 We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective. In an informal way, we established two conditions for this in the context of the mappings described in @sec-mappings-binary:
 
+<!--
 [^zmapping-notbijective]:
   We refer to @Sagan1994 for an in-depth study, and in particular chapter 6, in which the author shows that the Z-curve converges to the Lebesgue curve.<br> 
-  <!-- which is a Peano-type function (continuous and surjective from $[0,1]$ into $[0,1]^2$).<br> -->
+  <!-- which is a Peano-type function (continuous and surjective from $[0,1]$ into $[0,1]^2$).<br> 
   Despite what can often be found in online resources, the Z-curve is *not* a bijection.
-  <!-- because the added injectivity would violate Netto's theorem. -->
+  <!-- because the added injectivity would violate Netto's theorem. 
   For every point in $[0,1]^2$, there are at most 4 distinct preimages in $[0,1]$. The reason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give proof that the Z-curve is not injective in the $n\to\infty$ limit.<br>
   For the following, we will consider the Z-curve to be bijective by disallowing expansions of the type $0.1000\cdots=0.0111\cdots$.
-  <!-- We note that in @Sagan1994 many other Peano curves (continuous surjections $[0,1]\mapsto [0,1]^2$) are presented (albeit more difficult to implement numerically). -->
-  <!-- Nicole: I don't say that the Lebesgue curve is continuous, because that opens up a whole other can of worms that I don't want to go into -->
+  <!-- We note that in @Sagan1994 many other Peano curves (continuous surjections $[0,1]\mapsto [0,1]^2$) are presented (albeit more difficult to implement numerically). 
+  <!-- Nicole: I don't say that the Lebesgue curve is continuous, because that opens up a whole other can of worms that I don't want to go into 
+<!-- Nicole: OK, after discussion with valentin, our definition of the Z-mapping is not exactly the same as Lebesgue curve.
+  Z-mapping might seem to approximate the Lebesgue curve, but it is not the same.
+  Lebesgue is defined on the Cantor set (the cantor set avoids the discontinuities, e.g. around alpha=0.5), then extended linearly, thus continuous
+  Our Z-mapping is defined through the bits OBTAINED FROM THE INDICATOR FUNCTIONS; and so it works on NON-AMBIGUOUS binary representations. Thus, our Z-mapping is a bijection.
+  Our Z-mapping is also not continuous, consider alpha=0.5. So we don't have a problem with Netto's theorem.
+-->
 
 1. condition of pointwise convergence: the LSB of the input must be mapped to the LSB of the output,
 2. condition of "no information loss": the MSB of the input must be mapped to the MSB of the output.
 
 These two conditions do not leave a lot of flexibility in the design of new mappings. We can evidently define mappings where we interleave the bits in a different order, such as $0.b^2_1 b^1_1 b^2_2 b^1_2 \cdots$; or mappings where we reorder the $k$ bits of the input, as in $0.b^1_2 b^2_2 b^1_1 b^2_1 b^1_4 b^2_4 b^1_3 b^2_3 \cdots$, but the conditions restrict the reordering to be permutations of neighbouring bits. In essence, these mappings are not fundamentally different, and the Z-mapping can be seen as a "standard example" of the pointwise convergent mappings with bijective limits, which can be expressed as the permutation of binary digits.
 
-### Visualizating of the mappings of the dynamic 2D neural field
+<!-- ### Visualizing of the mappings of the dynamic 2D neural field
 
 It is time for a little treat. Before we argue about how to simulate the dynamics of the 1D neural field, let us simulate the dynamics of the 2D neural field, then at each timestep, we map the 2D neural field to the 1D embedding. This will give us a reference of how the 1D neural field is supposed to look under the condition that its dynamics are identical.
 
-![(TODO) Animation showing the image of the dynamics 2D neural field through different mappings $S : [0,1]^2 \mapsto [0,1]$](figures/photo_2023-06-10_17-21-19.jpg)
+![(TODO) Animation showing the image of the dynamics 2D neural field through different mappings $S : [0,1]^2 \mapsto [0,1]$](figures/photo_2023-06-10_17-21-19.jpg) -->
 
 ## Coarse-graining the neural field in $[0,1]$ {#sec-coarse-graining}
 

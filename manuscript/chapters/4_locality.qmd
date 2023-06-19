@@ -59,8 +59,6 @@ Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, th
 
 We do not address the question of well-posedness of the neural field equations in this thesis; for proofs of the well-posedness of neural field equations, we refer the reader to [@faugeras2008absolute;@faugeras2009persistent;@veltz2009localglobal].
 
-<!-- TODO : we may argue that the Z-curve is not bijective. This complicates the proof. Though, the pre-image of (v_1, v_2) is composed of at most 4 points, and the measurability compensates. -->
-
 ## Locality
 
 <!-- ### The total variation attempt
@@ -118,7 +116,7 @@ $$
 V_n(S^{-1}) = \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1
 $$ {#eq-Vn}
 
-<!-- Nicole: V_n -> 0 is implied by continuity -->
+The definition of locality can essentially be seen as a weakened version of continuity; since from definition the image of a small neighbourhood through a continuous function is also a small neighbourhood. Therefore, continuity of a function $f$ implies that $V_n(f) \xrightarrow{n \to \infty} 0$. The reverse is obviously not true, since for instance the metric $V_n$ vanishes when applied to a step function, which is only piecewise continuous.
 
 <!--
 variation inside the bins, strong version. basically, we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
@@ -146,7 +144,7 @@ Valentin: For the master thesis, it is ok to not mention it.
 
 Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is $V_n$ vanishes a $n\to\infty$ for local mappings, whereas $V_n$ is lower bounded by a constant for non-local mappings. @fig-vnum shows this is indeed the case, rejoice!
 
-![(TODO change title, change name of mappings) (Numerator of the) average binned variation as a function of $n$. The local mappings have a growth slower than the upper bound $2\times 2^n$.](figures/v_num.png){width=500px #fig-vnum}
+![(TODO change title, change name of mappings, remove the theory, but keep upper bound) (Numerator of the) average binned variation as a function of $n$. The local mappings have a growth slower than the upper bound $2\times 2^n$.](figures/v_num.png){width=500px #fig-vnum}
 
 ### Computations of average variation
 
@@ -170,13 +168,13 @@ $$
 
 #### Z-mapping
 
-Let us consider the Z-mapping, and the two terms compositing its inverse. In the case of $\alpha, \alpha^\prime$ above, we have if $n$ is even :
+Let us consider the Z-mapping, and the two terms compositing its inverse. In the case of $\alpha, \alpha^\prime$ above, we have if $n$ is even:
 
 $$
 \begin{aligned}
 Z^{-1}_1(\alpha) &= 0.\underbrace{i_{n-1} i_{n-3} \cdots i_1}_\text{$n/2$ bits} b_n b_{n+2} \cdots b_{2m-1} \\
 Z^{-1}_2(\alpha) &= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_0}_\text{$n/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}
-\end{aligned}of this locality
+\end{aligned}
 $$
 
 If $n$ is odd, we have :
@@ -315,8 +313,6 @@ I^\text{rec}_U(\vec v) = w_U(\vec v, \vec u) \phi(h_U(t, \vec u)),
 $$
 
 and that in @sec-cyling-nf, numerical simulations showed that $I^\text{rec}_U(\vec v)$ is a well-behaved function.
-
-<!-- [TODO MATH : prove that it is indeed Lipschitz. The main problem I've encountered with this is that these functions are $\textrm{regular function} \circ \textrm{CDF}^{-1}$, and the inverse CDF goes to infinity at 0 and 1]. -->
 
 Applying the Lipschitz assumption yields the following inequality on the integrand:
 

@@ -470,6 +470,7 @@ N: for the sigmoid with steepness parameter beta=1, numerical estimations show t
 
 V: I would remove these two paragraphs. Also, the statement "the network of neurons converges to the neural field with rate O(1/\sqrt{N})" actually depends on how exactly we define the converge. For example, in Chevallier, Duarte, Löcherbach, and Ost, the rate of convergence depends on the dimensionality p because they study the convergence of the empirical measures of all neurons (which is stronger than looking at a single neuron, which would indeed converge at rate 1/\sqrt{N}). 
 N: I would still like to at least say something about network of neurons ~ MC
+-> TODO modify the second para, avoiding mention of convergence of dynamics
 
 V: comment for Nicole: for finite N, the patterns are not exactly orthogonal.
 N: Yes ! I talk about this in the appendix :)
@@ -479,6 +480,7 @@ N: "cycling", because the p=3 reprentation clearly shows the cycle. in p=2, we j
 
 V: continuity and the differentiability of the kernel is conserved
 N: no, this would be misleading, because ~w is not continuous, nor differentiable
+-> TODO
 
 V: Here, should you add:
 "While Peano functions are interesting candidate for mapping neural field equations in [0,1]^2 to neural field equations on the interval [0,1], in this work, we will focus on bijective functions, i.e. Cantor functions."

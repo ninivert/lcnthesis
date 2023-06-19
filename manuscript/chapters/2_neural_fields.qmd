@@ -2,6 +2,23 @@
 
 ::: {.content-hidden}
 {{< include ../macros.tex >}}
+
+```{python}
+import matplotlib as mpl, matplotlib.pyplot as plt, matplotlib.colors as mplcolors, matplotlib.patheffects as pe, matplotlib.ticker as ticker
+import numpy as np
+import sys
+sys.path.append('../../notebooks')  # import neurodyn
+from neurodyn import *
+from matplotlib_tufte import *
+setup()
+
+mpl.use('svg')
+
+def mktrans(fig, ax):
+	"""Makes figure and axes transparent"""
+	fig.patch.set_facecolor('#FFFFFF00')
+	ax.patch.set_facecolor('#FFFFFF00')
+```
 :::
 
 In this chapter, we introduce a toy model so that we can later study the mappings of embedding spaces. We stress that this toy model serves only for illustration purposes, and our results apply to any neural field. For this reason, we only cite or give short derivations of results used to understand the model, and the influence of the mappings that are later applied to it.
@@ -86,13 +103,54 @@ The analysis of stability from @sec-fixedpoints-stability can be summarized by t
 
 1. Taking Taylor expansions of the activation functions reveals that -- at least up to order 3 -- uneven powers tend to increase stability of the pattern fixed points (and reciprocally, decrease stability of the zero fixed point), and vice-versa for the even powers (with the notable exception of the constant offset, which doesn't play a role in this analysis).
 2. A steeper slope at the origin of the activation function also seems to improve stability of the pattern fixed points. This corresponds to a sharper difference between the "inactive" (low potential) and the "active" (high potential) neurons.
-3. The spectrum of $K$ is composed of $p$ eigenvalues that depend on the fixed point, and $N-p$ eigenvalues $\lambda_\perp = -1$ corresponding to the orthogonal complement of the pattern fixed points.
+3. The spectrum of $K$ is composed of $p$ eigenvalues (labeled $\lambda_\mu$ for all $\mu\in\{1,\cdots,p\}$) that depend on the fixed point, and $N-p$ eigenvalues $\lambda_\perp = -1$ corresponding to the orthogonal complement of the pattern fixed points.
 
 In our case, this analysis in Taylor expansions was sufficient to explain the observed stability resulting from a logistic activation function.
 
 We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that already at $N=64$, the analytic eigenvalues match the numerical eigenvalues closely, and this correspondence improves when we take larger $N$ (typically we will for the rest of this thesis take $N > 10^3$).
 
-![(TODO add spectrum for zero fixed point) Spectrum of $K$ for $N=64$ for the pattern fixed point](figures/spectrum_N=64.png){#fig-spectrum}
+```{python}
+#| label: fig-spectrum
+#| fig-cap: Spectrum of $K$ for $N=64$ and $p=2$. The numerical estimation (black) of the eigenvalues is close to the analytical ($N \to \infty$) derivation (red). Eigenvalues above the dotted gray line(positive values) correspond to unstable fixed points, and below (negative values) correspond to stable fixed points. Only the 
+#| fig-subcap:
+#|   - Pattern (stable) fixed point
+#|   - Zero (unstable) fixed point
+#| layout-ncol: 2
+#| echo: false
+
+dsigmoid = lambda x: sigmoid(x) * (1 - sigmoid(x))
+
+def plot_spectrum(hstar_str: str):
+	params = LowRankRNNParams.new_valentin(p=2, N=256, phi=sigmoid, I_ext=zero, exclude_self_connections=False)
+	if hstar_str == 'pattern':
+		hstar = params.F[:, 0]
+	elif hstar_str == 'zero':
+		hstar = np.zeros(params.N)
+	dphi = dsigmoid(hstar)
+	l = 1/params.N * np.einsum('im,im->m', params.F, params.G * dphi[:, None]) - 1
+	l.sort()
+	J = np.einsum('im,jm->ij', params.F, params.G * dphi[:, None]) / params.N - np.eye(params.N)
+	
+	fig, ax = plt.subplots()
+	mktrans(fig, ax)
+	ax.axhline(0, color='gray', linestyle='--')
+	ax.plot(np.sort(np.linalg.eigvals(J).real)[::-1][:8], marker='o', clip_on=False)
+	ax.plot([7,8,8.5], np.sort(np.linalg.eigvals(J).real)[::-1][8:11], linestyle='--', color='k', clip_on=False)
+	ax.plot(l[::-1], color='r', marker='o', clip_on=False)
+	ax.set_ylim((-1, 0.5))
+	ax.set_xlim((0, 8.5))
+	ax.set_ylabel('Eigenvalues')
+	breathe()
+	return fig, ax
+
+# pattern fixed points
+fig, ax = plot_spectrum('pattern')
+display(fig)
+
+# zero fixed point
+fig, ax = plot_spectrum('zero')
+display(fig)
+```
 
 ### Emergence of structure in the networks of neurons
 
@@ -339,7 +397,7 @@ $$
 
 Defining the neural field in $[0,1]^p$ also addresses the problem that we tried to hide in @sec-gridmethod relating to the difficulties of defining a grid on $\Rp$. With the integral on $[0,1]^p$, we can simply use a uniform grid, which maps back to samples in $\Rp$ by using the inverse CDF, as shown in @fig-sampling-R2-012.
 
-![(TODO) A grid in $[0,1]^2$ and the corresponding samples in $\R^2$. The numeric density of points in $\R^2$ approaches the normal distribution as the grid becomes finer.](figures/sampling_R2_01.png){#fig-sampling-R2-012}
+![(TODO not color) A grid in $[0,1]^2$ and the corresponding samples in $\R^2$. The numeric density of points in $\R^2$ approaches the normal distribution as the grid becomes finer.](figures/sampling_R2_01.png){#fig-sampling-R2-012}
 
 We make the final remark that this method of mapping $\Rp$ to $[0,1]^p$ by using the CDF does not work for any neural field. In our case, we use the fact that the distribution factorizes into $\rho(z_1, \cdots, z_p) = \rho_1(z_1) \cdots \rho_p(z_p)$, such that the components of $\vec{v}$ are independent. We can then define the "componentwise CDF" that relates to the total CDF via
 
