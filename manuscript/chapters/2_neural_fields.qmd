@@ -107,11 +107,11 @@ The analysis of stability from @sec-fixedpoints-stability can be summarized by t
 
 In our case, this analysis in Taylor expansions was sufficient to explain the observed stability resulting from a logistic activation function.
 
-We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that already at $N=64$, the analytic eigenvalues match the numerical eigenvalues closely, and this correspondence improves when we take larger $N$ (typically we will for the rest of this thesis take $N > 10^3$).
+We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that at $N=250$, the numerical eigenvalues approximate the analytical eigenvalues, and this correspondence improves when we take larger $N$ (typically we will for the rest of this thesis take $N > 10^3$).
 
 ```{python}
 #| label: fig-spectrum
-#| fig-cap: Spectrum of $K$ for $N=64$ and $p=2$. The numerical estimation (black) of the eigenvalues is close to the analytical ($N \to \infty$) derivation (red). Eigenvalues above the dotted gray line(positive values) correspond to unstable fixed points, and below (negative values) correspond to stable fixed points. Only the 
+#| fig-cap: Spectrum of $K$ for $N=250$ and $p=2$. The numerical estimation (black, eigenvalues $\lambda_\mu$ and $\lambda_\perp=-1$) of the eigenvalues is close to the analytical ($N \to \infty$) derivation (red, only eigenvalues $\lambda_\mu$). Eigenvalues above the dotted gray line (positive values) correspond to unstable fixed points, and below (negative values) correspond to stable fixed points.
 #| fig-subcap:
 #|   - Pattern (stable) fixed point
 #|   - Zero (unstable) fixed point
@@ -121,27 +121,28 @@ We should however note that the results obtained in @sec-fixedpoints are valid i
 dsigmoid = lambda x: sigmoid(x) * (1 - sigmoid(x))
 
 def plot_spectrum(hstar_str: str):
-	params = LowRankRNNParams.new_valentin(p=2, N=256, phi=sigmoid, I_ext=zero, exclude_self_connections=False)
-	if hstar_str == 'pattern':
-		hstar = params.F[:, 0]
-	elif hstar_str == 'zero':
-		hstar = np.zeros(params.N)
+	params = LowRankRNNParams.new_valentin(p=2, N=250, phi=sigmoid, I_ext=zero, exclude_self_connections=False)
+	if hstar_str == 'pattern': hstar = params.F[:, 0]
+	elif hstar_str == 'zero': hstar = np.zeros(params.N)
 	dphi = dsigmoid(hstar)
-	l = 1/params.N * np.einsum('im,im->m', params.F, params.G * dphi[:, None]) - 1
-	l.sort()
 	J = np.einsum('im,jm->ij', params.F, params.G * dphi[:, None]) / params.N - np.eye(params.N)
+	eig_num = np.sort(np.linalg.eigvals(J).real)[::-1]
+	eig_ana = { 'zero': 0.19061, 'pattern': -0.28090 }[hstar_str]  # see appendix A
 	
 	fig, ax = plt.subplots()
 	mktrans(fig, ax)
 	ax.axhline(0, color='gray', linestyle='--')
-	ax.plot(np.sort(np.linalg.eigvals(J).real)[::-1][:8], marker='o', clip_on=False)
-	ax.plot([7,8,8.5], np.sort(np.linalg.eigvals(J).real)[::-1][8:11], linestyle='--', color='k', clip_on=False)
-	ax.plot(l[::-1], color='r', marker='o', clip_on=False)
+	ax.plot(eig_num[:8], marker='o', clip_on=False)
+	ax.plot([7,8,8.5], eig_num[8:11], linestyle='--', color='k', clip_on=False)
+	ax.plot(np.arange(params.p), np.full(params.p, eig_ana), color='r', marker='o', clip_on=False)
 	ax.set_ylim((-1, 0.5))
 	ax.set_xlim((0, 8.5))
 	ax.set_ylabel('Eigenvalues')
+	ax.set_xlabel('nth eigenvalue')
 	breathe()
 	return fig, ax
+
+# %matplotlib inline
 
 # pattern fixed points
 fig, ax = plot_spectrum('pattern')
@@ -171,11 +172,11 @@ Instead of numerically computing the full connectivity matrix $J$ (which would r
 Initially, we set all the potentials to zero, then simulate the differential equation by using the Runge-Kutta of order 4 integration schema (see [`scipy.integrate.solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html)). In @fig-p1, we show the resulting dynamics for a few thousand neurons. We order the neurons as they appear in the numerical array (a naive "random" one-dimensional embedding), and compare this to the ordering of neurons by their sampled position $z_1 \sim \mathcal{N}$.
 
 ::: {.content-visible when-format="html"}
-![(TODO remove overlap, change notation, color for activity) Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/embedding_d=1_h0=0_phi=sigmoid.mp4){width=400px #fig-p1}
+![Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis.](figures/embedding_d=1.mp4){#fig-p1}
 :::
 
 ::: {.content-visible when-format="pdf"}
-![(TODO PDF remove overlap, change notation, color for activity) Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/lol7.jpg){width=400px #fig-p1}
+![(TODO) Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis.](figures/lol7.jpg){#fig-p1}
 :::
 
 The results of the simulation show that the random ordering of the neurons does not yield a smooth embedding, in contrast to the smooth surface that appears when we order the neurons by their position $z_{1i}$. The simulation serves as a demonstration that the neurons converge to the stable fixed point $h^\star_i = z_{1i}$, as well as confirming that the zero fixed point is unstable. Indeed, despite the zero initialization, the simulation did not stay there because small numerical fluctuations were amplified by the instability. 
@@ -316,7 +317,7 @@ The set of $\kappa_\mu(t)$ defines a trajectory in a $p$-dimensional *latent spa
 
 Additionally, it can be seen from the expression of the overlaps in @eq-overlap, that in the case of a linear activation function $\phi(h) = c_0 + c_1 h$, we have the equality $m_\mu(t) = \kappa_\mu(t)$.
 
-## A cycling neural field {#sec-cyling-nf}
+## A cycling neural field {#sec-cycling-nf}
 
 In @sec-networks-of-neurons-to-neural-fields we introduced a simple toy model of a neural field with a natural embedding on the $p$-dimensional Gaussian. Analytical derivations accompanied by numerical simulations showed the dynamics of this model can be summarized by the convergence to pattern fixed points. In this section, we modify the toy model minimally, such that we can observe more interesting behaviour in the form of cycling.
 

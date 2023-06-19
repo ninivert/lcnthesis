@@ -1,6 +1,7 @@
 """Plotting utilities"""
 
 import matplotlib as mpl, matplotlib.pyplot as plt, matplotlib.ticker as ticker, matplotlib.tri as tri, matplotlib.collections as collections
+from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import colorsys
 from matplotlib.axes import Axes
@@ -13,7 +14,8 @@ __all__ = [
 	'plot_overlap_phase2D',
 	'plot_2D_embedding_contour', 'plot_2D_embedding_scatter',
 	'plot_2D_to_1D_mapping',
-	'add_headers', 'scale_lightness'
+	'add_headers', 'scale_lightness',
+	'cmap_bi', 'cmap_bi_r', 'cmap_trans',
 ]
 
 def _unwrap_figax(figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
@@ -149,6 +151,9 @@ def plot_2D_to_1D_mapping(
 
 	return (fig, axes), scat1d, scat2d
 
+cmap_bi = LinearSegmentedColormap.from_list("", list(reversed(["#ff0080","#ff0080","#a349a4","#0000ff","#0000ff"])))
+cmap_bi_r = LinearSegmentedColormap.from_list("", ["#ff0080","#ff0080","#a349a4","#0000ff","#0000ff"])
+cmap_trans = LinearSegmentedColormap.from_list("", ["#55CDFC","#55CDFC","#FFFFFF","#FFFFFF","#F7A8B8","#F7A8B8"])
 
 def add_headers(
 	fig=None, axes=None,

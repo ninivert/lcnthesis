@@ -8,12 +8,12 @@ from ._rnn import LowRankRNN, Result
 from ._plot import plot_overlap_trajectory, scale_lightness
 from ._overlap import overlap
 
-__all__ = ['animate1d', 'animate2d']
+__all__ = ['animate2d']
 
 def midpoints(arr):
 	return (arr[:-1] + arr[1:]) / 2
 
-def animate1d(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1, Nmax = 1500):
+def animate1d_old(rnn: LowRankRNN, res: Result, outpath: Path, time_stride: int = 1, Nmax = 1500):
 	idt = 0
 	activity = rnn.phi(res.h[:Nmax])
 	cmap = mpl.colormaps['RdBu_r']

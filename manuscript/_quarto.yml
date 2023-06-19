@@ -58,7 +58,7 @@ format:
     documentclass: scrreprt
     classoption: abstract
     papersize: a4
-    keep-tex: true
+    # keep-tex: true
     link-citations: true
     colorlinks: true
     include-in-header: 

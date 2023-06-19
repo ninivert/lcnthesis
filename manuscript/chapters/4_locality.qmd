@@ -14,6 +14,8 @@ In this chapter, we will further explore these results, and attempt to formulate
 <!-- Let us make the assumption that $S$ is a bijective function. However, to not break Netto's theorem, we do not make any assumptions regarding its continuity.
 
 Nicole: let's not mention Netto's theorem here. It applies to S^{-1}, and it becomes difficult to reason about when we talk about S. I don't think the proof works strictly in our case, because the Z-mapping is not a bijection, but let us assume uwuwuwu
+
+Nicole again: our Z-mapping is not defined in the same way as the Lebesgue curve, because we use indicator functions to take bit representations. We are stepwise functions. Our Z-mapping is a bijection, and not continuous.
 -->
 
 Let us assume that the mapping $S$ is bijective and measurable. This is not a strong assumption, since the limit of pointwise convergent measurable functions is also measurable. In our case, we have written the finite-$n$ expansions $S^n$, which, by being sums of piecewise constant functions, are also measurable. The measurability of $S$ allows us to write $\lambda \circ S^{-1}$, the pushforward measure (or image measure) of $\lambda$ under the mapping $S$.
@@ -312,7 +314,7 @@ $$
 I^\text{rec}_U(\vec v) = w_U(\vec v, \vec u) \phi(h_U(t, \vec u)),
 $$
 
-and that in @sec-cyling-nf, numerical simulations showed that $I^\text{rec}_U(\vec v)$ is a well-behaved function.
+and that in @sec-cycling-nf, numerical simulations showed that $I^\text{rec}_U(\vec v)$ is a well-behaved function.
 
 Applying the Lipschitz assumption yields the following inequality on the integrand:
 

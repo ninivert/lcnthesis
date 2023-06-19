@@ -158,7 +158,10 @@ In light of these results, we might be tempted to search for expressions of Cant
 Peano functions seem like good candidates for the mapping $S^{-1}$, and are extensively studied in the literature around space-filling curves (we refer for instance to [@sagan_space-filling_1994]). They have the nice property that they are continuous and surjective, so the segment populations can "reach" the entirety of the square populations. All things considered, non-injectivity is not a problem, since it just means that two segment populations can "refer" to the same square population (see @fig-non-injection), which does not break the regularity of the kernel,  since the two segment populations can just have their own neighbourhoods.
 -->
 
-![Non-injectivity of $S^{-1}$ means that two segment populations can refer to the same square population.](figures/photo_2023-06-12_00-46-26.jpg){#fig-non-injection}
+<!-- ![Non-injectivity of $S^{-1}$ means that two segment populations can refer to the same square population.](figures/photo_2023-06-12_00-46-26.jpg){#fig-non-injection} 
+
+Nicole: removed. too confusing
+-->
 
 ### Sequences of bijective mappings
 
@@ -279,7 +282,7 @@ This way of enumerating the square populations might be familiar to people who h
 
 Research in computer science and efficient data structures has given rise to other ways of storing 2-dimensional information in a 1-dimensional memory.
 A problem in GPU computing is that of texture locality: sampling textures often involves reading data corresponding to a small 2D region, and therefore to improve speed (minimize cache misses), the 2D data should be packed close together in the 1D memory.
-One way of ordering the 2D texture data in the 1D memory is by using the Z-order curve (also known as "Morton mapping", and similar to the "Lebesgue curve" @Sagan1994). In this way, points close in 1D *tend* to be tightly packed in 2D. We can define the Z-order curve (Z-mapping) in the following way:[^zcurve]
+One way of ordering the 2D texture data in the 1D memory is by using the Z-order curve (also known as "Morton mapping", and similar to the "Lebesgue curve" @sagan_space-filling_1994, chapter 6). In this way, points close in 1D *tend* to be tightly packed in 2D. We can define the Z-order curve (Z-mapping) in the following way:[^zcurve]
 
 [^zcurve]: The Z-curve is often defined in a transpose manner, putting first the bits of $v_2$ (vertical component) then the bits of $v_1$, instead of $v_1$ then $v_2$. By doing this, we get the "upright" Z shapes, as [shown here](https://en.wikipedia.org/wiki/Z-order_curve#/media/File:Four-level_Z.svg).
 
@@ -543,7 +546,7 @@ In some sense, we would like to "take into account" the fact that a mapping of t
 
 We do this using "coarse-graining", in which we average $2^n$ consecutive segment populations, each of length $4^{-n}$, in order to obtain $2^n$ coarse-grained segment populations, each of length $2^{-n}$. This operation is illustrated in @fig-averaging.
 
-![(TODO) Averaging $2^n$ of the $4^n$ segments populations of $S^n$ results in the $2^n = 4^{n/2}$ segments populations of $S^{n/2}$](figures/photo_2023-06-13_12-15-32.jpg){width=400px #fig-averaging}
+![(TODO) Averaging $2^n$ of the $4^n$ segments populations of $S^n$ results in the $2^n$ segments populations](figures/photo_2023-06-13_12-15-32.jpg){width=400px #fig-averaging}
 
 Without coarse-graining, the mesh size along each spatial dimension is $2^{-n}$ in 2D, but directly applying the mapping results instead in a mesh size of $4^{-n}$ in 1D, which is much finer than the $2^{-n}$ per dimension. However, after coarse-graining, the effective mesh size in 1D becomes $2^{-n}$, which matches the 2D mesh size. Therefore, we are are not compensating the reduction of dimensionality by an increase in the numerical resolution.
 
