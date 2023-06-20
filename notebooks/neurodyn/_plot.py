@@ -15,7 +15,7 @@ __all__ = [
 	'plot_2D_embedding_contour', 'plot_2D_embedding_scatter',
 	'plot_2D_to_1D_mapping',
 	'add_headers', 'scale_lightness',
-	'cmap_bi', 'cmap_bi_r', 'cmap_trans',
+	'cmap_bi', 'cmap_bi_r', 'cmap_pan', 'cmap_pan_r', 'cmap_trans',
 ]
 
 def _unwrap_figax(figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
@@ -153,6 +153,8 @@ def plot_2D_to_1D_mapping(
 
 cmap_bi = LinearSegmentedColormap.from_list("", list(reversed(["#ff0080","#ff0080","#a349a4","#0000ff","#0000ff"])))
 cmap_bi_r = LinearSegmentedColormap.from_list("", ["#ff0080","#ff0080","#a349a4","#0000ff","#0000ff"])
+cmap_pan = LinearSegmentedColormap.from_list("", list(reversed(["#fa1a8c","#fcd900","#3aafff"])))
+cmap_pan_r = LinearSegmentedColormap.from_list("", list((["#fa1a8c","#fcd900","#3aafff"])))
 cmap_trans = LinearSegmentedColormap.from_list("", ["#55CDFC","#55CDFC","#FFFFFF","#FFFFFF","#F7A8B8","#F7A8B8"])
 
 def add_headers(

@@ -172,7 +172,7 @@ Instead of numerically computing the full connectivity matrix $J$ (which would r
 Initially, we set all the potentials to zero, then simulate the differential equation by using the Runge-Kutta of order 4 integration schema (see [`scipy.integrate.solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html)). In @fig-p1, we show the resulting dynamics for a few thousand neurons. We order the neurons as they appear in the numerical array (a naive "random" one-dimensional embedding), and compare this to the ordering of neurons by their sampled position $z_1 \sim \mathcal{N}$.
 
 ::: {.content-visible when-format="html"}
-![Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis.](figures/embedding_d=1.mp4){#fig-p1}
+![Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis.](figures/embedding_p=1.mp4){#fig-p1}
 :::
 
 ::: {.content-visible when-format="pdf"}
@@ -194,11 +194,11 @@ Because @eq-nf-gaussian-p1 already involves a one-dimensional integral, the $[0,
 The question of finding a one-dimensional embedding becomes non-trivial when we consider $p>1$, here we take $p=2$. In @fig-p2, we repeat the same simulations as in the previous section. Again, the structure of the network emerges naturally as a smooth surface in $\R^2$.
 
 ::: {.content-visible when-format="html"}
-![(TODO remove overlap, change notation, scatter only) Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/embedding_d=2_h0=0.mp4){width=500px #fig-p2}
+![Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level. Projections are shown by gray points.](figures/embedding_p=2.mp4){width=500px #fig-p2}
 :::
 
 ::: {.content-visible when-format="pdf"}
-![(TODO PDF remove overlap, change notation, scatter only) Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level.](figures/lol7.jpg){width=500px #fig-p2}
+![(TODO PDF) Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level. Projections are shown by gray points.](figures/lol7.jpg){width=500px #fig-p2}
 :::
 
 We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here, the network coincidentally converged again to the first pattern fixed point. The network is in the $\mu=1$ pattern, which we can see because the neural field is constant in the $z_2$ direction. We write the fixed point $h^\star(z_1, z_2, t) = z_1$. The neural field is now written as
@@ -334,14 +334,80 @@ $$ {#eq-nf-cycling-p}
 
 The geometric intuition behind this formulation is that now the recurrent currents are "rotated by half a turn" (around the axis normal to the plane $(z_\mu, z_{\mu+1})$) in the embedding. When the network is at a pattern fixed point $\mu$, the recurrent drive will then push it towards the pattern $\mu+1$. @fig-cycling-irec shows the difference in the behaviour of the original and the cycling neural field.
 
-![(TODO animation in 3D, rename non-cycling to original, number from one) Intuition for the cycling behavior by considering the recurrent currents](figures/cycling_recurrent.png){#fig-cycling-irec}
+```{python}
+#| label: fig-cycling-irec
+#| fig-cap: Intuition for the cycling behavior. We consider the network in the state $h(z_1,z_2)=z_1$, and look at the recurrent currents. The recurrent currents align with the activity for the original neural field, and the effective change in potential is zero everywhere. For the cycling neural field, the recurrent currents are orthogonal to the activity, such that with the decay term, the effective change leads to a rotation in the counter-clockwise direction, towards the state $h(z_1,z_2)=z_2$.
+#| echo: false
+
+from matplotlib.image import NonUniformImage
+
+nrec = 6
+rnn_nocyc = LowRankRNN.new_sampled_valentin(
+	phi=sigmoid, mapping_samples=ReshapeMapping.new_nrec(nrec=nrec).inverse_samples(),
+	I_ext=zero, exclude_self_connections=False
+)
+rnn_cyc = LowRankCyclingRNN.new_sampled_valentin(
+	phi=sigmoid, mapping_samples=ReshapeMapping.new_nrec(nrec=nrec).inverse_samples(),
+	I_ext=zero, exclude_self_connections=False, delta=10, shift=1
+)
+rnn_cyc.h_lagging = lambda t, h: h  # HACK : make the recurrent currents work for t=0
+
+fig, axes = plt.subplots(ncols=3, nrows=2, figsize=(3*4-3, 2*3), layout='constrained')
+
+for i, rnn in enumerate([rnn_nocyc, rnn_cyc]):
+	axes[i, 0].set_aspect('equal')
+	axes[i, 0].set_xlabel('$z_1$')
+	axes[i, 0].set_ylabel('$z_2$')
+	shape = (2**nrec, 2**nrec)
+	im = axes[i, 0].pcolormesh(
+		rnn.F[:, 0].reshape(shape), rnn.F[:, 1].reshape(shape), rnn.phi(rnn.F[:, 0]).reshape(shape),
+		cmap=cmap_bi, vmin=0, vmax=1,
+		rasterized=True  # enable rasterization to prevent 50Mo SVG files, lol
+	)
+	breathe(axes[i, 0])
+	if i == 1:
+		plt.colorbar(im, ax=axes[i, 0], orientation='horizontal', label='$\\phi(h(z_1,z_2))$')
+	
+	axes[i, 1].set_aspect('equal')
+	axes[i, 1].set_xlabel('$z_1$')
+	axes[i, 1].set_ylabel('$z_2$')
+	im = axes[i, 1].pcolormesh(
+		rnn.F[:, 0].reshape(shape), rnn.F[:, 1].reshape(shape), rnn.I_rec(0, rnn.F[:, 0]).reshape(shape),
+		cmap='coolwarm', vmin=-2, vmax=2,
+		rasterized=True  # enable rasterization to prevent 50Mo SVG files, lol
+	)
+	breathe(axes[i, 1])
+	if i == 1:
+		plt.colorbar(im, ax=axes[i, 1], orientation='horizontal', label='$I^\mathrm{rec}(z_1, z_2)$')
+
+	axes[i, 2].set_aspect('equal')
+	axes[i, 2].set_xlabel('$z_1$')
+	axes[i, 2].set_ylabel('$z_2$')
+	im = axes[i, 2].pcolormesh(
+		rnn.F[:, 0].reshape(shape), rnn.F[:, 1].reshape(shape), rnn.dh(0, rnn.F[:, 0]).reshape(shape),
+		cmap=cmap_pan, vmin=-2, vmax=2, shading='gouraud',
+		rasterized=True  # enable rasterization to prevent 50Mo SVG files, lol
+	)
+	breathe(axes[i, 2])
+	if i == 1:
+		plt.colorbar(im, ax=axes[i, 2], orientation='horizontal', label='$\partial_t h(z_1, z_2)$')
+
+add_headers(axes=axes.flat, row_headers=['Original neural field', 'Cycling neural field'], fontsize='medium', row_pad=8)
+add_headers(axes=axes.flat, col_headers=['Neural activity', 'Recurrent currents', 'Effective change'], fontsize='medium', col_pad=8)
+
+for ax in axes.flat:
+	mktrans(fig, ax)
+
+# %matplotlib inline
+display(fig)
+```
 
 We note however that @eq-nf-cycling-p no longer is a partial differential equation, but rather a delayed differential equation, which are in general much more complicated to solve. A simplifying assumption that we make is we extend the initial condition back in time, such that $h(\vec z, t < 0) = h(\vec z, 0)$ is a constant function. Numerically, this also means that we have to store a history of the neural fields instead of only the current one. Since the [`solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html) method dynamically adapts the timestep of integration, we use linear interpolation between two known points in the stored neural field states to estimate $h(\vec z, t-\delta)$ (see [`lagging.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_lagging.py) and [its use](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L334)).
 
 With these considerations, we simulate a $p=2$ cycling neural field with $\delta=6$ (since the membrane time constant has been fixed to one, this means that $\delta = 6\tau = 6$) and initial condition $h(z_1, z_2, t < 0) = z_1$ in @fig-cycling-anim. The latent trajectory is estimated from the simulation results, and animated simultaneously with the neural field. We clearly see the oscillations between the patterns $\mu=1$ and $\mu=2$.
 
 ::: {.content-visible when-format="html"}
-![A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour.](figures/embedding_d=2_h0=0_cycling_delta=6.mp4){#fig-cycling-anim}
+![A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour.](figures/embedding_p=2_cycling.mp4){#fig-cycling-anim}
 :::
 
 ::: {.content-visible when-format="pdf"}
@@ -377,7 +443,28 @@ $$
 
 and maps $\R$ to $[0,1]$,[^R-to-01] as pictured in @fig-gaussian-cdf.
 
-![(TODO) CDF of the Gaussian distribution](figures/1920px-Normal_Distribution_CDF.svg.png){width=400px #fig-gaussian-cdf}
+```{python}
+#| label: fig-gaussian-cdf
+#| fig-cap: CDF of the Gaussian distribution
+#| echo: false
+#| 
+from scipy import stats
+
+z = np.linspace(-4.5, 4.5, 200)
+fig, ax = plt.subplots()
+ax.plot(z, stats.norm.cdf(z), clip_on=False)
+# ax.set_xlim((-4, 4))
+ax.set_ylim((0, 1))
+ax.set(xlabel='$z$', ylabel='$\\mathrm{CDF}(z)$')
+ax.set_yticks([0.0, 0.25, 0.5, 0.75, 1.0])
+ax.grid(clip_on=False)
+# ax.grid(clip_on=False, axis='y')
+# breathe(ax, which='x')
+# breathe(ax, which='y', pad_frac=0.1)
+breathe(ax)
+mktrans(fig, ax)
+display(fig)
+```
 
 [^R-to-01]: Strictly speaking the image of $\R$ is in $(0,1)$, but for simplicity we consider $\R \cup \{-\infty, +\infty\}$ which maps to $[0,1]$. This is not fundamentally important, because numerically the infinities are never touched, and analytically the recurrent currents given by the integration vanish at infinity due to the Gaussian weighting.
 
@@ -396,9 +483,33 @@ $$
 \partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u.
 $$
 
-Defining the neural field in $[0,1]^p$ also addresses the problem that we tried to hide in @sec-gridmethod relating to the difficulties of defining a grid on $\Rp$. With the integral on $[0,1]^p$, we can simply use a uniform grid, which maps back to samples in $\Rp$ by using the inverse CDF, as shown in @fig-sampling-R2-012.
+Defining the neural field in $[0,1]^p$ also addresses the problem that we tried to hide in @sec-gridmethod relating to the difficulties of defining a grid on $\Rp$. With the integral on $[0,1]^p$, we can simply use a uniform grid, which maps back to samples in $\Rp$ by using the inverse CDF, as shown in @fig-grid-correspondance.
 
-![(TODO not color) A grid in $[0,1]^2$ and the corresponding samples in $\R^2$. The numeric density of points in $\R^2$ approaches the normal distribution as the grid becomes finer.](figures/sampling_R2_01.png){#fig-sampling-R2-012}
+```{python}
+#| label: fig-grid-correspondance
+#| fig-cap: A grid in $[0,1]^2$ and the corresponding samples in $\R^2$. The numeric density of points in $\R^2$ approaches the normal distribution as the grid becomes finer (here, the mesh size is $2^{-4}$ along each dimension).
+#| echo: false
+
+nrec = 4
+mapping = ColumnMapping.new_nrec(nrec=nrec)
+Y = mapping.inverse_samples()
+Z = stats.norm.ppf(Y)
+
+fig, axes = plt.subplots(ncols=2, figsize=(8, 3))
+axes[0].scatter(*Y.T, c='k', s=15)
+axes[1].scatter(*Z.T, c='k', s=15)
+axes[0].set_xlim((0,1))
+axes[0].set_ylim((0,1))
+axes[0].set_aspect('equal')
+axes[1].set_aspect('equal')
+axes[0].set_title('In $[0,1]^2$ (CDF space)', fontsize='medium')
+axes[1].set_title('In $\\mathbb{R}^2$ (PDF space)', fontsize='medium')
+breathe(axes[0])
+breathe(axes[1])
+mktrans(fig, axes[0])
+mktrans(fig, axes[1])
+display(fig)
+```
 
 We make the final remark that this method of mapping $\Rp$ to $[0,1]^p$ by using the CDF does not work for any neural field. In our case, we use the fact that the distribution factorizes into $\rho(z_1, \cdots, z_p) = \rho_1(z_1) \cdots \rho_p(z_p)$, such that the components of $\vec{v}$ are independent. We can then define the "componentwise CDF" that relates to the total CDF via
 
