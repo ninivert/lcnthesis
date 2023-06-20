@@ -373,7 +373,7 @@ for i, rnn in enumerate([rnn_nocyc, rnn_cyc]):
 	axes[i, 1].set_ylabel('$z_2$')
 	im = axes[i, 1].pcolormesh(
 		rnn.F[:, 0].reshape(shape), rnn.F[:, 1].reshape(shape), rnn.I_rec(0, rnn.F[:, 0]).reshape(shape),
-		cmap='coolwarm', vmin=-2, vmax=2,
+		cmap=cmap_pan, vmin=-2, vmax=2,
 		rasterized=True  # enable rasterization to prevent 50Mo SVG files, lol
 	)
 	breathe(axes[i, 1])
@@ -385,7 +385,7 @@ for i, rnn in enumerate([rnn_nocyc, rnn_cyc]):
 	axes[i, 2].set_ylabel('$z_2$')
 	im = axes[i, 2].pcolormesh(
 		rnn.F[:, 0].reshape(shape), rnn.F[:, 1].reshape(shape), rnn.dh(0, rnn.F[:, 0]).reshape(shape),
-		cmap=cmap_pan, vmin=-2, vmax=2, shading='gouraud',
+		cmap='coolwarm', vmin=-2, vmax=2, shading='gouraud',
 		rasterized=True  # enable rasterization to prevent 50Mo SVG files, lol
 	)
 	breathe(axes[i, 2])

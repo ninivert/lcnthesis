@@ -217,7 +217,7 @@ What a mess ! We summarize the results from the Taylor expansion :
   The intuition behind this is that if the slope $c_1$ is stronger, then the bump of $\partial \phi$ becomes "more concentrated", which helps lower the eigenvalues associated with the pattern fixed points.
   The magnitude of the second order term $c_2$ only contributes to adding instability to the pattern fixed point, and stability to the zero fixed point, which leads to the conclusion it is best set to $c_2=0$ if we want the network to be stable at the pattern fixed points.
 
-[TODO FIG : might be nice to have a phase plot of $c_1, c_3$ and the value of the eigenvalue to illustrate the previous illustration]
+<!-- [TODO FIG : might be nice to have a phase plot of $c_1, c_3$ and the value of the eigenvalue to illustrate the previous illustration] -->
 
 The study of the Taylor expansion therefore instructs us that stability is improved when $\phi$ grows rapidly around $h=0$, and that even powers (symmetries of $\phi$ around the y-axis) deteriorate the stability of the pattern fixed point. This helps us understand why the logistic function $\phi(h)=\frac{1}{1+\mathrm{e}^{-h}}=\tfrac 12 + \tfrac h4 - \tfrac{h^3}{48} + \bO(h^5)$ has good convergence properties : we have that $c_1$ is large enough, $c_3$ is negative, and $c_2$ is zero.
 

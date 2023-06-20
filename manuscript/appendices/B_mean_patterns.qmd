@@ -2,6 +2,23 @@
 {{< include ../macros.tex >}}
 \def\A{\mathcal{A}}
 \def\B{\mathcal{B}}
+
+```{python}
+import matplotlib as mpl, matplotlib.pyplot as plt, matplotlib.colors as mplcolors, matplotlib.patheffects as pe, matplotlib.ticker as ticker
+import numpy as np
+import sys
+sys.path.append('../../notebooks')  # import neurodyn
+from neurodyn import *
+from matplotlib_tufte import *
+setup()
+
+mpl.use('svg')
+
+def mktrans(fig, ax):
+	"""Makes figure and axes transparent"""
+	fig.patch.set_facecolor('#FFFFFF00')
+	ax.patch.set_facecolor('#FFFFFF00')
+```
 :::
 
 # Binned sampling of populations and visualization of kernels {#sec-mean-patterns}
@@ -96,21 +113,70 @@ We have hereby shown that sampling neurons in the 2D embeddings, and binning the
 
 For the sake of illustration, let us compare the connectivity kernels obtained using different methods in @fig-kernels.
 
-* @fig-kernels-samplingR2 is the method described in this appendix, based on sampling $N$ neurons in the PDF space $\R^2$, applying the mapping on the obtained positions $\vec{z_i}$, the applying the binning (downsampling). We see, through the empty rows in the connectivity, that due to finite-$N$ effect, locations where $\rho$ is small are not represented, and, as a consequence, no neurons are present in the corresponding 1D bin. When this happens, we set these rows to zero.
-* To obtain @fig-kernels-gridR2, we make the approximation that the support of $\rho(z_1, z_2)$ is compact in $[-4,4]\times[-4,4]$, which of course is not true, but in the case of a Gaussian distribution this is a reasonable approximation, because $\CDF(4) \approx 0.999968$. Defining $\tilde \rho = \rho \circ S^{-1}$, the grid is numerically renormalized so that despite the compact support approximation, the probabilities sum up to one, and the connectivity matrix is modified so that the columns are weighed by $\tilde \rho(\beta)$:
+* @fig-kernels-1 is the method described in this appendix, based on sampling $N$ neurons in the PDF space $\R^2$, applying the mapping on the obtained positions $\vec{z_i}$, the applying the binning (downsampling). We see, through the empty rows in the connectivity, that due to finite-$N$ effect, locations where $\rho$ is small are not represented, and, as a consequence, no neurons are present in the corresponding 1D bin. When this happens, we set these rows to zero.
+* To obtain @fig-kernels-2, we make the approximation that the support of $\rho(z_1, z_2)$ is compact in $[-4,4]\times[-4,4]$, which of course is not true, but in the case of a Gaussian distribution this is a reasonable approximation, because $\CDF(4) \approx 0.999968$. Defining $\tilde \rho = \rho \circ S^{-1}$, the grid is numerically renormalized so that despite the compact support approximation, the probabilities sum up to one, and the connectivity matrix is modified so that the columns are weighed by $\tilde \rho(\beta)$:
   $$
   \tilde J_{\alpha\beta} = \tilde \rho(\beta) \sum_{\mu=1}^p \tilde F_{\mu \alpha} \tilde G_{\mu \beta}
   $$
-  We see that compared to @fig-kernels-samplingR2, using the grid method allows us to "sample" the locations where the density is small, and this results in less "whited-out" rows. The vertical bands of white correspond to the reweighing of the columns with $\tilde \rho(\beta)$.
-* Finally, @fig-kernels-grid01 shows the kernel obtained from applying the grid method in the CDF $[0,1]^2$ described in @sec-mapping-cdf. We see that the connectivity seems much more "uniform", because each point of the grid has "equal weight" in the CDF space.
+  We see that compared to @fig-kernels-1, using the grid method allows us to "sample" the locations where the density is small, and this results in less "whited-out" rows. The vertical bands of white correspond to the reweighing of the columns with $\tilde \rho(\beta)$.
+* Finally, @fig-kernels-3 shows the kernel obtained from applying the grid method in the CDF $[0,1]^2$ described in @sec-mapping-cdf. We see that the connectivity seems much more "uniform", because each point of the grid has "equal weight" in the CDF space.
 
-::: {#fig-kernels layout-ncol=3}
+```{python}
+#| label: fig-kernels
+#| fig-cap: Comparison of methods for computing the connectivity matrices $\tilde J_{\alpha\beta}$ approximating the kernel $\tilde w(\alpha,\beta)$.
+#| fig-subcap: 
+#|   - Sampling neurons $\vec{z_i} \sim \rho(z_1, z_2)$ and binning the corresponding mappings.
+#|   - Grid method in a subset of the PDF space $[-4,4]\times[-4,4] \subset \R^2$.
+#|   - Grid method in the CDF space $[0,1]^2$.
+#| layout-ncol: 3
+#| echo: false
 
-![Sampling neurons $\vec{z_i} \sim \rho(z_1, z_2)$ and binning the corresponding mappings](../chapters/figures/sampling_R2_nogrid_kernel.png){#fig-kernels-samplingR2}
+import matplotlib.colors as mplcolors
 
-![Grid method in a subset of the PDF space $[-4,4]\times[-4,4] \subset \R^2$](../chapters/figures/sampling_R2_kernel.png){#fig-kernels-gridR2}
+nrec = 5
 
-![Grid method in the CDF space $[0,1]^2$](../chapters/figures/sampling_R2_01_kernel.png){#fig-kernels-grid01}
+def plot_Jab(Jab):
+	amp = np.abs(J_ab).max()
+	fig, ax = plt.subplots(dpi=200)
+	im = ax.imshow(J_ab,
+		cmap='seismic', norm=mplcolors.TwoSlopeNorm(vcenter=0.0, vmin=-amp, vmax=amp),
+		extent=((0,1,0,1)), rasterized=True, origin='upper'
+		)
+	ax.set(
+		xlim=(0,1), ylim=(0,1), aspect='equal'
+	)
+	fig.colorbar(im)
+	mktrans(fig, ax)
+	breathe(ax)
+	return fig, ax
 
-(TODO) Comparison of methods for computing the connectivity matrices $\tilde J_{\alpha\beta}$ approximating the kernel $\tilde w(\alpha,\beta)$.
-:::
+J_ab = LowRankRNNParams.new_valentin(
+	p=2, N=100_000, phi=sigmoid, I_ext=zero, exclude_self_connections=False
+).to_binmapped(ZMapping.new_nrec(nrec=nrec)).to_dense().J
+fig, ax = plot_Jab(J_ab)
+display(fig)
+
+phi = sigmoid
+rho = lambda z: 1/np.sqrt(2*np.pi)*np.exp(-np.linalg.norm(z, axis=1)**2/2)
+z0 = np.random.default_rng(42).normal(loc=0, scale=1, size=1_000_000)
+phi_z0 = phi(z0)
+a, c = np.mean(phi_z0), np.var(phi_z0)
+def phi_tilde(z):
+	return (phi(z) - a) / c
+mapping = ZMapping.new_nrec(nrec=nrec)  # 4**n = 4**4 = 256 boxes along each axis
+Z = mapping.inverse_samples(bbox=Box(xmin=-4, xmax=4, ymin=-4, ymax=4), centered=True)
+J_ab = LowRankRNNParams(
+	phi=sigmoid, I_ext=zero, exclude_self_connections=False,
+	F=Z, G=phi_tilde(Z) * rho(Z)[:, None]/rho(Z).sum() * len(Z)
+).to_dense().J
+fig, ax = plot_Jab(J_ab)
+display(fig)
+
+mapping = ZMapping.new_nrec(nrec=nrec)
+V = mapping.inverse_samples()
+J_ab = LowRankRNNParams.new_sampled_valentin(
+	phi=sigmoid, mapping_samples=V, exclude_self_connections=False, I_ext=zero
+).to_dense().J
+fig, ax = plot_Jab(J_ab)
+display(fig)
+```
