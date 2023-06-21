@@ -9,7 +9,7 @@
 <meta name="author" content="Nicole Vadot">
 <meta name="author" content="(Supervisor) Valentin Schmutz">
 <meta name="author" content="(Supervisor, Director of LCN) Wulfram Gerstner">
-<meta name="dcterms.date" content="2023-06-21">
+<meta name="dcterms.date" content="2023-06-22">
 
 <title>Equivalence of neural field dynamics with different embedding dimensionality</title>
 <style>
@@ -99,23 +99,7 @@ ul.task-list li input[type="checkbox"] {
       <a href="./">Equivalence of neural field dynamics with different embedding dimensionality</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ninivert/lcnthesis" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="./Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
-            Download PDF
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="./Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
-            Download ePub
-            </a>
-          </li>
-      </ul>
-    </div>
+    <a href="./Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -161,6 +145,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./chapters/5_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -225,7 +215,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 21, 2023</p>
+      <p class="date">June 22, 2023</p>
     </div>
   </div>
   
@@ -236,7 +226,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p><strong>Abstract</strong></p>
-<p>Early recordings of cat’s somatosensory and visual cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons. The columnar organization of the cortex motivated the design of spatially structured models of neural population dynamics, namely neural field models, where the spatial dimensions corresponded to the two dimensions of the cortical sheet. Later it has been shown that not only the physical position of the neurons can be used to parametrize their function, but also their location in more abstract “embedding spaces”, for example a space of “neuron celltypes”.</p>
+<p>Early recordings of cats’ somatosensory and visual cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons. The columnar organization of the cortex motivated the design of spatially structured models of neural population dynamics, namely neural field models, where the spatial dimensions corresponded to the two dimensions of the cortical sheet. Later it has been shown that not only the physical position of the neurons can be used to parametrize their function, but also their location in more abstract “embedding spaces”, for example a space of “neuron celltypes”.</p>
 <p>Decoupling the embedding space from the physical position of neurons on the cortical sheet begs the question of uniqueness of the embedding space. Given an embedding space and neural dynamics thereon, are there other embedding spaces which can express the same behavior? Is there a “natural” choice for the embedding space?</p>
 <p>In this work, we show that the answer to the second question is highly nontrivial because given some neural dynamics, we can find multiple equivalent embedding spaces in different dimensions. We illustrate this using a toy example of a 2 (or 3)-dimensional embedding that is mapped to an equivalent 1-dimensional embedding. This is done by applying measurable bijective mappings <span class="math inline">\(S : [0,1]^2 \mapsto [0,1]\)</span>, which lead, as we show, to well-behaved numerical simulation schemes. In this, we exploit the key concept of “locality”, which expresses the property of (possibly fractal) neural fields, in which neighbouring neurons in the embedding space <em>tend</em> to have similar functions.</p>
 <div class="quarto-figure quarto-figure-center">

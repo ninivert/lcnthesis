@@ -114,23 +114,7 @@ div.csl-indent {
       <a href="../">Equivalence of neural field dynamics with different embedding dimensionality</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ninivert/lcnthesis" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
-            Download PDF
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
-            Download ePub
-            </a>
-          </li>
-      </ul>
-    </div>
+    <a href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -176,6 +160,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="../chapters/5_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -305,7 +295,7 @@ $$ -->
 <ul>
 <li><a href="#fig-kernels-1">Figure&nbsp;<span>B.1 (a)</span></a> is the method described in this appendix, based on sampling <span class="math inline">\(N\)</span> neurons in the PDF space <span class="math inline">\(\mathbb R^2\)</span>, applying the mapping on the obtained positions <span class="math inline">\(\boldsymbol{z_i}\)</span>, and finally applying the binning (this is coarse-graining). We see, through the empty rows in the connectivity, that due to finite-<span class="math inline">\(N\)</span> effects, locations where <span class="math inline">\(\rho\)</span> is small are not represented, and, as a consequence, no neurons are present in the corresponding 1D bin. When this happens, we set these rows to zero.</li>
 <li>To obtain <a href="#fig-kernels-2">Figure&nbsp;<span>B.1 (b)</span></a>, we make the approximation that the support of <span class="math inline">\(\rho(z_1, z_2)\)</span> is compact in <span class="math inline">\([-4,4]\times[-4,4]\)</span>, which of course is not true, but in the case of a Gaussian distribution this is a reasonable approximation, because <span class="math inline">\(\mathrm{CDF}(4) \approx 0.999968\)</span>. Defining <span class="math inline">\(\tilde \rho = \rho \circ S^{-1}\)</span>, the grid is numerically renormalized so that despite the compact support approximation, the probabilities sum up to one, and the connectivity matrix is modified so that the columns are weighed by <span class="math inline">\(\tilde \rho(\beta)\)</span>: <span class="math display">\[
-\tilde J_{\alpha\beta} = \tilde \rho(\beta) \sum_{\mu=1}^p \tilde F_{\mu \alpha} \tilde G_{\mu \beta}
+\tilde J_{\alpha\beta} = \tilde \rho(\beta) \sum_{\mu=1}^p \tilde F_{\mu \alpha} \tilde G_{\mu \beta}.
 \]</span> We see that compared to <a href="#fig-kernels-1">Figure&nbsp;<span>B.1 (a)</span></a>, using the grid method allows us to “sample” the locations where the density is small, and this results in less “whited-out” <em>rows</em>. Still, vertical bands of very fade colour correspond to the reweighing of the <em>columns</em> where <span class="math inline">\(\tilde \rho(\beta)\)</span> is small.</li>
 <li>Finally, <a href="#fig-kernels-3">Figure&nbsp;<span>B.1 (c)</span></a> shows the kernel obtained from applying the grid method in the CDF space <span class="math inline">\([0,1]^2\)</span>, as described in <a href="../chapters/2_neural_fields.html#sec-mapping-cdf"><span>Section&nbsp;2.5</span></a>. We see that the connectivity seems much more “uniform”, because each point of the grid has “equal weight” in the CDF space.</li>
 </ul>
@@ -351,7 +341,7 @@ $$ -->
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>We are glossing over the fact that <span class="math inline">\(S^n : [0,1]^2 \mapsto [0,1]\)</span>, but the positions <span class="math inline">\(\boldsymbol{z_i} \in \mathbb R^2\)</span>. In the code, we can deal with these by either applying the inverse CDF (as described in <a href="../chapters/2_neural_fields.html#sec-mapping-cdf"><span>Section&nbsp;2.5</span></a>), or considering a bounding box <span class="math inline">\([\min_i(z_{1,i}), \max_i(z_{1,i})] \times [\min_i(z_{2,i}), \max_i(z_{2,i})]\)</span> of the sampled points, which is then rescaled to <span class="math inline">\([0,1] \times [0,1]\)</span> (see implementation for <a href="https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L24"><code>Box</code></a>). Both approaches are equivalent, in the sense that they give rise to the same dynamics as <span class="math inline">\(n\)</span> becomes large, although the obtained connectivity matrix <span class="math inline">\(\tilde J_{\alpha\beta}\)</span> may not be the identical.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>We are glossing over the fact that <span class="math inline">\(S^n : [0,1]^2 \mapsto [0,1]\)</span>, but the positions <span class="math inline">\(\boldsymbol{z_i} \in \mathbb R^2\)</span>. In the code, we can deal with this by either applying the inverse CDF (as described in <a href="../chapters/2_neural_fields.html#sec-mapping-cdf"><span>Section&nbsp;2.5</span></a>), or considering a bounding box <span class="math inline">\([\min_i(z_{1,i}), \max_i(z_{1,i})] \times [\min_i(z_{2,i}), \max_i(z_{2,i})]\)</span> of the sampled points, which is then rescaled to <span class="math inline">\([0,1] \times [0,1]\)</span> (see implementation for <a href="https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L24"><code>Box</code></a>). Both approaches are equivalent, in the sense that they give rise to the same dynamics as <span class="math inline">\(n\)</span> becomes large, although the obtained connectivity matrix <span class="math inline">\(\tilde J_{\alpha\beta}\)</span> may not be the identical.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>We note that if we exclude self-connections (as is done in <span class="citation" data-cites="schmutz2023convergence"><a href="../references.html#ref-schmutz2023convergence" role="doc-biblioref">[1]</a></span>), that is we redefine <span class="math inline">\(J_{ij} \mapsto (1 - \mathrm{Id}_{ij}) J_{ij}\)</span>, then we can show that <span class="math inline">\(\tilde J_{\alpha\beta}\)</span> becomes <span class="math display">\[
   \tilde J_{\alpha\beta} = \frac{|\mathcal{B}|}{\sum_{\beta^\prime} |\mathcal{B}^\prime|} \sum_{\mu=1}^p \tilde F_{\mu\alpha} \tilde G_{\mu\beta} - \mathrm{Id}_{\alpha\beta} \frac{|\mathcal{B}|}{\sum_{\beta^\prime} |\mathcal{B}^\prime|} \sum_{\mu=1}^p \sum_{i \in \mathcal{A}} \frac{F_{\mu i}}{|\mathcal{A}|} \frac{G_{\mu i}}{|\mathcal{A}|}.
   \]</span> We see that the correction is still of order <span class="math inline">\(\mathcal{O}(\tfrac{1}{N})\)</span>, and therefore can be again ignored in the <span class="math inline">\(N \to \infty\)</span> limit.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>

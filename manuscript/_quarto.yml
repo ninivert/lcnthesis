@@ -3,6 +3,8 @@ project:
   output-dir: ../docs
   preview: 
     port: 4200
+  post-render:
+    - postprocess.sh
 
 book:
   title: "Equivalence of neural field dynamics with different embedding dimensionality"
@@ -19,12 +21,13 @@ book:
     - chapters/3_mappings.qmd
     - chapters/4_locality.qmd
     - chapters/5_conclusion.qmd
+    - acknowledgements.qmd
     - references.qmd
   appendices:
     - appendices/A_fixed_points.qmd
     - appendices/B_mean_patterns.qmd
   repo-url: https://github.com/ninivert/lcnthesis
-  downloads: [pdf, epub]
+  downloads: pdf
   language: en
 
 bibliography:

@@ -1,0 +1,7 @@
+# Acknowledgements {.unnumbered}
+
+I would like to express my most sincere gratitude towards Dr. Valentin Schmutz, who supervised this thesis and provided key insights on the theoretical aspects, as well as invaluable feedback during the editing process.
+
+My gratitude extends to the members of the LCN directed by Prof. Wulfram Gerstner, for their helpful comments during the midterm presentation, and for maintaining a welcoming atmosphere in the lab. Additionally, I would like to thank Louis Henry Pezon for his patience in sharing his knowledge on low-rank networks.
+
+Thank you to my girlfriend Solène, for her unwavering love and support, and for teaching me about the Z-mapping, which proved to be essential in the writing of this thesis. To my friends and family for encouraging me and being there when I needed it most.

@@ -115,23 +115,7 @@ div.csl-indent {
       <a href="../">Equivalence of neural field dynamics with different embedding dimensionality</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ninivert/lcnthesis" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
-            Download PDF
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
-            Download ePub
-            </a>
-          </li>
-      </ul>
-    </div>
+    <a href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -177,6 +161,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="../chapters/5_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -294,7 +284,7 @@ Nicole again: our Z-mapping is not defined in the same way as the Lebesgue curve
 <p><span class="math display">\[
 \partial_t h_U(\boldsymbol{v}, t) = -h_U(\boldsymbol{v}, t) + \int_{[0,1]^2} w(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(\boldsymbol{u}, t)) \mathrm d\boldsymbol{u}.
 \]</span></p>
-<p>Therefore, if <span class="math inline">\(h_U(\boldsymbol{v}, t)\)</span> solves the neural field equation in <span class="math inline">\([0,1]^2\)</span>, then <span class="math inline">\(\tilde h(t) = h_U(t) \circ S^{-1}\)</span> solves the equivalent neural field equation in <span class="math inline">\([0,1]\)</span>. The same reasoning applies in reverse: if <span class="math inline">\(\tilde h(\alpha, t)\)</span> solves the neural field equation in <span class="math inline">\([0,1]\)</span>, then <span class="math inline">\(h_U(t) = \tilde h \circ S\)</span> solves the neural field in <span class="math inline">\([0,1]^2\)</span>.</p>
+<p>Therefore, if <span class="math inline">\(h_U(\boldsymbol{v}, t)\)</span> solves the neural field equation in <span class="math inline">\([0,1]^2\)</span>, then <span class="math inline">\(\tilde h(\alpha, t) = (h_U(\cdot, t) \circ S^{-1})(\alpha)\)</span> solves the equivalent neural field equation in <span class="math inline">\([0,1]\)</span>. The same reasoning applies in reverse: if <span class="math inline">\(\tilde h(\alpha, t)\)</span> solves the neural field equation in <span class="math inline">\([0,1]\)</span>, then <span class="math inline">\(h_U(\boldsymbol{v}, t) = (\tilde h(\cdot, t) \circ S)(\boldsymbol{v})\)</span> solves the neural field in <span class="math inline">\([0,1]^2\)</span>.</p>
 <p>We do not address the question of well-posedness of the neural field equations in this thesis; for proofs of the well-posedness of neural field equations, we refer the reader to <span class="citation" data-cites="faugeras2008absolute faugeras2009persistent veltz2009localglobal"><a href="../references.html#ref-faugeras2008absolute" role="doc-biblioref">[2]</a>–<a href="../references.html#ref-veltz2009localglobal" role="doc-biblioref">[4]</a></span>.</p>
 </section>
 <section id="locality" class="level2" data-number="4.2">
@@ -343,24 +333,24 @@ In some sense, having the constraint that the mapping traces a path in the bound
 <div id="fig-distance-2d-1d" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="4_locality_files/figure-html/fig-distance-2d-1d-output-1.svg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.1: Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope <span class="math inline">\(\sqrt 2\)</span>.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.1: Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope <span class="math inline">\(\sqrt 2\)</span>. This figure is generated using <span class="math inline">\(n=6\)</span>.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>For control, we also demonstrate that the random mapping has no locality: there is no correlation between the positions in 1D and the positions in 2D. Both Column and Z-mappings show a clear trend, the distances in 2D are correlated to the distances in 1D. The notable difference is that distances for the Column mapping seem to “oscillate” wildly, while the Z-mapping seems much more regular and matches the straight line more closely.</p>
-<p>With this view, we understand that the coarse-grained performed in <a href="3_mappings.html#sec-coarse-graining"><span>Section&nbsp;3.4</span></a> was making use of that fact that locality helps by bounding the variation inside of each averaged bin. Therefore, we would like for mathematically formulate that on average, the variation inside of each bin before coarse-graining is small. <a href="#fig-sketch-binned-variation">Figure&nbsp;<span>4.2</span></a> gives an intuition of this. Even though the <span class="math inline">\([0,1]\)</span> embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.</p>
+<p>With this view, we understand that the coarse-graining performed in <a href="3_mappings.html#sec-coarse-graining"><span>Section&nbsp;3.4</span></a> makes use of that fact that locality helps by bounding the variation inside of each averaged bin. Therefore, we would like for mathematically formulate that on average, the variation inside of each bin before coarse-graining is small. <a href="#fig-sketch-binned-variation">Figure&nbsp;<span>4.2</span></a> gives an intuition of this. Even though the <span class="math inline">\([0,1]\)</span> embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.</p>
 <div id="fig-sketch-binned-variation" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="figures/fig-variation.svg" class="img-fluid figure-img" width="600"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.2: Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions. 4 bins are shown with a different colour. The horizontal line represents the average activity in the bin. From top to bottom: random, column, Z mapping.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.2: Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions. 4 bins are each shown with a different colour. The horizontal line represents the average activity in each bin. From top to bottom: Random, Column, Z-mapping.</figcaption>
 </figure>
 </div>
 <p>Given <span class="math inline">\(n\)</span>, let us define the average binned variation as the maximum difference of the 2D positions associated to segment populations in the same bin of size <span class="math inline">\(2^{-n}\)</span>:</p>
 <p><span id="eq-Vn"><span class="math display">\[
 V_n(S^{-1}) = \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \lVert{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}\rVert_1
 \tag{4.2}\]</span></span></p>
-<p>The definition of locality can essentially be seen as a weakened version of continuity, or “continuity on average”. A continuous function <span class="math inline">\(f\)</span> evidently verifies <span class="math inline">\(V_n(f) \xrightarrow{n \to \infty} 0\)</span>, since small neighbourhoods are mapped to small neighbourhoods. The reverse is obviously not true, since for instance the metric <span class="math inline">\(V_n\)</span> vanishes when applied to a step function, which is only piecewise continuous.</p>
+<p>The definition of locality can essentially be seen as a weakened version of continuity, or “continuity on average”. A continuous function <span class="math inline">\(f\)</span> evidently verifies <span class="math inline">\(V_n(f) \xrightarrow{n \to \infty} 0\)</span>, since small neighbourhoods are mapped to small neighbourhoods. The reverse is not true, since for instance the metric <span class="math inline">\(V_n\)</span> vanishes when applied to a step function, which is only piecewise continuous.</p>
 <!--
 variation inside the bins, strong version. basically, we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
 
@@ -382,13 +372,13 @@ $$
 Valentin: For the master thesis, it is ok to not mention it.
 -->
 <!-- TODONE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This is adressed by a footnote in @sec-mappings-binary -->
-<p>Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is <span class="math inline">\(V_n\)</span> vanishes a <span class="math inline">\(n\to\infty\)</span> for local mappings, whereas <span class="math inline">\(V_n\)</span> is lower bounded by a constant for non-local mappings. <a href="#fig-vnum">Figure&nbsp;<span>4.3</span></a> shows this is indeed the case, rejoice!</p>
+<p>Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is <span class="math inline">\(V_n\)</span> vanishes when <span class="math inline">\(n\to\infty\)</span> for local mappings, whereas <span class="math inline">\(V_n\)</span> should be lower bounded by a constant for non-local mappings. <a href="#fig-vnum">Figure&nbsp;<span>4.3</span></a> shows this is indeed the case, rejoice!</p>
 <div class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div id="fig-vnum" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="4_locality_files/figure-html/fig-vnum-output-1.svg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.3: (Numerator of the) average binned variation as a function of <span class="math inline">\(n\)</span>. The Z-mapping has a growth slower than the upper bound <span class="math inline">\(2\times 2^n\)</span>.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.3: (Numerator of the) average binned variation as a function of <span class="math inline">\(n\)</span>. The Z-mapping has a growth slower than the upper bound <span class="math inline">\(2\times 2^n\)</span>. The Column mapping grows at the same rate as the upper bound, and the Random mapping saturates it.</figcaption>
 </figure>
 </div>
 </div>
@@ -416,17 +406,17 @@ Valentin: For the master thesis, it is ok to not mention it.
 <p><span class="math display">\[
 \begin{aligned}
 Z^{-1}_1(\alpha) &amp;= 0.\underbrace{i_{n-1} i_{n-3} \cdots i_1}_\text{$n/2$ bits} b_n b_{n+2} \cdots b_{2m-1} \\
-Z^{-1}_2(\alpha) &amp;= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_0}_\text{$n/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}
+Z^{-1}_2(\alpha) &amp;= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_0}_\text{$n/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}.
 \end{aligned}
 \]</span></p>
-<p>If <span class="math inline">\(n\)</span> is odd, we have :</p>
+<p>If <span class="math inline">\(n\)</span> is odd, we have:</p>
 <p><span class="math display">\[
 \begin{aligned}
 Z^{-1}_1(\alpha) &amp;= 0.\underbrace{i_{n-1} i_{n-3} \cdots i_0}_\text{$(n+1)/2$ bits} b_n b_{n+2} \cdots b_{2m-1} \\
-Z^{-1}_2(\alpha) &amp;= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_1}_\text{$(n-1)/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}
+Z^{-1}_2(\alpha) &amp;= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_1}_\text{$(n-1)/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}.
 \end{aligned}
 \]</span></p>
-<p>We only consider even <span class="math inline">\(n\)</span> in the following, as the proof remains very similar.</p>
+<p>We only consider even <span class="math inline">\(n\)</span> in the following, as the proof for the latter remains very similar.</p>
 <p>The core of the proof relies on the fact the first <span class="math inline">\(n/2\)</span> bits of the difference of the inverses cancel out when computing the average binned variation.</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -466,7 +456,7 @@ C^{-1}_2(\alpha) &amp;= 0.b_{m+1} b_{m+2} \cdots b_{2m}.
 &amp;&gt; \frac 12
 \end{aligned}
 \]</span></p>
-<p>Putting both together, we can write :</p>
+<p>Putting both together, we can write:</p>
 <p><span class="math display">\[
 \begin{aligned}
 V_n(C^{-1}) &amp;= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)| + |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)| \\
@@ -476,12 +466,12 @@ V_n(C^{-1}) &amp;= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in
     \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)|\\
     &amp;+ \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)|
 \end{aligned}\\
-&amp;\geq \frac 12 + \mathcal{O}(2^{-n})
+&amp;\geq \frac 12 + \mathcal{O}(2^{-n}).
 \end{aligned}
 \]</span></p>
 <p>Therefore we have found a lower bound, which proves the average binned variation does not converge to zero (if it converges at all).</p>
 <p><span class="math display">\[
-V_n(C^{-1}) &gt; \frac 12 \implies \lim_{n \to \infty} V_n &gt; \frac 12
+V_n(C^{-1}) &gt; \frac 12 \implies \lim_{n \to \infty} V_n(C^{-1}) &gt; \frac 12
 \]</span></p>
 </section>
 </section>
@@ -491,8 +481,8 @@ V_n(C^{-1}) &gt; \frac 12 \implies \lim_{n \to \infty} V_n &gt; \frac 12
 <!-- In @sec-coarse-graining we discussed how we approximate the fractal mappings numerically, and introduced the coarse-graining procedure, in which we average the populations in segments of length $2^{-n}$, and end up with $2^n$ "binned" segment populations, compared to the $4^n$ we started with.
 
 By doing this, we were able to numerically estimate the integral on the one-dimensional fractal space, and showed that local mappings exhibited the property that they conserved the dynamics between two spaces of different dimensions. @sec-Vn introduced the analytical metric $V_n$ of this locality. Assuming that $V_n \xrightarrow{n\to\infty} 0$, is this enough to prove that the numerical estimation of the integral goes to its analytical value? -->
-<p>In <a href="#sec-Vn"><span>Section&nbsp;4.2.1</span></a>, we have introduced the average variation metric <span class="math inline">\(V_n\)</span>. Assuming that <span class="math inline">\(V_n \xrightarrow{n\to\infty} 0\)</span> (which expresses the locality property), does this imply that the numerical estimation of the integral in the neural field equation in <span class="math inline">\([0,1]\)</span> converges to its true value?</p>
-<p>The intuition behind the proof of convergence is that the variation, coming from the coarse-graining, inside each numerical bin vanishes as we increase the number of iterations <span class="math inline">\(n\)</span>, even though the the neural field <span class="math inline">\(\tilde{h}\)</span> and the connectivity kernel <span class="math inline">\(\tilde{w}\)</span> become fractal.</p>
+<p>In <a href="#sec-Vn"><span>Section&nbsp;4.2.1</span></a>, we have introduced the average variation metric <span class="math inline">\(V_n\)</span>. Assuming that <span class="math inline">\(V_n(S^{-1}) \xrightarrow{n\to\infty} 0\)</span> (which expresses the locality property), does this imply that the numerical estimation of the integral in the neural field equation in <span class="math inline">\([0,1]\)</span> converges to its true value?</p>
+<p>The intuition behind the proof of convergence is that the variation, coming from the coarse-graining, inside each numerical bin vanishes as we increase the number of iterations <span class="math inline">\(n\)</span>, even though the neural field <span class="math inline">\(\tilde{h}\)</span> and the connectivity kernel <span class="math inline">\(\tilde{w}\)</span> become fractal.</p>
 <p>We define the one-dimensional field on the grid:</p>
 <p><span class="math display">\[
 \tilde h_i(t) = \tilde h(\tfrac{i-1}{2^n}, t) = \tilde h(\beta_i, t),\,\beta_i=\tfrac{i-1}{2^n},\,i\in\{1,\cdots,2^n\}.
@@ -518,20 +508,20 @@ By doing this, we were able to numerically estimate the integral on the one-dime
 \begin{aligned}
 |\mathrm{NI}_n - \mathrm{AI}| &amp;\leq \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \Delta(\beta) \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \right| \\
 \text{where}\ \Delta(\beta) &amp;= \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t))\\
-&amp;= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t))
+&amp;= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)).
 \end{aligned}
 \]</span></p>
-<p>The main source of variance inside the integrand <span class="math inline">\(\Delta(\beta)\)</span> is the term <span class="math inline">\(S^{-1}\)</span>, since <span class="math inline">\(w_U\)</span> and <span class="math inline">\(h_U\)</span> are “nice” functions. We express this regularity by the added assumption that <span class="math inline">\(w_U(\alpha, \boldsymbol{u}) \phi(h_U(t, \boldsymbol{u}))\)</span> is Lipschitz in <span class="math inline">\(\boldsymbol{u}\)</span>, with Lipschitz constant <span class="math inline">\(L(\alpha)\)</span>, and <span class="math inline">\(\lVert{\alpha}\rVert\)</span> the corresponding norm on <span class="math inline">\([0,1]^2\)</span>. We argue this is not a strong assumption, because this is just expressing the regularity of the integrand in the integral over <span class="math inline">\([0,1]^2\)</span>.</p>
-<p>A more pragmatic justification of this is to notice that the recurrent currents are expressed as:</p>
+<p>The main source of variance inside the integrand <span class="math inline">\(\Delta(\beta)\)</span> is the term <span class="math inline">\(S^{-1}\)</span>, since <span class="math inline">\(w_U\)</span> and <span class="math inline">\(h_U\)</span> are “nice” functions. We express this regularity by the added assumption that <span class="math inline">\(w_U(\alpha, \boldsymbol{u}) \phi(h_U(t, \boldsymbol{u}))\)</span> is Lipschitz in <span class="math inline">\(\boldsymbol{u}\)</span>, with Lipschitz constant <span class="math inline">\(L(\alpha)\)</span>, and <span class="math inline">\(\lVert{\alpha}\rVert\)</span> is the corresponding norm on <span class="math inline">\([0,1]^2\)</span>. We argue this is not a strong assumption, because this is just expressing the regularity of the integrand in the integral over <span class="math inline">\([0,1]^2\)</span>.</p>
+<p>A more pragmatic justification of this is to notice that the “density of recurrent currents” is expressed as:</p>
 <p><span class="math display">\[
-I^\text{rec}_U(\boldsymbol{v}) = w_U(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(t, \boldsymbol{u})),
+I^\text{rec}_U(\boldsymbol{v}, \boldsymbol{u}) = w_U(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(t, \boldsymbol{u})),
 \]</span></p>
-<p>and that in <a href="2_neural_fields.html#sec-cycling-nf"><span>Section&nbsp;2.4</span></a>, numerical simulations showed that <span class="math inline">\(I^\text{rec}_U(\boldsymbol{v})\)</span> is a well-behaved function.</p>
+<p>and that in <a href="2_neural_fields.html#sec-cycling-nf"><span>Section&nbsp;2.4</span></a>, numerical simulations showed that <span class="math inline">\(I^\text{rec}_U(\boldsymbol{v}, \boldsymbol{u})\)</span> (the integrand of the integral on <span class="math inline">\([0,1]^2\)</span>) is a well-behaved function.</p>
 <p>Applying the Lipschitz assumption yields the following inequality on the integrand:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \Delta(\beta) &amp;= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \\
-&amp;\leq L(\alpha) \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert
+&amp;\leq L(\alpha) \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert.
 \end{aligned}
 \]</span></p>
 <p>We now make use of our intuition of “locality”: points close in <span class="math inline">\([0,1]\)</span> should be (on average) mapped to points close in <span class="math inline">\([0,1]^2\)</span>. Therefore, taking the sup inside each <span class="math inline">\(2^{-n}\)</span> segment does not introduce a too large error.</p>
@@ -541,7 +531,7 @@ I^\text{rec}_U(\boldsymbol{v}) = w_U(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(t,
 &amp;\leq L(\alpha) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert \left[\lambda \circ S^{-1}\right](\mathrm d\beta^\prime) \right| \\
 &amp;= L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert \\
 &amp;\leq L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \lVert{S^{-1}(\beta^\prime) - S^{-1}(\beta)}\rVert \\
-&amp;= L(\alpha) V_n \\
+&amp;= L(\alpha) V_n(S^{-1}) \\
 &amp;\xrightarrow{n \to \infty} 0
 \end{aligned}
 \]</span></p>
@@ -554,10 +544,10 @@ I^\text{rec}_U(\boldsymbol{v}) = w_U(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(t,
 <p><span class="math display">\[
 \begin{aligned}
 Z_p^n(\boldsymbol{v^{(n)}}) &amp;= \sum_{k=1}^{n} \sum_{\mu=1}^p b^{\mu}_k 2^{-(p(k-1)+\mu)} \\
-&amp;= 0.b^1_1 b^2_1 \cdots b^p_1 b^1_2 b^2_2 \cdots b^p_{n-1} b^1_n b^2_n \cdots b^p_n
+&amp;= 0.b^1_1 b^2_1 \cdots b^p_1 b^1_2 b^2_2 \cdots b^p_{n-1} b^1_n b^2_n \cdots b^p_n.
 \end{aligned}
 \]</span></p>
-<p>The same arguments apply to show that this generalized Z-mapping converges pointwise to <span class="math inline">\(Z_p\)</span>, has the locality property, and that <span class="math inline">\(V_n(Z_p) \xrightarrow{n\to\infty} 0\)</span>. Then the proof of convergence, albeit more laborious, can be repeated using the same procedure.</p>
+<p>The same arguments apply to show that this generalized Z-mapping converges pointwise to <span class="math inline">\(Z_p\)</span>, has the locality property, and that <span class="math inline">\(V_n(Z_p^{-1}) \xrightarrow{n\to\infty} 0\)</span>. Then the proof of convergence, albeit more laborious, can be repeated using the same procedure.</p>
 
 
 <div id="refs" class="references csl-bib-body" role="list" style="display: none">

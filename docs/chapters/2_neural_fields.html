@@ -115,23 +115,7 @@ div.csl-indent {
       <a href="../">Equivalence of neural field dynamics with different embedding dimensionality</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ninivert/lcnthesis" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
-            Download PDF
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
-            Download ePub
-            </a>
-          </li>
-      </ul>
-    </div>
+    <a href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -177,6 +161,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="../chapters/5_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -269,11 +259,11 @@ div.csl-indent {
 <h2 data-number="2.1" class="anchored" data-anchor-id="sec-networks-of-neurons-to-neural-fields"><span class="header-section-number">2.1</span> Networks of neurons to neural fields</h2>
 <section id="sec-low-rank-network" class="level3" data-number="2.1.1">
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="sec-low-rank-network"><span class="header-section-number">2.1.1</span> Low-rank networks of neurons</h3>
-<p>The toy model we introduce is an instance of a low-rank neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) <span class="math inline">\(p\)</span>. We write the connectivity matrix as</p>
+<p>The toy model we introduce is an instance of a low-rank neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) <span class="math inline">\(p\)</span>. We write the connectivity matrix as follows:</p>
 <p><span id="eq-lowrankj"><span class="math display">\[
 J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu i} G_{\mu j}.
 \tag{2.1}\]</span></span></p>
-<p>The geometric view of these networks is that the recurrent currents lie in a <span class="math inline">\(p\)</span>-dimensional subspace of <span class="math inline">\(\mathbb R^N\)</span> spanned by the vectors <span class="math inline">\(\{\boldsymbol{F_1}, \cdots, \boldsymbol{F_p}\}\)</span> (where <span class="math inline">\(\boldsymbol{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})\)</span>), which therefore define a “natural” linear embedding (in the sense of <span class="citation" data-cites="JazOst21"><a href="../references.html#ref-JazOst21" role="doc-biblioref">[1]</a></span>) of the neural population activity.</p>
+<p>The geometric view of these networks is that the recurrent currents lie in a <span class="math inline">\(p\)</span>-dimensional subspace of <span class="math inline">\(\mathbb R^N\)</span> spanned by the vectors <span class="math inline">\(\{\boldsymbol{F_1}, \cdots, \boldsymbol{F_\mu},\cdots, \boldsymbol{F_p}\}\)</span> (where each <span class="math inline">\(\boldsymbol{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})\)</span>), which therefore define a “natural” linear embedding (in the sense of <span class="citation" data-cites="JazOst21"><a href="../references.html#ref-JazOst21" role="doc-biblioref">[1]</a></span>) of the neural population activity.</p>
 <p>Recalling the notation from the introduction, the <span class="math inline">\(h_i(t)\)</span> are neuron potentials (with initial condition <span class="math inline">\(h_i(0)\)</span>), <span class="math inline">\(\phi : \mathbb R\mapsto \mathbb R^+\)</span> is the monotonic increasing activation function, and we write the evolution equation for this network of neurons:</p>
 <p><span id="eq-lowrank-evolution"><span class="math display">\[
 \dot h_i(t) = \underbrace{-h_i(t)}_\text{exponential decay} + \underbrace{\frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} F_{\mu i} G_{\mu j} \phi(h_j(t))}_\text{recurrent current $I^\text{rec}_i(t)$}.
@@ -359,7 +349,7 @@ $$
 <section id="numerical-aspects-of-simulating-a-low-rank-network-of-neurons" class="level4" data-number="2.1.3.1">
 <h4 data-number="2.1.3.1" class="anchored" data-anchor-id="numerical-aspects-of-simulating-a-low-rank-network-of-neurons"><span class="header-section-number">2.1.3.1</span> Numerical aspects of simulating a low-rank network of neurons</h4>
 <p>We first demonstrate what happens with numerical simulations in the simple case of <span class="math inline">\(p=1\)</span>. We generate a network of 50,000 neurons, where each neuron samples a one-dimensional Gaussian to get its position in the embedding. The function <span class="math inline">\(\tilde \phi\)</span> is computed by rescaling <span class="math inline">\(\phi\)</span> with the numerically computed mean and variance.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>Instead of numerically computing the full connectivity matrix <span class="math inline">\(J\)</span> (which would require storing <span class="math inline">\(N^2 = 50,000^2 \sim 10^{10}\)</span> entries, taking about 40 GiB if we use 32-bit floating point numbers… yikes !), we take advantage of its low-rank structure to compute recurrent currents, therefore only storing <span class="math inline">\(p \times N\)</span> numbers instead of <span class="math inline">\(N^2\)</span>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>Instead of numerically computing the full connectivity matrix <span class="math inline">\(J\)</span> (which would require storing <span class="math inline">\(N^2 = 50,000^2 \sim 10^{10}\)</span> entries, taking about 40 GiB if we use 32-bit floating point numbers… yikes!), we take advantage of its low-rank structure to compute recurrent currents, therefore only storing <span class="math inline">\(p \times N\)</span> numbers instead of <span class="math inline">\(N^2\)</span>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 </section>
 <section id="naive-and-natural-embeddings-for-p1" class="level4" data-number="2.1.3.2">
 <h4 data-number="2.1.3.2" class="anchored" data-anchor-id="naive-and-natural-embeddings-for-p1"><span class="header-section-number">2.1.3.2</span> Naive and natural embeddings for <span class="math inline">\(p=1\)</span></h4>
@@ -395,7 +385,7 @@ Simulation of the Gaussian network of neurons with $p=1$. Every neuron is repres
 <figcaption class="figure-caption">Figure&nbsp;2.3: Simulation of the Gaussian network of neurons with <span class="math inline">\(p=2\)</span>. Every neuron is represented by a dot, of which the height represents its activity level. Projections are shown by gray points.</figcaption>
 </figure>
 </div>
-<p>We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here, the network coincidentally converged again to the first pattern fixed point. The network is in the <span class="math inline">\(\mu=1\)</span> pattern, which we can see because the neural field is constant in the <span class="math inline">\(z_2\)</span> direction. We write the fixed point <span class="math inline">\(h^\star(z_1, z_2, t) = z_1\)</span>. The neural field is now written as</p>
+<p>We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here, the network coincidentally converged again to the first pattern fixed point. We see this because the neural field is constant in the <span class="math inline">\(z_2\)</span> direction. We write the fixed point <span class="math inline">\(h^\star(z_1, z_2, t) = z_1\)</span>. The neural field is now written as</p>
 <p><span id="eq-nf-gaussian-p2"><span class="math display">\[
 \begin{aligned}
 \partial_t h(z_1, z_2, t) &amp;= -h(z_1, z_2, t)\\
@@ -418,7 +408,7 @@ w(\boldsymbol{z}, \boldsymbol{y}) &amp;= \sum_{\mu=1}^p z_\mu \tilde\phi(y_\mu) 
 <p>Now that we have introduced the analytical neural fields, let us discuss how we can simulate them numerically, more specifically how we can estimate the <span class="math inline">\(p\)</span>-dimensional integral.</p>
 <section id="sec-mc" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="sec-mc"><span class="header-section-number">2.2.1</span> Sampling method (Monte Carlo integration)</h3>
-<p>Due to the formulation of the neural field weighed by a probability distribution <span class="math inline">\(\rho(y_1, \cdots, y_p)\)</span>, a natural way to estimate the integral is by Monte Carlo integration. The essence of this method is to use the Central Limit Theorem, where we take <span class="math inline">\(N\)</span> independent samples <span class="math inline">\(\boldsymbol{y_i} = (y_{1i}, \cdots, y_{pi})\)</span> from the distribution <span class="math inline">\(\rho\)</span>, and use them to estimate the integrand.</p>
+<p>Due to the formulation of the neural field weighed by a probability distribution <span class="math inline">\(\rho(y_1, \cdots, y_p)\)</span>, a natural way to estimate the integral is by Monte Carlo integration. The essence of this method is to use the Central Limit Theorem, where we take <span class="math inline">\(N\)</span> independent samples <span class="math inline">\(\boldsymbol{y_i} = (y_{1i}, \cdots, y_{pi})\)</span> from the distribution <span class="math inline">\(\rho\)</span>, and use them to estimate the integrand <span class="math inline">\(I(\boldsymbol{z}, \boldsymbol{y})\)</span>.</p>
 <p><span id="eq-mc"><span class="math display">\[
 \begin{aligned}
 \mathcal{I}(\boldsymbol{z}) &amp;= \int_{\mathbb R^p} \underbrace{w(\boldsymbol{z}, \boldsymbol{y}) \phi(h(\boldsymbol{y}, t))}_{I(\boldsymbol{z}, \boldsymbol{y})} \rho(\mathrm d\boldsymbol{y}) \\
@@ -446,12 +436,12 @@ One small nuance we should add, is that strictly speaking, Monte-Carlo integrati
 <p>We now introduce some tools that will help us understand the toy model. We stress that in general, other neural field models might not have this luxury, and that we only make use of these tools to help explain the dynamics of the simulated neural fields. The overlaps and projections introduced here are only computed from the results of the simulation (see <a href="https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_overlap.py"><code>overlap.py</code></a> in the source code).</p>
 <section id="overlap-variables" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="overlap-variables"><span class="header-section-number">2.3.1</span> Overlap variables</h3>
-<p>Overlap variables in continuous time variables were introduced by <span class="citation" data-cites="Gerstner_1992"><a href="../references.html#ref-Gerstner_1992" role="doc-biblioref">[4]</a></span> to study spiking networks models of associative memory (Hopfield-type networks), which can be seen as a low-rank network with discrete spatial structure instead of our continuous <span class="math inline">\(\boldsymbol{z}\)</span>. The overlap variables measure the correlation between the state of the network (the value of the potential <span class="math inline">\(h(\boldsymbol{z}, t)\)</span> at each point in space) and the pattern fixed point.</p>
+<p>Overlap variables in continuous time were introduced by <span class="citation" data-cites="Gerstner_1992"><a href="../references.html#ref-Gerstner_1992" role="doc-biblioref">[4]</a></span> to study spiking networks models of associative memory (Hopfield-type networks), which can be seen as a low-rank network with discrete spatial structure instead of our continuous <span class="math inline">\(\boldsymbol{z}\)</span>. The overlap variables measure the correlation between the state of the network (the value of the potential <span class="math inline">\(h(\boldsymbol{z}, t)\)</span> at each point in space) and the pattern fixed point.</p>
 <p>For the network for neurons, we write the overlap with the pattern <span class="math inline">\(\mu\)</span> as</p>
 <p><span id="eq-overlap"><span class="math display">\[
 \begin{aligned}
 m_\mu(t) &amp;= \frac 1N \sum_{i=1}^N \tilde \phi(z_{\mu i}) \phi(h_i(t)) \\
-&amp;\xrightarrow{N \to \infty} \int_{\mathbb R^p} \tilde \phi(z_\mu) \phi(h(\boldsymbol{z}, t)) \mathcal{N}^p(\mathrm d\boldsymbol{z})
+&amp;\xrightarrow{N \to \infty} \int_{\mathbb R^p} \tilde \phi(z_\mu) \phi(h(\boldsymbol{z}, t)) \mathcal{N}^p(\mathrm d\boldsymbol{z}).
 \end{aligned}
 \tag{2.8}\]</span></span></p>
 <p>We note that similarly to <span class="citation" data-cites="Gerstner_1992"><a href="../references.html#ref-Gerstner_1992" role="doc-biblioref">[4]</a></span>, we can write the dynamics of the neural field in terms of the overlap variables:</p>
@@ -469,7 +459,7 @@ m_\mu(t) &amp;= \frac 1N \sum_{i=1}^N \tilde \phi(z_{\mu i}) \phi(h_i(t)) \\
 \tag{2.10}\]</span></span></p>
 <p>we can decompose the neural field onto the basis of patterns (mathematically, the patterns form an orthonormal basis of functions):</p>
 <p><span class="math display">\[
-h(\boldsymbol{z}, t) = h^\perp(\boldsymbol{z}, t) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu
+h(\boldsymbol{z}, t) = h^\perp(\boldsymbol{z}, t) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu.
 \]</span></p>
 <p>The orthonormal component <span class="math inline">\(h^\perp(\boldsymbol{z}, t)\)</span> is independent of the rest of the system and decays exponentially. Then, the equations of evolution for the projections are given by the following closed system:</p>
 <p><span class="math display">\[

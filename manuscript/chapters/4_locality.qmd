@@ -74,7 +74,7 @@ $$
 \partial_t h_U(\vec v, t) = -h_U(\vec v, t) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(\vec u, t)) \d \vec u.
 $$
 
-Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(t) = h_U(t) \circ S^{-1}$ solves the equivalent neural field equation in $[0,1]$. The same reasoning applies in reverse: if $\tilde h(\alpha, t)$ solves the neural field equation in $[0,1]$, then $h_U(t) = \tilde h \circ S$ solves the neural field in $[0,1]^2$.
+Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(\alpha, t) = (h_U(\cdot, t) \circ S^{-1})(\alpha)$ solves the equivalent neural field equation in $[0,1]$. The same reasoning applies in reverse: if $\tilde h(\alpha, t)$ solves the neural field equation in $[0,1]$, then $h_U(\vec v, t) = (\tilde h(\cdot, t) \circ S)(\vec v)$ solves the neural field in $[0,1]^2$.
 
 We do not address the question of well-posedness of the neural field equations in this thesis; for proofs of the well-posedness of neural field equations, we refer the reader to [@faugeras2008absolute;@faugeras2009persistent;@veltz2009localglobal].
 
@@ -122,7 +122,7 @@ The previous chapter gave the intuition that local mappings map populations clos
 
 ```{python}
 #| label: fig-distance-2d-1d
-#| fig-cap: Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope $\sqrt 2$.
+#| fig-cap: Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope $\sqrt 2$. This figure is generated using $n=6$.
 #| echo: false
 
 mapping_clss = {
@@ -161,9 +161,9 @@ display(fig)
 For control, we also demonstrate that the random mapping has no locality: there is no correlation between the positions in 1D and the positions in 2D.
 Both Column and Z-mappings show a clear trend, the distances in 2D are correlated to the distances in 1D. The notable difference is that distances for the Column mapping seem to "oscillate" wildly, while the Z-mapping seems much more regular and matches the straight line more closely.
 
-With this view, we understand that the coarse-grained performed in @sec-coarse-graining was making use of that fact that locality helps by bounding the variation inside of each averaged bin. Therefore, we would like for mathematically formulate that on average, the variation inside of each bin before coarse-graining is small. @fig-sketch-binned-variation gives an intuition of this. Even though the $[0,1]$ embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.
+With this view, we understand that the coarse-graining performed in @sec-coarse-graining makes use of that fact that locality helps by bounding the variation inside of each averaged bin. Therefore, we would like for mathematically formulate that on average, the variation inside of each bin before coarse-graining is small. @fig-sketch-binned-variation gives an intuition of this. Even though the $[0,1]$ embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.
 
-![Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions. 4 bins are shown with a different colour. The horizontal line represents the average activity in the bin. From top to bottom: random, column, Z mapping.](figures/fig-variation.svg){width=600px #fig-sketch-binned-variation}
+![Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions. 4 bins are each shown with a different colour. The horizontal line represents the average activity in each bin. From top to bottom: Random, Column, Z-mapping.](figures/fig-variation.svg){width=600px #fig-sketch-binned-variation}
 
 Given $n$, let us define the average binned variation as the maximum difference of the 2D positions associated to segment populations in the same bin of size $2^{-n}$:
 
@@ -171,7 +171,7 @@ $$
 V_n(S^{-1}) = \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1
 $$ {#eq-Vn}
 
-The definition of locality can essentially be seen as a weakened version of continuity, or "continuity on average". A continuous function $f$ evidently verifies $V_n(f) \xrightarrow{n \to \infty} 0$, since small neighbourhoods are mapped to small neighbourhoods. The reverse is obviously not true, since for instance the metric $V_n$ vanishes when applied to a step function, which is only piecewise continuous.
+The definition of locality can essentially be seen as a weakened version of continuity, or "continuity on average". A continuous function $f$ evidently verifies $V_n(f) \xrightarrow{n \to \infty} 0$, since small neighbourhoods are mapped to small neighbourhoods. The reverse is not true, since for instance the metric $V_n$ vanishes when applied to a step function, which is only piecewise continuous.
 
 <!--
 variation inside the bins, strong version. basically, we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
@@ -197,11 +197,11 @@ Valentin: For the master thesis, it is ok to not mention it.
 
 <!-- TODONE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This is adressed by a footnote in @sec-mappings-binary -->
 
-Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is $V_n$ vanishes a $n\to\infty$ for local mappings, whereas $V_n$ is lower bounded by a constant for non-local mappings. @fig-vnum shows this is indeed the case, rejoice!
+Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is $V_n$ vanishes when $n\to\infty$ for local mappings, whereas $V_n$ should be lower bounded by a constant for non-local mappings. @fig-vnum shows this is indeed the case, rejoice!
 
 ```{python}
 #| label: fig-vnum
-#| fig-cap: (Numerator of the) average binned variation as a function of $n$. The Z-mapping has a growth slower than the upper bound $2\times 2^n$.
+#| fig-cap: (Numerator of the) average binned variation as a function of $n$. The Z-mapping has a growth slower than the upper bound $2\times 2^n$. The Column mapping grows at the same rate as the upper bound, and the Random mapping saturates it.
 #| echo: false
 
 def V(F: np.ndarray) -> np.ndarray:
@@ -268,20 +268,20 @@ Let us consider the Z-mapping, and the two terms compositing its inverse. In the
 $$
 \begin{aligned}
 Z^{-1}_1(\alpha) &= 0.\underbrace{i_{n-1} i_{n-3} \cdots i_1}_\text{$n/2$ bits} b_n b_{n+2} \cdots b_{2m-1} \\
-Z^{-1}_2(\alpha) &= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_0}_\text{$n/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}
+Z^{-1}_2(\alpha) &= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_0}_\text{$n/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}.
 \end{aligned}
 $$
 
-If $n$ is odd, we have :
+If $n$ is odd, we have:
 
 $$
 \begin{aligned}
 Z^{-1}_1(\alpha) &= 0.\underbrace{i_{n-1} i_{n-3} \cdots i_0}_\text{$(n+1)/2$ bits} b_n b_{n+2} \cdots b_{2m-1} \\
-Z^{-1}_2(\alpha) &= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_1}_\text{$(n-1)/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}
+Z^{-1}_2(\alpha) &= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_1}_\text{$(n-1)/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}.
 \end{aligned}
 $$
 
-We only consider even $n$ in the following, as the proof remains very similar.
+We only consider even $n$ in the following, as the proof for the latter remains very similar.
 
 The core of the proof relies on the fact the first $n/2$ bits of the difference of the inverses cancel out when computing the average binned variation.
 
@@ -331,7 +331,7 @@ $$
 \end{aligned}
 $$
 
-Putting both together, we can write :
+Putting both together, we can write:
 
 $$
 \begin{aligned}
@@ -342,14 +342,14 @@ V_n(C^{-1}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \le
 	\sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)|\\
 	&+ \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)|
 \end{aligned}\\
-&\geq \frac 12 + \bO(2^{-n})
+&\geq \frac 12 + \bO(2^{-n}).
 \end{aligned}
 $$
 
 Therefore we have found a lower bound, which proves the average binned variation does not converge to zero (if it converges at all).
 
 $$
-V_n(C^{-1}) > \frac 12 \implies \lim_{n \to \infty} V_n > \frac 12
+V_n(C^{-1}) > \frac 12 \implies \lim_{n \to \infty} V_n(C^{-1}) > \frac 12
 $$
 
 ## Numerical convergence of the finite-$n$ estimations
@@ -358,9 +358,9 @@ $$
 
 By doing this, we were able to numerically estimate the integral on the one-dimensional fractal space, and showed that local mappings exhibited the property that they conserved the dynamics between two spaces of different dimensions. @sec-Vn introduced the analytical metric $V_n$ of this locality. Assuming that $V_n \xrightarrow{n\to\infty} 0$, is this enough to prove that the numerical estimation of the integral goes to its analytical value? -->
 
-In @sec-Vn, we have introduced the average variation metric $V_n$. Assuming that $V_n \xrightarrow{n\to\infty} 0$ (which expresses the locality property), does this imply that the numerical estimation of the integral in the neural field equation in $[0,1]$ converges to its true value?
+In @sec-Vn, we have introduced the average variation metric $V_n$. Assuming that $V_n(S^{-1}) \xrightarrow{n\to\infty} 0$ (which expresses the locality property), does this imply that the numerical estimation of the integral in the neural field equation in $[0,1]$ converges to its true value?
 
-The intuition behind the proof of convergence is that the variation, coming from the coarse-graining, inside each numerical bin vanishes as we increase the number of iterations $n$, even though the the neural field $\tilde{h}$ and the connectivity kernel $\tilde{w}$ become fractal.
+The intuition behind the proof of convergence is that the variation, coming from the coarse-graining, inside each numerical bin vanishes as we increase the number of iterations $n$, even though the neural field $\tilde{h}$ and the connectivity kernel $\tilde{w}$ become fractal.
 
 We define the one-dimensional field on the grid:
 
@@ -395,26 +395,26 @@ $$
 \begin{aligned}
 |\mathrm{NI}_n - \mathrm{AI}| &\leq \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \Delta(\beta) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
 \text{where}\ \Delta(\beta) &= \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t))\\
-&= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t))
+&= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)).
 \end{aligned}
 $$
 
-The main source of variance inside the integrand $\Delta(\beta)$ is the term $S^{-1}$, since $w_U$ and $h_U$ are "nice" functions. We express this regularity by the added assumption that $w_U(\alpha, \vec u) \phi(h_U(t, \vec u))$ is Lipschitz in $\vec u$, with Lipschitz constant $L(\alpha)$, and $\norm{\alpha}$ the corresponding norm on $[0,1]^2$. We argue this is not a strong assumption, because this is just expressing the regularity of the integrand in the integral over $[0,1]^2$.
+The main source of variance inside the integrand $\Delta(\beta)$ is the term $S^{-1}$, since $w_U$ and $h_U$ are "nice" functions. We express this regularity by the added assumption that $w_U(\alpha, \vec u) \phi(h_U(t, \vec u))$ is Lipschitz in $\vec u$, with Lipschitz constant $L(\alpha)$, and $\norm{\alpha}$ is the corresponding norm on $[0,1]^2$. We argue this is not a strong assumption, because this is just expressing the regularity of the integrand in the integral over $[0,1]^2$.
 
-A more pragmatic justification of this is to notice that the recurrent currents are expressed as:
+A more pragmatic justification of this is to notice that the "density of recurrent currents" is expressed as:
 
 $$
-I^\text{rec}_U(\vec v) = w_U(\vec v, \vec u) \phi(h_U(t, \vec u)),
+I^\text{rec}_U(\vec v, \vec u) = w_U(\vec v, \vec u) \phi(h_U(t, \vec u)),
 $$
 
-and that in @sec-cycling-nf, numerical simulations showed that $I^\text{rec}_U(\vec v)$ is a well-behaved function.
+and that in @sec-cycling-nf, numerical simulations showed that $I^\text{rec}_U(\vec v, \vec u)$ (the integrand of the integral on $[0,1]^2$) is a well-behaved function.
 
 Applying the Lipschitz assumption yields the following inequality on the integrand:
 
 $$
 \begin{aligned}
 \Delta(\beta) &= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \\
-&\leq L(\alpha) \norm{S^{-1}(\beta_i) - S^{-1}(\beta)}
+&\leq L(\alpha) \norm{S^{-1}(\beta_i) - S^{-1}(\beta)}.
 \end{aligned}
 $$
 
@@ -426,7 +426,7 @@ $$
 &\leq L(\alpha) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \left[\lambda \circ S^{-1}\right](\d \beta^\prime) \right| \\
 &= L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \\
 &\leq L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\beta^\prime) - S^{-1}(\beta)} \\
-&= L(\alpha) V_n \\
+&= L(\alpha) V_n(S^{-1}) \\
 &\xrightarrow{n \to \infty} 0
 \end{aligned}
 $$
@@ -442,8 +442,8 @@ Let us give a generalization of the Z-mapping. Defining $\vec{v^{(n)}} = (v^{(n)
 $$
 \begin{aligned}
 Z_p^n(\vec{v^{(n)}}) &= \sum_{k=1}^{n} \sum_{\mu=1}^p b^{\mu}_k 2^{-(p(k-1)+\mu)} \\
-&= 0.b^1_1 b^2_1 \cdots b^p_1 b^1_2 b^2_2 \cdots b^p_{n-1} b^1_n b^2_n \cdots b^p_n
+&= 0.b^1_1 b^2_1 \cdots b^p_1 b^1_2 b^2_2 \cdots b^p_{n-1} b^1_n b^2_n \cdots b^p_n.
 \end{aligned}
 $$
 
-The same arguments apply to show that this generalized Z-mapping converges pointwise to $Z_p$, has the locality property, and that $V_n(Z_p) \xrightarrow{n\to\infty} 0$. Then the proof of convergence, albeit more laborious, can be repeated using the same procedure.
+The same arguments apply to show that this generalized Z-mapping converges pointwise to $Z_p$, has the locality property, and that $V_n(Z_p^{-1}) \xrightarrow{n\to\infty} 0$. Then the proof of convergence, albeit more laborious, can be repeated using the same procedure.

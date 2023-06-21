@@ -27,13 +27,13 @@ In this chapter, we introduce a toy model so that we can later study the mapping
 
 ### Low-rank networks of neurons {#sec-low-rank-network}
 
-The toy model we introduce is an instance of a low-rank neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) $p$. We write the connectivity matrix as
+The toy model we introduce is an instance of a low-rank neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) $p$. We write the connectivity matrix as follows:
 
 $$
 J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu i} G_{\mu j}.
 $$ {#eq-lowrankj}
 
-The geometric view of these networks is that the recurrent currents lie in a $p$-dimensional subspace of $\R^N$ spanned by the vectors $\{\vec{F_1}, \cdots, \vec{F_p}\}$ (where $\vec{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})$), which therefore define a "natural" linear embedding (in the sense of @JazOst21) of the neural population activity.
+The geometric view of these networks is that the recurrent currents lie in a $p$-dimensional subspace of $\R^N$ spanned by the vectors $\{\vec{F_1}, \cdots, \vec{F_\mu},\cdots, \vec{F_p}\}$ (where each $\vec{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})$), which therefore define a "natural" linear embedding (in the sense of @JazOst21) of the neural population activity.
 
 Recalling the notation from the introduction, the $h_i(t)$ are neuron potentials (with initial condition $h_i(0)$), $\phi : \R \mapsto \R^+$ is the monotonic increasing activation function, and we write the evolution equation for this network of neurons:
 
@@ -161,7 +161,7 @@ In the introduction, we introduced the convergence of a network of neurons to a 
 
 We first demonstrate what happens with numerical simulations in the simple case of $p=1$. We generate a network of 50,000 neurons, where each neuron samples a one-dimensional Gaussian to get its position in the embedding. The function $\tilde \phi$ is computed by rescaling $\phi$ with the numerically computed mean and variance.[^code1]
 
-Instead of numerically computing the full connectivity matrix $J$ (which would require storing $N^2 = 50,000^2 \sim 10^{10}$ entries, taking about 40 GiB if we use 32-bit floating point numbers... yikes !), we take advantage of its low-rank structure to compute recurrent currents, therefore only storing $p \times N$ numbers instead of $N^2$.[^code2]
+Instead of numerically computing the full connectivity matrix $J$ (which would require storing $N^2 = 50,000^2 \sim 10^{10}$ entries, taking about 40 GiB if we use 32-bit floating point numbers... yikes!), we take advantage of its low-rank structure to compute recurrent currents, therefore only storing $p \times N$ numbers instead of $N^2$.[^code2]
 
 [^code1]: In the source code, implementation for this can be found under `notebooks/neurodyn/_rnn.py`, in the method [`LowRankRNNParams.new_sampled_valentin`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L154).
 
@@ -235,7 +235,7 @@ display(Image('figures/embedding_p=2.mp4-2.jpg'))
 ```
 :::
 
-We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here, the network coincidentally converged again to the first pattern fixed point. The network is in the $\mu=1$ pattern, which we can see because the neural field is constant in the $z_2$ direction. We write the fixed point $h^\star(z_1, z_2, t) = z_1$. The neural field is now written as
+We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here, the network coincidentally converged again to the first pattern fixed point. We see this because the neural field is constant in the $z_2$ direction. We write the fixed point $h^\star(z_1, z_2, t) = z_1$. The neural field is now written as
 
 $$
 \begin{aligned}
@@ -261,7 +261,7 @@ Now that we have introduced the analytical neural fields, let us discuss how we 
 ### Sampling method (Monte Carlo integration) {#sec-mc}
 
 Due to the formulation of the neural field weighed by a probability distribution $\rho(y_1, \cdots, y_p)$, a natural way to estimate the integral is by Monte Carlo integration.
-The essence of this method is to use the Central Limit Theorem, where we take $N$ independent samples $\vec{y_i} = (y_{1i}, \cdots, y_{pi})$ from the distribution $\rho$, and use them to estimate the integrand.
+The essence of this method is to use the Central Limit Theorem, where we take $N$ independent samples $\vec{y_i} = (y_{1i}, \cdots, y_{pi})$ from the distribution $\rho$, and use them to estimate the integrand $I(\vec z, \vec y)$.
 
 $$
 \begin{aligned}
@@ -294,14 +294,14 @@ We now introduce some tools that will help us understand the toy model. We stres
 
 ### Overlap variables
 
-Overlap variables in continuous time variables were introduced by @Gerstner_1992 to study spiking networks models of associative memory (Hopfield-type networks), which can be seen as a low-rank network with discrete spatial structure instead of our continuous $\vec{z}$. The overlap variables measure the correlation between the state of the network (the value of the potential $h(\vec z, t)$ at each point in space) and the pattern fixed point.
+Overlap variables in continuous time were introduced by @Gerstner_1992 to study spiking networks models of associative memory (Hopfield-type networks), which can be seen as a low-rank network with discrete spatial structure instead of our continuous $\vec{z}$. The overlap variables measure the correlation between the state of the network (the value of the potential $h(\vec z, t)$ at each point in space) and the pattern fixed point.
 
 For the network for neurons, we write the overlap with the pattern $\mu$ as
 
 $$
 \begin{aligned}
 m_\mu(t) &= \frac 1N \sum_{i=1}^N \tilde \phi(z_{\mu i}) \phi(h_i(t)) \\
-&\xrightarrow{N \to \infty} \int_{\Rp} \tilde \phi(z_\mu) \phi(h(\vec z, t)) \mathcal{N}^p(\d \vec z)
+&\xrightarrow{N \to \infty} \int_{\Rp} \tilde \phi(z_\mu) \phi(h(\vec z, t)) \mathcal{N}^p(\d \vec z).
 \end{aligned}
 $$ {#eq-overlap}
 
@@ -326,7 +326,7 @@ $$ {#eq-kappa}
 we can decompose the neural field onto the basis of patterns (mathematically, the patterns form an orthonormal basis of functions):
 
 $$
-h(\vec z, t) = h^\perp(\vec z, t) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu
+h(\vec z, t) = h^\perp(\vec z, t) + \sum_{\mu=1}^p \kappa_\mu(t) z_\mu.
 $$
 
 The orthonormal component $h^\perp(\vec z, t)$ is independent of the rest of the system and decays exponentially. Then, the equations of evolution for the projections are given by the following closed system:
