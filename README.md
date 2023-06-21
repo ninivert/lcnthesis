@@ -2,7 +2,7 @@
 
 **View online**: [ninivert.github.io/lcnthesis/](https://ninivert.github.io/lcnthesis/)
 
-**Download PDF**: [here](https://github.com/ninivert/lcnthesis/blob/master/docs/Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf)
+**Download PDF**: [here](https://ninivert.github.io/lcnthesis/Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf)
 
 **Abstract**
 
