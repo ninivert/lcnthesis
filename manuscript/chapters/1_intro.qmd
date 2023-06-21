@@ -29,7 +29,7 @@ Our results suggest that the notion of (spatial) dimensionality in neural field 
 
 Let us now give a short introduction to the mathematical theory of neural fields. Neural field equations emerge from the spatial structure of networks of rate neurons (or Poisson spiking neurons [@Ger95;@CheDua19]) when the number of neurons $N$ becomes large. Positions $\vec z_i \in \Rp$ are attributed to each neuron, where $\Rp$ is the *embedding space*. Each neuron has a potential $h_i(t)$ that evolves in time, and the weight with which the neurons interact with each other is given by the entries of the connectivity matrix $J_{ij} \in \R^{N \times N}$. Additionally, the activation function $\phi(h)$ describes the firing rate of a given neuron with potential $h$. Then, the product $J_{ij} \phi(h_j)$ gives the *recurrent current* of neuron $j$ on neuron $i$.
 
-![(TODO add phi, add z instead of xi, arrow only in one direction) Every neuron in a rate neural network has a position in the $p$-dimensional embedding space](figures/neural_field_discrete.png)
+![Every neuron in a rate neural network has a position in the $p$-dimensional embedding space](figures/fig-rnn.svg){width=500px}
 
 If the embedding is well-chosen,[^1] the connectivity matrix $J_{ij}$ approaches a connectivity kernel $w(\vec y, \vec z)$ as $N \rightarrow \infty$, and neurons close in the embedding space tend to have similar potentials, such that we can write the continuous *neural field* $h(\vec z, t)$ of neuron potentials. Before we write down the neural field equation which describes how the field evolves in time, we need to introduce the neuron density $\rho(\vec z)$, which measures the number of neurons per unit volume of the embedding space. The neural field equation writes:
 
@@ -38,8 +38,8 @@ If the embedding is well-chosen,[^1] the connectivity matrix $J_{ij}$ approaches
 $$
 \partial_t h(\vec z, t) = -h(\vec z, t) + \int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\mathrm d \vec y).
 $$ {#eq-nf}
-
-![(TODO add phi, add z instead of xi) The connectivity kernel defines the influence between localized neural populations in the embedding space](figures/connectivity_kernel.png)
+<!-- 
+![(TODO add phi, add z instead of xi) The connectivity kernel defines the influence between localized neural populations in the embedding space](figures/connectivity_kernel.png) -->
 
 ## Motivation for a one-dimensional neural field
 

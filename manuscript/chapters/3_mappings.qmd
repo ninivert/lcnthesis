@@ -47,7 +47,7 @@ So far, we have not considered that the populations are embedded in some abstrac
 
 [^poplocation]: Formally, we would write the cumulative sum $K_a = \sum_{b=1}^a p_b$. Then, we have $\alpha \in [K_{a-1}, K_{a})$ and $\beta \in [K_{b-1}, K_{b})$. We abusively wrote $J^0_{ab}$ since all neurons in each population are identical, therefore we can index into the connectivity $J^0_{ij}$ with the population indices $a,b$ instead of neuron indices $i,j$.
 
-![(TODO) Embedding of the population dynamics in $[0,1]$](figures/photo_2023-06-10_19-26-49.jpg){#fig-popdynamics-01}
+![Embedding of the population dynamics in $[0,1]$](figures/fig-multipop.svg){width=500px #fig-popdynamics-01}
 
 Defining the neural field $H(\alpha, t) = H_a(t)$, we can write a "neural field equation" on the $[0,1]$ space.
 
@@ -71,7 +71,7 @@ In light of the toy model presented in @sec-nf, we can reinterpret the density $
 
 Additionally, the notion of population dynamics helps give another interpretation of the grid integration method given in @sec-gridmethod. When we discretize the $[0,1]^2$ space, we are effectively performing a coarse-graining approximation and simulating a finite number of populations. For every bin localized by $(v_1, v_2)$, we are sampling the connectivity kernel $w_U(\cdot, (v_1, v_2))$ and 2D neural field $h_U((v_1, v_2), t)$ (see @fig-grid-sampling). In the rest of the chapter, we refer to these 2D bins as "square populations", and to the corresponding 1D bins obtained by the mapping $S$ as "segment populations".
 
-![(TODO, reorder args of $w_U$) Every point of the grid effectively performs coarse-graining, and defines a point where we sample the connectivity kernel $w_U$ and the 2D neural field $h_U$](figures/photo_2023-06-10_21-13-23.jpg){#fig-grid-sampling}
+![Every point of the grid effectively performs coarse-graining, and defines a point where we sample the connectivity kernel $w_U$ and the 2D neural field $h_U$](figures/fig-smallsquare.svg){width=500px #fig-grid-sampling}
 
 For a finite number of populations $N_\text{pop}$, applying a bijective mapping $S$ will evidently give an equivalent neural field, because the connectivity matrix is permutation-invariant, and the resulting connectivity matrix $J_{S(a),S(b)}$ will therefore give equivalent dynamics. As we increase $N_\text{pop}$ by taking finer and finer grids, the image of the grids defines a sequence of mappings $S^n: \text{grid in}\ [0,1]^2 \mapsto \text{grid in}\ [0,1]$, which we aim to study in the rest of this chapter. The main question is:
 
@@ -142,7 +142,7 @@ Perhaps these examples are a bit too naive, and we need to look for more complex
 
 Since in the composition $w_U \circ S^{-1}$ we work with the inverse mapping, we contextualize our study by first considering the types of functions from $[0,1]$ into $[0,1]^2$. We have already established that there is no homeomorphism between those spaces, and need to relax one of the conditions. Since bijections are functions that are both injective and surjective, we can represent Netto's theorem as a 3-way Venn diagram in @fig-venn. -->
 
-![(TODO) Venn diagram reprensenting the properties of functions $[0,1] \mapsto [0,1]^2$ which are allowed by Netto's theorem.](figures/photo_2023-06-18_21-32-45.jpg){width=400px #fig-venn}
+![Venn diagram reprensenting the properties of functions $[0,1] \mapsto [0,1]^2$ which are allowed by Netto's theorem.](figures/fig-venn.svg){width=400px #fig-venn}
 
 <!--
 * Cantor functions are bijections $[0,1] \mapsto [0,1]^2$. However, they are not continuous, and thereby break the continuity of the kernel.
@@ -184,7 +184,7 @@ $$ {#eq-trunc}
 The intuition and illustration @fig-recurse-binary behind this expansion is that we locate each component by recursively splitting the segment in two sub-segments of equal length. At every step, taking the left or right segments defines the sequence of binary digits.
 <!-- Then combine the bits of $v^{(n)}_1$ and $v^{(n)}_2$ to get the position in the $[0,1]^2$ embedding. -->
 
-![(TODO rename bins to segments) Splitting $[0,1]$ recursively gives the binary bit expansion of $v_1$](figures/photo_2023-06-10_17-21-28.jpg){#fig-recurse-binary}
+![Splitting $[0,1]$ recursively with the indicator function gives the binary bit expansion of $v_1$](figures/fig-binary.svg){width=400px #fig-recurse-binary}
 
 We define the mapping $S^n$ that takes the $n$-bit truncations $v^{(n)}_1$ and $v^{(n)}_2$ as input, and outputs a $2n$ bit truncation $\alpha^{(n)}$ of $\alpha=S(v_1, v_2)$, where $S$ is the $n\to\infty$ pointwise limit of the sequence $S^n$ (when the sequence $S^n$ converges).
 
@@ -551,7 +551,7 @@ In some sense, we would like to "take into account" the fact that a mapping of t
 
 We do this using "coarse-graining", in which we average $2^n$ consecutive segment populations, each of length $4^{-n}$, in order to obtain $2^n$ coarse-grained segment populations, each of length $2^{-n}$. This operation is illustrated in @fig-averaging.
 
-![(TODO) Averaging $2^n$ of the $4^n$ segments populations of $S^n$ results in the $2^n$ segments populations](figures/photo_2023-06-13_12-15-32.jpg){width=400px #fig-averaging}
+![Averaging $2^n$ of the $4^n$ segments populations of $S^n$ results in the $2^n$ segments populations](figures/fig-cg.svg){width=400px #fig-averaging}
 
 Without coarse-graining, the mesh size along each spatial dimension is $2^{-n}$ in 2D, but directly applying the mapping results instead in a mesh size of $4^{-n}$ in 1D, which is much finer than the $2^{-n}$ per dimension. However, after coarse-graining, the effective mesh size in 1D becomes $2^{-n}$, which matches the 2D mesh size. Therefore, we are are not compensating the reduction of dimensionality by an increase in the numerical resolution.
 
