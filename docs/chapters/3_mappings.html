@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Equivalence of neural field dynamics with different embedding dimensionality - 3&nbsp; Mapping neural fields to lower-dimensional embeddings</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/4_locality.html" rel="next">
+<link href="../chapters/2_neural_fields.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/3_mappings.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Mapping neural fields to lower-dimensional embeddings</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Equivalence of neural field dynamics with different embedding dimensionality</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/ninivert/lcnthesis" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf">
+              <i class="bi bi-bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.epub">
+              <i class="bi bi-bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cover</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/1_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/2_neural_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Neural field toy model and simulations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/3_mappings.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Mapping neural fields to lower-dimensional embeddings</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/4_locality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Locality and numerical convergence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/5_conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A_fixed_points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Fixed point study in the network of neurons</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B_mean_patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Binned sampling of populations and visualization of kernels</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#population-dynamics-an-introductory-example-of-a-1d-embedding" id="toc-population-dynamics-an-introductory-example-of-a-1d-embedding" class="nav-link active" data-scroll-target="#population-dynamics-an-introductory-example-of-a-1d-embedding"><span class="header-section-number">3.1</span> Population dynamics: an introductory example of a 1D embedding</a>
+  <ul>
+  <li><a href="#embedding-a-finite-number-of-populations-in-01" id="toc-embedding-a-finite-number-of-populations-in-01" class="nav-link" data-scroll-target="#embedding-a-finite-number-of-populations-in-01"><span class="header-section-number">3.1.1</span> Embedding a finite number of populations in <span class="math inline">\([0,1]\)</span></a></li>
+  <li><a href="#population-dynamics-with-an-infinite-number-of-populations" id="toc-population-dynamics-with-an-infinite-number-of-populations" class="nav-link" data-scroll-target="#population-dynamics-with-an-infinite-number-of-populations"><span class="header-section-number">3.1.2</span> Population dynamics with an infinite number of populations</a></li>
+  </ul></li>
+  <li><a href="#defining-the-neural-field-in-01" id="toc-defining-the-neural-field-in-01" class="nav-link" data-scroll-target="#defining-the-neural-field-in-01"><span class="header-section-number">3.2</span> Defining the neural field in <span class="math inline">\([0,1]\)</span></a></li>
+  <li><a href="#mappings-of-012-to-01" id="toc-mappings-of-012-to-01" class="nav-link" data-scroll-target="#mappings-of-012-to-01"><span class="header-section-number">3.3</span> Mappings of <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span></a>
+  <ul>
+  <li><a href="#the-search-for-differentiable-mappings" id="toc-the-search-for-differentiable-mappings" class="nav-link" data-scroll-target="#the-search-for-differentiable-mappings"><span class="header-section-number">3.3.1</span> The search for differentiable mappings</a></li>
+  <li><a href="#sequences-of-bijective-mappings" id="toc-sequences-of-bijective-mappings" class="nav-link" data-scroll-target="#sequences-of-bijective-mappings"><span class="header-section-number">3.3.2</span> Sequences of bijective mappings</a>
+  <ul class="collapse">
+  <li><a href="#sec-mappings-binary" id="toc-sec-mappings-binary" class="nav-link" data-scroll-target="#sec-mappings-binary"><span class="header-section-number">3.3.2.1</span> Mappings as binary expansions</a></li>
+  <li><a href="#a-geometric-view-relating-to-curves-in-012" id="toc-a-geometric-view-relating-to-curves-in-012" class="nav-link" data-scroll-target="#a-geometric-view-relating-to-curves-in-012"><span class="header-section-number">3.3.2.2</span> A geometric view relating to curves in <span class="math inline">\([0,1]^2\)</span></a></li>
+  <li><a href="#sec-local" id="toc-sec-local" class="nav-link" data-scroll-target="#sec-local"><span class="header-section-number">3.3.2.3</span> “Local” curves</a></li>
+  </ul></li>
+  <li><a href="#sequence-of-mappings-and-their-limit" id="toc-sequence-of-mappings-and-their-limit" class="nav-link" data-scroll-target="#sequence-of-mappings-and-their-limit"><span class="header-section-number">3.3.3</span> Sequence of mappings and their limit</a>
+  <ul class="collapse">
+  <li><a href="#pointwise-convergence-of-mappings" id="toc-pointwise-convergence-of-mappings" class="nav-link" data-scroll-target="#pointwise-convergence-of-mappings"><span class="header-section-number">3.3.3.1</span> Pointwise convergence of mappings</a></li>
+  <li><a href="#sec-ninfty-bijection" id="toc-sec-ninfty-bijection" class="nav-link" data-scroll-target="#sec-ninfty-bijection"><span class="header-section-number">3.3.3.2</span> Bijectivity in the <span class="math inline">\(n\to\infty\)</span> limit</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#sec-coarse-graining" id="toc-sec-coarse-graining" class="nav-link" data-scroll-target="#sec-coarse-graining"><span class="header-section-number">3.4</span> Coarse-graining the neural field in <span class="math inline">\([0,1]\)</span></a>
+  <ul>
+  <li><a href="#naive-simulations-of-the-neural-field-on-01" id="toc-naive-simulations-of-the-neural-field-on-01" class="nav-link" data-scroll-target="#naive-simulations-of-the-neural-field-on-01"><span class="header-section-number">3.4.1</span> Naive simulations of the neural field on <span class="math inline">\([0,1]\)</span></a></li>
+  <li><a href="#coarse-graining-the-one-dimensional-neural-field" id="toc-coarse-graining-the-one-dimensional-neural-field" class="nav-link" data-scroll-target="#coarse-graining-the-one-dimensional-neural-field"><span class="header-section-number">3.4.2</span> Coarse-graining the one-dimensional neural field</a></li>
+  </ul></li>
+  <li><a href="#simulations-of-neural-fields-in-3d-2d-and-1d" id="toc-simulations-of-neural-fields-in-3d-2d-and-1d" class="nav-link" data-scroll-target="#simulations-of-neural-fields-in-3d-2d-and-1d"><span class="header-section-number">3.5</span> Simulations of neural fields in 3D, 2D and 1D</a>
+  <ul>
+  <li><a href="#practical-aspects-of-implementing-the-simulations-of-the-one-dimensional-neural-field" id="toc-practical-aspects-of-implementing-the-simulations-of-the-one-dimensional-neural-field" class="nav-link" data-scroll-target="#practical-aspects-of-implementing-the-simulations-of-the-one-dimensional-neural-field"><span class="header-section-number">3.5.1</span> Practical aspects of implementing the simulations of the one-dimensional neural field</a></li>
+  <li><a href="#application-of-s-from-012-to-01" id="toc-application-of-s-from-012-to-01" class="nav-link" data-scroll-target="#application-of-s-from-012-to-01"><span class="header-section-number">3.5.2</span> Application of <span class="math inline">\(S\)</span> : from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span></a></li>
+  <li><a href="#sec-simulations-3d-2d-1d" id="toc-sec-simulations-3d-2d-1d" class="nav-link" data-scroll-target="#sec-simulations-3d-2d-1d"><span class="header-section-number">3.5.3</span> Iterative application of <span class="math inline">\(S\)</span> : from <span class="math inline">\([0,1]^3\)</span> to <span class="math inline">\([0,1]^2\)</span>, then to <span class="math inline">\([0,1]\)</span></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-mappings" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Mapping neural fields to lower-dimensional embeddings</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In the previous chapter, we have established a simple toy model for a neural field in <span class="math inline">\(p\)</span> dimensions, and have shown how it can be embedded in <span class="math inline">\([0,1]^p\)</span>. In this chapter, we discuss in-depth what types of mappings can be used to map the <span class="math inline">\(p\)</span>-dimensional space to <span class="math inline">\([0,1]\)</span>, and in particular we study the case <span class="math inline">\(p=2\)</span>. Before getting into too much detail, let us give some insight as to why this problem is not trivial.</p>
+<section id="population-dynamics-an-introductory-example-of-a-1d-embedding" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="population-dynamics-an-introductory-example-of-a-1d-embedding"><span class="header-section-number">3.1</span> Population dynamics: an introductory example of a 1D embedding</h2>
+<section id="embedding-a-finite-number-of-populations-in-01" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="embedding-a-finite-number-of-populations-in-01"><span class="header-section-number">3.1.1</span> Embedding a finite number of populations in <span class="math inline">\([0,1]\)</span></h3>
+<p>Let us for a moment consider another type of model for networks of neurons, that of multiple homogeneous population dynamics, describing how <span class="math inline">\(N_\text{pop}\)</span> different populations interact with each other. These types of models emerge, for example, when networks of neurons exhibit a finite number of “neuron types”. We then group neurons of the same type, and make the approximation that they have identical potentials and the same interaction weights with other neurons. As a consequence, every population then represents a homogeneous population of identical neurons.</p>
+<p>This results in writing population dynamics with the same equation as a finite network of neurons. However, the equation <em>already represents</em> the <span class="math inline">\(N \to \infty\)</span> limit. We write the potential of the populations <span class="math inline">\(H_a(t)\)</span> and the population connectivity <span class="math inline">\(\tilde J_{ab}\)</span>, where <span class="math inline">\(a,b \in \{1, \cdots, N_\text{pop}\}^2\)</span> in <a href="#eq-pop-dynamics">Equation&nbsp;<span>3.1</span></a>.</p>
+<p><span id="eq-pop-dynamics"><span class="math display">\[
+\dot H_a(t) = -H_a(t) + \sum_{b=1}^{N_\text{pop}} \tilde J_{ab} \phi(H_b(t))
+\tag{3.1}\]</span></span></p>
+<p>We don’t show the derivation of population dynamics here (see <span class="citation" data-cites="GerKis14"><a href="../references.html#ref-GerKis14" role="doc-biblioref">[1]</a></span>, chapter 12.3 for a detailed analysis), but we point out the implicit scaling behavior of <span class="math inline">\(\tilde J_{ab}\)</span>. Letting <span class="math inline">\(i\)</span> be a neuron of population <span class="math inline">\(a\)</span> and <span class="math inline">\(j\)</span> be a neuron of population <span class="math inline">\(b\)</span>, the connectivity between the two neurons is <span class="math inline">\(J_{ij}\)</span>, and the population connectivity scales with the number of neurons in the presynaptic population <span class="math inline">\(|b|\)</span>. Furthermore, we make the reasonable assumption that <span class="math inline">\(J_{ij}\)</span> scales as <span class="math inline">\(J^0_{ij} / N\)</span>, where <span class="math inline">\(J^0_{ij} \sim \mathcal{O}(1)\)</span>. We then have</p>
+<p><span class="math display">\[
+\tilde J_{ab} = \frac{|b|}{N} J^0_{ij}.
+\]</span></p>
+<p>As <span class="math inline">\(N\to\infty\)</span>, the ratio <span class="math inline">\(\tfrac{|b|}{N}\)</span> converges to a constant <span class="math inline">\(p_b\)</span>, the probability of the population, normalized such that <span class="math inline">\(\sum_{a=1}^{N_\text{pop}} p_a = 1\)</span>. It expresses the probability of uniformly sampling a neuron belonging to population <span class="math inline">\(b\)</span>. In effect, <span class="math inline">\(p_b\)</span> can be interpreted as the “weight” of the population.</p>
+<p>So far, we have not considered that the populations are embedded in some abstract space; but the notion of population weights gives rise to the obvious embedding in <span class="math inline">\([0,1]\)</span> given by the cumulative sums of the population weights, illustrated in <a href="#fig-popdynamics-01">Figure&nbsp;<span>3.1</span></a>. We define (somewhat informally) the connectivity kernel <span class="math inline">\(w(\alpha, \beta) = J^0_{ab}\)</span> for <span class="math inline">\(\alpha, \beta\)</span> in the regions corresponding to populations <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> respectively.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div id="fig-popdynamics-01" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="figures/fig-multipop.svg" class="img-fluid figure-img" width="500"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.1: Embedding of the population dynamics in <span class="math inline">\([0,1]\)</span></figcaption>
+</figure>
+</div>
+<p>Defining the neural field <span class="math inline">\(H(\alpha, t) = H_a(t)\)</span>, we can write a “neural field equation” on the <span class="math inline">\([0,1]\)</span> space.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\partial_t H(\alpha, t) &amp;= -H(\alpha, t) + \int_0^1 w(\alpha, \beta) \phi(H(\beta, t)) \mathrm d\beta \\
+&amp;= -H(\alpha, t) + \sum_{b=1}^{N_\text{pop}} p_b w(\alpha, b) \phi(H_b(t)) \\
+\iff \partial_t H_a(t) &amp;= -H(a, t) + \sum_{b=1}^{N_\text{pop}} p_b w(a, b) \phi(H_b(t)) \\
+&amp;= -H(a, t) + \sum_{b=1}^{N_\text{pop}} p_b J^0_{ab} \phi(H_b(t)) \\
+&amp;= -H(a, t) + \sum_{b=1}^{N_\text{pop}} \tilde J^0_{ab} \phi(H_b(t))
+\end{aligned}
+\]</span></p>
+<p>We hereby showed (having taken many writing liberties, but this is just to give an idea) how the neural field reduces back to the original population dynamics, which was in itself already the <span class="math inline">\(N\to\infty\)</span> limit of the network. The case of multi-population dynamics therefore shows a trivial example of an embedding in <span class="math inline">\([0,1]\)</span>.</p>
+</section>
+<section id="population-dynamics-with-an-infinite-number-of-populations" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="population-dynamics-with-an-infinite-number-of-populations"><span class="header-section-number">3.1.2</span> Population dynamics with an infinite number of populations</h3>
+<p>When taken in isolation, the previous developments might sound a little bit silly, though they serve to give a feeling for the problem at hand, and a motivation for the rest of this work. For a finite number of populations <span class="math inline">\(N_\text{pop}\)</span>, the population dynamics is well-defined; however, what happens as <span class="math inline">\(N_\text{pop} \to \infty\)</span> ? The core of the question lies in the fact that we can easily <em>enumerate</em> a finite number of populations, but the sum <span class="math inline">\(\sum_{b=1}^{N_\text{pop}}\)</span> must have a clearly defined interpretation when this number tends to infinity.</p>
+<p>In light of the toy model presented in <a href="2_neural_fields.html"><span>Chapter&nbsp;2</span></a>, we can reinterpret the density <span class="math inline">\(\rho\)</span> of the neural field equation. Every point <span class="math inline">\(\boldsymbol{z} \in \mathbb R^p\)</span> (let us consider <span class="math inline">\(p=2\)</span> in the following) describes an infinite population of homogeneous neurons, associated with a probability (density) <span class="math inline">\(\rho(\boldsymbol{z})\)</span>. Therefore, in order to write an equivalent neural field in <span class="math inline">\([0,1]\)</span>, we need a way to <em>enumerate</em> the populations. This is done using a mapping <span class="math inline">\(S : [0,1]^2 \mapsto [0,1]\)</span>, where we cover the <span class="math inline">\([0,1]^2\)</span> space by following the order assigned to the populations in the image <span class="math inline">\([0,1]\)</span>.</p>
+<p>Additionally, the notion of population dynamics helps give another interpretation of the grid integration method given in <a href="2_neural_fields.html#sec-gridmethod"><span>Section&nbsp;2.2.2</span></a>. When we discretize the <span class="math inline">\([0,1]^2\)</span> space, we are effectively performing a coarse-graining approximation and simulating a finite number of populations. For every bin localized by <span class="math inline">\((v_1, v_2)\)</span>, we are sampling the connectivity kernel <span class="math inline">\(w_U(\cdot, (v_1, v_2))\)</span> and 2D neural field <span class="math inline">\(h_U((v_1, v_2), t)\)</span> (see <a href="#fig-grid-sampling">Figure&nbsp;<span>3.2</span></a>). In the rest of the chapter, we refer to these 2D bins as “square populations”, and to the corresponding 1D bins obtained by the mapping <span class="math inline">\(S\)</span> as “segment populations”.</p>
+<div id="fig-grid-sampling" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="figures/fig-smallsquare.svg" class="img-fluid figure-img" width="500"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.2: Every point of the grid effectively performs coarse-graining, and defines a point where we sample the connectivity kernel <span class="math inline">\(w_U\)</span> and the 2D neural field <span class="math inline">\(h_U\)</span></figcaption>
+</figure>
+</div>
+<p>For a finite number of populations <span class="math inline">\(N_\text{pop}\)</span>, applying a bijective mapping <span class="math inline">\(S\)</span> will evidently give an equivalent neural field, because the connectivity matrix is permutation-invariant, and the resulting connectivity matrix <span class="math inline">\(J_{S(a),S(b)}\)</span> will therefore give equivalent dynamics. As we increase <span class="math inline">\(N_\text{pop}\)</span> by taking finer and finer grids, the image of the grids defines a sequence of mappings <span class="math inline">\(S^n: \text{grid in}\ [0,1]^2 \mapsto \text{grid in}\ [0,1]\)</span>, which we aim to study in the rest of this chapter. The main question is:</p>
+<blockquote class="blockquote">
+<p>How do we define a sequence of mappings <span class="math inline">\(S^n\)</span> such that the limiting <span class="math inline">\(S : [0,1]^2 \mapsto [0,1]\)</span> can express a 1D neural field with identical dynamics ?</p>
+</blockquote>
+</section>
+</section>
+<section id="defining-the-neural-field-in-01" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="defining-the-neural-field-in-01"><span class="header-section-number">3.2</span> Defining the neural field in <span class="math inline">\([0,1]\)</span></h2>
+<p>We start by writing the neural field equation in the <span class="math inline">\([0,1]\)</span> space. For <span class="math inline">\(\lambda: [0,1]^2 \to [0, \infty]\)</span> a measurable function (e.g.&nbsp;the Lebesgue measure, which is nothing but the uniform probability distribution), we let the composition <span class="math inline">\(\lambda \circ S^{-1}\)</span> define a measure on <span class="math inline">\([0,1]\)</span>, which keeps track of how 2D surfaces are transformed to (possibly disjoint) 1D segments through the mapping <span class="math inline">\(S\)</span>.</p>
+<p>The connectivity kernel <span class="math inline">\(\tilde w\)</span> defines the interactions between the populations in the <span class="math inline">\([0,1]\)</span> embedding, which we define relating to the kernel <span class="math inline">\(w_U\)</span> on <span class="math inline">\([0,1]^2\)</span>, defined in <a href="2_neural_fields.html#sec-mapping-cdf"><span>Section&nbsp;2.5</span></a> as:</p>
+<p><span id="eq-kernel-1d"><span class="math display">\[
+\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))
+\tag{3.2}\]</span></span></p>
+<p>Defining the initial condition for the 1D neural field as <span class="math inline">\(\tilde h(\alpha, t=0) = h_U(S^{-1}(\alpha), t=0)\)</span>, we have fully defined the equation of evolution in the one-dimensional embedding in <a href="#eq-nf-1d">Equation&nbsp;<span>3.3</span></a>.</p>
+<p><span id="eq-nf-1d"><span class="math display">\[
+\partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta)
+\tag{3.3}\]</span></span></p>
+<p>The definition of the connectivity kernel in <a href="#eq-kernel-1d">Equation&nbsp;<span>3.2</span></a> might seem innocent, but the key element here is the inverse <span class="math inline">\(S^{-1}\)</span>. We recall that in the toy model, the original connectivity kernel is written as <span class="math inline">\(w(\boldsymbol{z}, \boldsymbol{y}) = \sum_{\mu=1}^p \tilde \phi(y_\mu) z_\mu\)</span>. This kernel is highly regular, by which we mean that, by its continuity in each of its arguments, populations nearby in the <span class="math inline">\(\mathbb R^p\)</span> will have similar input weights. Since it is also differentiable, we can write this as a Taylor expansion in the first argument :</p>
+<p><span class="math display">\[
+\begin{aligned}
+w(\boldsymbol{z} + \boldsymbol{\epsilon}, \boldsymbol{y}) &amp;= w(\boldsymbol{z}, \boldsymbol{y}) + \sum_{\mu=1}^p \epsilon_\mu \frac{\partial w}{\partial z_\mu} + \mathcal{O}(\lVert{\boldsymbol{\epsilon}}\rVert^2) \\
+&amp;= w(\boldsymbol{z}, \boldsymbol{y}) + \sum_{\mu=1}^p \epsilon_\mu \phi(y_\mu) + \mathcal{O}(\lVert{\boldsymbol{\epsilon}}\rVert^2) \\
+&amp;\approx w(\boldsymbol{z}, \boldsymbol{y})
+\end{aligned}
+\]</span></p>
+<p>When we do the change of variables with the CDF, we don’t encounter problems because the Gaussian (inverse) CDF is differentiable and its derivative is continuous;<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> therefore <span class="math inline">\(w_U(\boldsymbol{v}, \boldsymbol{u}) = w(\textrm{CDF}^{-1}(\boldsymbol{v}), \textrm{CDF}^{-1}(\boldsymbol{u}))\)</span> is still highly regular.</p>
+<p>For these reasons, we can see why the composition of <span class="math inline">\(w_U\)</span> with a possibly non-differentiable mapping <span class="math inline">\(S\)</span> might be problematic. Since the only thing we know about <span class="math inline">\(S\)</span> is that it is measurable and bijective, <em>there is no guarantee that the regularity (continuity and the differentiability) of the kernel is conserved through composition with the mapping <span class="math inline">\(S\)</span>.</em></p>
+</section>
+<section id="mappings-of-012-to-01" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="mappings-of-012-to-01"><span class="header-section-number">3.3</span> Mappings of <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span></h2>
+<section id="the-search-for-differentiable-mappings" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="the-search-for-differentiable-mappings"><span class="header-section-number">3.3.1</span> The search for differentiable mappings</h3>
+<p>We start our search of mappings by attempting to find a mapping <span class="math inline">\(S\)</span> that is differentiable. The easiest example of such a mapping would be a linear projection, for instance, <span class="math inline">\(P(v_1, v_2) = v_1\)</span>. This mapping is obviously continuous and differentiable in both components, and surjectively maps the unit square to the unit segment. However, the obvious problem with this approach is that linear projections are not invertible. Hence, should we nevertheless define an inverse <span class="math inline">\(P^{-1}\)</span> that computes the preimage of <span class="math inline">\(\alpha \in [0,1]\)</span>, we have that</p>
+<p><span class="math display">\[
+P^{-1}(\alpha) = \{(\alpha, v_2)\ |\ v_2 \in [0,1] \}.
+\]</span></p>
+<p>In other words, <span class="math inline">\(P^{-1}(\alpha)\)</span> defines a vertical line in the <span class="math inline">\([0,1]^2\)</span> embedding. When we then take the composition <span class="math inline">\(w_U \circ P^{-1}\)</span>, the “locality” is destroyed, in the sense that the same population <span class="math inline">\(\alpha\)</span> in the 1D embedding will “sense” all the connectivity kernels on the vertical line.</p>
+<p>A more sophisticated attempt, in the spirit of <a href="2_neural_fields.html#sec-mapping-cdf"><span>Section&nbsp;2.5</span></a>, might be to consider the joint cumulative function</p>
+<p><span class="math display">\[
+\alpha = \mathrm{CDF}(z_1, z_2) = \int_{-\infty}^{z_1} \int_{-\infty}^{z_2} \rho(y_1, y_2) \mathrm dy_1 \mathrm dy_2.
+\]</span></p>
+<p>However, this again fails because the joint cumulative function is not bijective, and isolines of the CDF define continuous curves in the uniform embedding space <span class="math inline">\([0,1]^2\)</span>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p>Perhaps these examples are a bit too naive, and we need to look for more complex mappings. We might ask the question of whether a diffeomorphism (a differentiable bijection with a differentiable inverse) even exists between the unit square and the unit segment. Unfortunately, results from topology give a negative answer, and even worse, it can be shown that there is no homeomorphism (a continuous bijection with continuous inverse) between the unit square and the unit segment. This is stated by Netto’s theorem, which imposes continuous bijections to conserve the dimensionality between the domain and the image.</p>
+<p><a href="#fig-venn">Figure&nbsp;<span>3.3</span></a> shows a visual representation of Netto’s theorem. The 3-way intersection of the Venn diagram represents that functions which are both bijective (surjective and injective) and continuous do not exist. For the three remaining 2-way intersections, we annotate, without going into detail, the types of functions which they represent (see <span class="citation" data-cites="kharazishvili_strange_2017"><a href="../references.html#ref-kharazishvili_strange_2017" role="doc-biblioref">[2]</a></span> for Cantor and Peano functions, <span class="citation" data-cites="sagan_space-filling_1994"><a href="../references.html#ref-sagan_space-filling_1994" role="doc-biblioref">[3]</a></span> for Peano and Jordan functions).</p>
+<!-- ### Mappings of $[0,1]$ into $[0,1]^2$
+
+Since in the composition $w_U \circ S^{-1}$ we work with the inverse mapping, we contextualize our study by first considering the types of functions from $[0,1]$ into $[0,1]^2$. We have already established that there is no homeomorphism between those spaces, and need to relax one of the conditions. Since bijections are functions that are both injective and surjective, we can represent Netto's theorem as a 3-way Venn diagram in @fig-venn. -->
+<div id="fig-venn" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="figures/fig-venn.svg" class="img-fluid figure-img" width="400"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.3: Venn diagram reprensenting the properties of functions <span class="math inline">\([0,1] \mapsto [0,1]^2\)</span> which are allowed by Netto’s theorem.</figcaption>
+</figure>
+</div>
+<!--
+* Cantor functions are bijections $[0,1] \mapsto [0,1]^2$. However, they are not continuous, and thereby break the continuity of the kernel.
+<!-- Nicole: ACTUALLY NO THIS IS NOT A PROBLEM !! OUR Z-MAPPING IS NOT CONTINUOUS, BUT LOCALITY STILL SAVES US, SO THAT IT IS CONTINUOUS "ON AVERAGE"
+* Jordan curves are continuous injections $[0,1] \mapsto [0,1]^2$. Since they are not surjective, these curves cannot entirely "fill" the $[0,1]^2$ space, and we will not use them.
+<!-- Nicole : see my notebook about Jordan functions and their nonzero Jordan measure
+* Peano curves are continuous surjections $[0,1] \mapsto [0,1]^2$. Their non-injectivity however is not a problem, since it just means that two segment populations can "refer" to the same square population (see @fig-non-injection). Therefore, Peano functions seem like good candidates for the mapping $S^{-1}$.
+-->
+<!-- 
+Functions of $[0,1]$ into $[0,1]^2$ are extensively discussed in chapter 1 of @kharazishvili_strange_2017, and we cite two classes of such functions :
+
+1. Cantor functions are bijections between $[0,1]$ and $[0,1]^2$. By Netto's theorem, these functions cannot be continuous.
+2. Peano functions are continuous surjections from $[0,1]$ to $[0,1]^2$. They cannot be injections. For reasons that will become apparent in the following sections, Peano functions are often called space-filling curves.
+
+In light of these results, we might be tempted to search for expressions of Cantor-type functions, since having a bijection would allow us to have a direct mapping between the square and the segment populations. Problematically, these functions are discontinuous and thereby break the continuity of the kernel.
+
+Peano functions seem like good candidates for the mapping $S^{-1}$, and are extensively studied in the literature around space-filling curves (we refer for instance to [@sagan_space-filling_1994]). They have the nice property that they are continuous and surjective, so the segment populations can "reach" the entirety of the square populations. All things considered, non-injectivity is not a problem, since it just means that two segment populations can "refer" to the same square population (see @fig-non-injection), which does not break the regularity of the kernel,  since the two segment populations can just have their own neighbourhoods.
+-->
+<!-- ![Non-injectivity of $S^{-1}$ means that two segment populations can refer to the same square population.](figures/photo_2023-06-12_00-46-26.jpg){#fig-non-injection} 
+
+Nicole: removed. too confusing
+-->
+</section>
+<section id="sequences-of-bijective-mappings" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="sequences-of-bijective-mappings"><span class="header-section-number">3.3.2</span> Sequences of bijective mappings</h3>
+<section id="sec-mappings-binary" class="level4" data-number="3.3.2.1">
+<h4 data-number="3.3.2.1" class="anchored" data-anchor-id="sec-mappings-binary"><span class="header-section-number">3.3.2.1</span> Mappings as binary expansions</h4>
+<p>Previously, we motivated <span class="math inline">\(S\)</span> as the limit of functions <span class="math inline">\(S^n\)</span> acting on finer and finer grids. Let us consider <span class="math inline">\((v_1, v_2) \in [0,1]^2\)</span>. Given <span class="math inline">\(n \in \mathbb N\)</span>, we write a (truncated) binary expansion of <span class="math inline">\(v_1\)</span> and <span class="math inline">\(v_2\)</span>.</p>
+<p><span id="eq-trunc"><span class="math display">\[
+\begin{aligned}
+v^{(n)}_1 &amp;= \sum_{l=1}^{n} b^1_l 2^{-l} = 0.b^1_1b^1_2\cdots b^1_{n} \iff b^1_l = \mathrm{Ind}\left\{2^{l-1}v_1 - \lfloor2^{l-1}v_1\rfloor \geq \frac{1}{2}\right\} \\
+v^{(n)}_2 &amp;= \sum_{l=1}^{n} b^2_l 2^{-l} = 0.b^2_1b^2_2\cdots b^2_{n} \iff b^2_l = \mathrm{Ind}\left\{2^{l-1}v_2 - \lfloor2^{l-1}v_2\rfloor \geq \frac{1}{2}\right\}
+\end{aligned}
+\tag{3.4}\]</span></span></p>
+<p>The intuition and illustration <a href="#fig-recurse-binary">Figure&nbsp;<span>3.4</span></a> behind this expansion is that we locate each component by recursively splitting the segment in two sub-segments of equal length. At every step, taking the left or right segments defines the sequence of binary digits. <!-- Then combine the bits of $v^{(n)}_1$ and $v^{(n)}_2$ to get the position in the $[0,1]^2$ embedding. --></p>
+<div id="fig-recurse-binary" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="figures/fig-binary.svg" class="img-fluid figure-img" width="400"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.4: Splitting <span class="math inline">\([0,1]\)</span> recursively with the indicator function gives the binary bit expansion of <span class="math inline">\(v_1\)</span></figcaption>
+</figure>
+</div>
+<p>We define the mapping <span class="math inline">\(S^n\)</span> that takes the <span class="math inline">\(n\)</span>-bit truncations <span class="math inline">\(v^{(n)}_1\)</span> and <span class="math inline">\(v^{(n)}_2\)</span> as input, and outputs a <span class="math inline">\(2n\)</span> bit truncation <span class="math inline">\(\alpha^{(n)}\)</span> of <span class="math inline">\(\alpha=S(v_1, v_2)\)</span>, where <span class="math inline">\(S\)</span> is the <span class="math inline">\(n\to\infty\)</span> pointwise limit of the sequence <span class="math inline">\(S^n\)</span> (when the sequence <span class="math inline">\(S^n\)</span> converges).</p>
+<p><span id="eq-Sn"><span class="math display">\[
+\begin{aligned}
+S^n : &amp;\{0, \tfrac{1}{2^n}, \cdots, 1-\tfrac{1}{2^n}\}^2 \mapsto \{0, \tfrac{1}{4^n}, \cdots, 1-\tfrac{1}{4^n}\} \\
+&amp;(v^{(n)}_1,v^{(n)}_2)=(0.b^1_1 b^1_2 \cdots b^1_n, 0.b^2_1 b^2_2 \cdots b^2_n) \mapsto \alpha^{(n)}=0.b_1 b_2 \cdots b_{2n}
+\end{aligned}
+\tag{3.5}\]</span></span></p>
+<p>In general, each bit <span class="math inline">\(b_k\)</span> of the image would be a binary function of the <span class="math inline">\(n\)</span> bits of <span class="math inline">\(v_1\)</span> and the <span class="math inline">\(n\)</span> bits of <span class="math inline">\(v_2\)</span>, i.e.&nbsp;<span class="math inline">\(b_k = b_k(b^1_1, b^1_2, \cdots, b^1_n, b^2_1, b^2_2, \cdots, b^2_n)\)</span>. With this, we can formulate any mapping between sets of <span class="math inline">\(4^n\)</span> distinct elements.</p>
+<p>The intuition behind the use of <span class="math inline">\(2n\)</span> bits for the image is that we take <span class="math inline">\(2^n \times 2^n = 4^n\)</span> squares of size <span class="math inline">\(2^{-n} \times 2^{-n}\)</span> in <span class="math inline">\([0,1]^2\)</span>, and map those to <span class="math inline">\(4^n\)</span> segments of size <span class="math inline">\(4^{-n}\)</span> in <span class="math inline">\([0,1]\)</span>. Informally, we map <span class="math inline">\(n+n\)</span> bits onto <span class="math inline">\(2n\)</span> bits.</p>
+<p>In the following, we will restrict ourselves to mappings where the functions <span class="math inline">\(b_k\)</span> are defined in such a way that each bit of the inputs <span class="math inline">\(v_1\)</span> and <span class="math inline">\(v_2\)</span> is used only once. Therefore, for each bit <span class="math inline">\(k\)</span> of the output, there is a function <span class="math inline">\(b_k(b^{\mu_k}_{l_k})\)</span> acting on only one bit of the input. <span class="math inline">\(\mu_k \in \{1,2\}\)</span> is the input component and <span class="math inline">\(l_k \in \{1,\cdots,n\}\)</span> the bit number corresponding to <span class="math inline">\(k\)</span>. Since this function is binary, the only allowed definitions are</p>
+<ul>
+<li><span class="math inline">\(b_k(b^{\mu_k}_{l_k}) = b^{\mu_k}_{l_k}\)</span> (identity),</li>
+<li><span class="math inline">\(b_k(b^{\mu_k}_{l_k}) = 1-b^{\mu_k}_{l_k}\)</span> (inversion),</li>
+<li><span class="math inline">\(b_k(b^{\mu_k}_{l_k}) = 0\)</span> (constant zero),</li>
+<li><span class="math inline">\(b_k(b^{\mu_k}_{l_k}) = 1\)</span> (constant one).</li>
+</ul>
+<p>The constant functions are ignored, since they effectively just restrict the output domain to a subset of <span class="math inline">\([0,1]\)</span>; and since only <span class="math inline">\(2n\)</span> bits are allowed for the output, they are a “waste” by ignoring information of the input. Because they don’t add information to the output (they just “swap” the values of the output bits at known locations), inversion functions are also not considered.</p>
+<p>All this mathematical formalism expresses, in essence, that the mapping <span class="math inline">\(S^n\)</span> is just a <em>reordering</em> of the input bits. <span class="math inline">\(S^n\)</span> takes <span class="math inline">\(4^n\)</span> points embedded in <span class="math inline">\([0,1]^2\)</span>, and reorders them onto <span class="math inline">\(4^n\)</span> points in <span class="math inline">\([0,1]\)</span>.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>Therefore, there is a one-to-one mapping between the points on the square and the points on the segment, and the mapping <span class="math inline">\(S^n\)</span> is bijective. In the following, we will, for ease of notation and when it is clear in the context, drop the index <span class="math inline">\(n\)</span> when writing <span class="math inline">\(S^n\)</span>. This is often justified (particularly with the Z-mapping and Column mapping introduced later), because the finite-<span class="math inline">\(n\)</span> truncations <span class="math inline">\((v_1^{(n)}, v_2^{(n)})\)</span> result in finite truncations of <span class="math inline">\(S\)</span>, therefore <span class="math inline">\(S(v_1^{(n)}, v_2^{(n)}) = S^n(v_1^{(n)}, v_2^{(n)})\)</span>.</p>
+<!-- These simplifications might seem too restrictive, however, -->
+<p>We will show in the rest of this thesis that this simple formulation is flexible enough to express mappings that have good properties such as “locality”, while being simple enough to help build intuitions.</p>
+<!-- #### A geometric view relating to space-filling curves
+Let's not mention space-filling curves, because the Column mapping is not space-filling (no continuity 1D -> 2D), and because we would need a whole lot more formalism, see @Sagan1994
+ -->
+</section>
+<section id="a-geometric-view-relating-to-curves-in-012" class="level4" data-number="3.3.2.2">
+<h4 data-number="3.3.2.2" class="anchored" data-anchor-id="a-geometric-view-relating-to-curves-in-012"><span class="header-section-number">3.3.2.2</span> A geometric view relating to curves in <span class="math inline">\([0,1]^2\)</span></h4>
+<p>With this formalism in mind, we give a geometric interpretation to the mappings <span class="math inline">\(S^n\)</span>. The core idea is that the populations in <span class="math inline">\([0,1]\)</span> have a clear ordering to them, and we can enumerate them simply by their position in the embedding. Since we constructed <span class="math inline">\(S^n\)</span> to be bijective, this enumeration traces a path in the corresponding populations of the <span class="math inline">\([0,1]^2\)</span> embedding.</p>
+<p>We illustrate this by introducing the “column” mapping.</p>
+<p><span id="eq-column"><span class="math display">\[
+\alpha^{(n)} = C(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n
+\tag{3.6}\]</span></span></p>
+<p>The intuition behind this mapping is that we enumerate the populations on a grid column by column, letting the index of the rows vary the fastest. We visualize this mapping in <a href="#fig-col">Figure&nbsp;<span>3.5</span></a>, by coloring the square populations by the position of the corresponding <span class="math inline">\([0,1]\)</span> population, and additionally drawing lines between the points to help guide the eye.</p>
+<div class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-col" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-col-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.5: Column mapping for <span class="math inline">\(n=2\)</span>. Numbers represent the ordering of the populations in the <span class="math inline">\([0,1]\)</span> embedding, neighbouring populations are connected by lines.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For finite <span class="math inline">\(n\)</span>, we write the inverse of the column mapping:</p>
+<p><span id="eq-column-inverse"><span class="math display">\[
+\begin{aligned}
+v^{(n)}_1 = C^{-1}_1(\alpha^{(n)}) &amp;= 0.b_1 b_2 \cdots b_n = \sum_{k=1}^n b_{k} 2^{-k} \\
+v^{(n)}_2 = C^{-1}_2(\alpha^{(n)}) &amp;= 0.b_{n+1} b_{n+2} \cdots b_{2n} = \sum_{k=1}^n b_{n+k} 2^{-k}.
+\end{aligned}
+\tag{3.7}\]</span></span></p>
+<p>This way of enumerating the square populations might be familiar to people who have worked with numerical arrays. In such (contiguous) arrays, the values are laid out in memory in “row-major” order (C-style) or “column-major” order (Fortran-style); and we can go from the 1D memory representation to a 2D matrix representation by using “reshape” operations. Effectively, this is how this mapping is implemented in code, using <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel_multi_index.html"><code>numpy.ravel_multi_index</code></a> (2D to 1D) and <a href="https://numpy.org/doc/stable/reference/generated/numpy.unravel_index.html"><code>numpy.unravel_index</code></a> (1D to 2D).</p>
+</section>
+<section id="sec-local" class="level4" data-number="3.3.2.3">
+<h4 data-number="3.3.2.3" class="anchored" data-anchor-id="sec-local"><span class="header-section-number">3.3.2.3</span> “Local” curves</h4>
+<p>Research in computer science and efficient data structures has given rise to other ways of storing 2-dimensional information in a 1-dimensional memory. A problem in GPU computing is that of texture locality: sampling textures often involves reading data corresponding to a small 2D region, and therefore to improve speed (minimize cache misses), the 2D data should be packed close together in the 1D memory. One way of ordering the 2D texture data in the 1D memory is by using the Z-order curve (also known as “Morton mapping”, and similar to the “Lebesgue curve” <span class="citation" data-cites="sagan_space-filling_1994"><a href="../references.html#ref-sagan_space-filling_1994" role="doc-biblioref">[3]</a></span>, chapter 6). In this way, points close in 1D <em>tend</em> to be tightly packed in 2D. We can define the Z-order curve (Z-mapping) in the following way:<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<p><span id="eq-z"><span class="math display">\[
+\alpha^{(n)} = Z(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^2_1 b^1_2 b^2_2 \cdots b^1_n b^2_n = \sum_{k=1}^{n} b^1_k 2^{1-2k} + b^2_k 2^{-2k}
+\tag{3.8}\]</span></span></p>
+<p>And its inverse is:</p>
+<p><span id="eq-z-inverse"><span class="math display">\[
+\begin{aligned}
+v^{(n)}_1 = Z^{-1}_1(\alpha^{(n)}) &amp;= 0.b_1 b_3 \cdots b_{2n-1} = \sum_{k=1}^n b_{2k-1} 2^{-k} \\
+v^{(n)}_2 = Z^{-1}_2(\alpha^{(n)}) &amp;= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n b_{2k} 2^{-k}.
+\end{aligned}
+\tag{3.9}\]</span></span></p>
+<p><a href="#fig-z">Figure&nbsp;<span>3.6</span></a> is a visualization of the Z-mapping when <span class="math inline">\(n=2\)</span>, and shows how it is composed of the “Z” shapes giving it its name.</p>
+<div class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-z" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-z-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.6: Z-mapping for <span class="math inline">\(n=2\)</span>. Numbers represent the ordering of the populations in the <span class="math inline">\([0,1]\)</span> embedding, neighbouring populations are connected by lines.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>To illustrate this notion of locality, we take a few consecutive populations in 1D and show where the corresponding populations fall in the 2D embedding. This is done in <a href="#fig-locality">Figure&nbsp;<span>3.7</span></a>, in which we see that the Z-mapping seems to conserve locality from 1D to 2D: populations close in 1D seem to be close in 2D.</p>
+<p>We also see that the Column mapping is not local in this sense, since there is a large variation along the vertical direction, which seems to always be “of order one”. This can be explained by looking at the expression for <span class="math inline">\(C^{-1}_2(\alpha^{(n)}) = 0.b_{n+1} b_{n+2} \cdots b_{2n}\)</span> : small variations of the order of <span class="math inline">\(2^{-n}\)</span> in the value of <span class="math inline">\(\alpha\)</span> always result in variations of order one in <span class="math inline">\(C^{-1}_2\)</span>.e</p>
+<div class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div id="fig-locality" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-locality-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.7: Locality of the mappings. The 2D populations corresponding to three small segments of 1D populations of length <span class="math inline">\(\tfrac{1}{16}\)</span> are shown. The figures are generated with <span class="math inline">\(n=6\)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that, in some sense, the Column mapping is local, from 2D to 1D. This can be seen from the definition of <span class="math inline">\(\alpha^{(n)}=C(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n\)</span>: small variations of order <span class="math inline">\(2^{-n}\)</span> in <span class="math inline">\(v^{(n)}_1\)</span> result in small variations also of order <span class="math inline">\(2^{-n}\)</span> in <span class="math inline">\(\alpha^{(n)}\)</span>. Small variations of order <span class="math inline">\(2^{-n}\)</span> in <span class="math inline">\(v^{(n)}_1\)</span> result in even smaller variations also of order <span class="math inline">\(2^{-2n}\)</span> in <span class="math inline">\(\alpha^{(n)}\)</span> ! We therefore have two notions of locality: from 1D to 2D, and from 2D to 1D; and the Column mapping shows that they are not equivalent.</p>
+<p>We argue that in our case only the notion of locality from 1D to 2D matters. In essence, the dynamics in the 2D embedding are already known, and we ask the question of whether it is possible to write an equivalent neural field in 1D. <!-- (in the sense that it has identical latent trajectories) --> Without repeating the intuition given in <a href="1_intro.html#sec-intro-simnf"><span>Section&nbsp;1.4</span></a>, if neighbouring populations in 1D have similar potentials, then this allows us to write a neural field equation in <span class="math inline">\([0,1]\)</span>. Therefore we would like to have the property that populations close in 1D are (inversely) mapped to populations close in 2D, which already have similar potentials.</p>
+<!-- note for me : find a formulation for the recursive local mapping. it is not trivial, since it has
+
+```
+n=1
+0 0 -> 00
+1 0 -> 01
+1 1 -> 10
+0 1 -> 11
+
+n=2
+00 00 -> 0000
+01 00 -> 0001
+01 01 -> 0010
+00 01 -> 0011
+10 00 -> 0100
+11 00 -> 0101
+11 01 -> 0110
+10 01 -> 0111
+10 10 -> 1000
+11 10 -> 1001
+11 11 -> 1010
+10 11 -> 1011
+00 10 -> 1100
+01 10 -> 1101
+01 11 -> 1110
+00 11 -> 1111
+```
+
+this might be nice as an appendix, to show that our formulation is very simplistic, and more complex formulations can also have nice properties
+
+this also shows our proof is "incomplete", because it relies on the fact we have a permutation of the bits, although it is not strictly necessary. we have a sufficient, but not necessary proof
+
+also : this might be a type of peano curve or smth. see @Sagan1994
+
+https://www.cut-the-knot.org/Curriculum/Geometry/LebesgueCurve.shtml
+-->
+</section>
+</section>
+<section id="sequence-of-mappings-and-their-limit" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="sequence-of-mappings-and-their-limit"><span class="header-section-number">3.3.3</span> Sequence of mappings and their limit</h3>
+<section id="pointwise-convergence-of-mappings" class="level4" data-number="3.3.3.1">
+<h4 data-number="3.3.3.1" class="anchored" data-anchor-id="pointwise-convergence-of-mappings"><span class="header-section-number">3.3.3.1</span> Pointwise convergence of mappings</h4>
+<p>We now discuss what happens to the bijective mappings when <span class="math inline">\(n\to\infty\)</span>. For this, let us consider again the “random mapping” considered in the introduction <a href="1_intro.html#sec-intro-simnf"><span>Section&nbsp;1.4</span></a>. We discussed how this hypothetical mapping maps each position in <span class="math inline">\([0,1]^2\)</span> into a “random position” in <span class="math inline">\([0,1]\)</span>. A finite-<span class="math inline">\(n\)</span> formulation would be that the mapping corresponds to a <em>random permutation</em> of the bits, therefore, its limit is obviously not well-defined. <!-- It is unclear how to formally write this mapping in a way that is well-defined for a given $n$, since by definition, it is random. --> For a given position of the input <span class="math inline">\((v_1,v_2)\)</span>, we would like that the image is stable in the <span class="math inline">\(n\to\infty\)</span> limit.</p>
+<p><span class="math display">\[
+S^{n}(v_1, v_2) \xrightarrow{n\to\infty} \alpha =: S(v_1, v_2)
+\]</span></p>
+<p>This is the condition of “pointwise convergence” of the mappings. Let us introduce another mapping, which will help to give a better intuition of what pointwise convergence means in our context. We define, for finite <span class="math inline">\(n\)</span>, the “anti-Z” mapping and its inverse: <!-- We might be tempted to write that any mapping for which we can write the binary expansion $S^n$ is pointwise convergent, however, we show by the example of the "anti-Z" mapping that this is not the case. Let us define for finite $n$ --></p>
+<p><span class="math display">\[
+\begin{aligned}
+\alpha^{(n)} &amp;= A(v^{(n)}_1,v^{(n)}_2) = 0.b^1_n b^2_n b^1_{n-1} b^2_{n-1} \cdots b^1_1 b^2_1 = \sum_{k=1}^{n} b^1_{n+1-k} 2^{1-2k} + b^2_{n+1-k} 2^{-2k} \\
+\iff&amp; \\
+v^{(n)}_1 &amp;= A^{-1}_1(\alpha^{(n)}) = 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \sum_{k=1}^n b_{2(n-k)-1} 2^{-k} \\
+v^{(n)}_2 &amp;= A^{-1}_2(\alpha^{(n)}) = 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}.
+\end{aligned}
+\]</span></p>
+<div id="fig-anti-z" class="cell quarto-layout-panel" data-execution_count="6">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
+<div id="fig-anti-z-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-anti-z-output-1.svg" class="img-fluid figure-img" data-ref-parent="fig-anti-z"></p>
+<figcaption class="figure-caption">(a) <span class="math inline">\(n=2\)</span></figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
+<div id="fig-anti-z-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-anti-z-output-2.svg" class="img-fluid figure-img" data-ref-parent="fig-anti-z"></p>
+<figcaption class="figure-caption">(b) <span class="math inline">\(n=3\)</span></figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
+<div id="fig-anti-z-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-anti-z-output-3.svg" class="img-fluid figure-img" data-ref-parent="fig-anti-z"></p>
+<figcaption class="figure-caption">(c) <span class="math inline">\(n=4\)</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.8: Anti-Z mapping for <span class="math inline">\(n=2,3,4\)</span>. Numbers represent the ordering of the populations in the <span class="math inline">\([0,1]\)</span> embedding. We don’t plot the trace, because it has many crossovers and overlaps which makes the plot hard to read.</figcaption><p></p>
+</figure>
+</div>
+<p><a href="#fig-anti-z">Figure&nbsp;<span>3.8</span></a> gives some insight into the problem of this mapping. For a fixed input <span class="math inline">\((v_1,v_2)\)</span>, we see that the output point position jumps around when <span class="math inline">\(n\)</span> changes, and that these jumps seem to always be of order 1. The intuition behind pointwise convergence is that as <span class="math inline">\(n\)</span> increases, the image of a point by <span class="math inline">\(S^n\)</span> is continually refined.</p>
+<p>Consider how <span class="math inline">\(\alpha^{(n)}\)</span> fluctuates as the precision of the input increases with <span class="math inline">\(n \to \infty\)</span>. As we refine the input with fluctuations of order <span class="math inline">\(2^{-n}\)</span>, the output <span class="math inline">\(\alpha^{(n)} = b^1_n 4^{-1} + b^2_n 4^{-2} + b^1_{n-1} 4^{-3} + b^2_{n-1} 4^{-4} \cdots\)</span> fluctuates (at least) with amplitude <span class="math inline">\(\sim 4^{-2}\)</span> independantly of <span class="math inline">\(n\)</span>. Therefore the output never converges, and the mapping <span class="math inline">\(A^{n}\)</span> is not pointwise convergent.</p>
+<p>In our setting, how can we guarantee that the mappings are pointwise convergent? We need to show that small fluctuations in the input result in small fluctuations in the output. The binary expansion allows us to argue that for the sequence of mappings to be pointwise convergent, we need that the “least significant bits” (LSB, the bits to the right of the binary expansion) of the input are mapped to the LSB of the output. Conversely, the “most significant bits” (MSB, the bits to the left of the binary expansion) should be mapped to the MSB of the output.</p>
+<p>We illustrate this with the Z-mapping, written in <a href="#eq-z">Equation&nbsp;<span>3.8</span></a>. Corrections of order <span class="math inline">\(2^{-n}\)</span> in <span class="math inline">\(v_1\)</span> and <span class="math inline">\(v_2\)</span> induce corrections of order <span class="math inline">\(2^{1-2n}\)</span> and <span class="math inline">\(2^{-2n}\)</span> in <span class="math inline">\(\alpha\)</span> respectively. Therefore, it is easy to see that the Z-mapping is pointwise convergent as <span class="math inline">\(n\to\infty\)</span>. Similarly, the Column mapping in <a href="#eq-column">Equation&nbsp;<span>3.6</span></a> is also pointwise convergent, since as discussed <a href="#sec-local"><span>Section&nbsp;3.3.2.3</span></a> it has a locality of 2D to 1D.</p>
+</section>
+<section id="sec-ninfty-bijection" class="level4" data-number="3.3.3.2">
+<h4 data-number="3.3.3.2" class="anchored" data-anchor-id="sec-ninfty-bijection"><span class="header-section-number">3.3.3.2</span> Bijectivity in the <span class="math inline">\(n\to\infty\)</span> limit</h4>
+<p>However, the behavior of the Column mapping and that of the Z-mapping are very different in the <span class="math inline">\(n\to\infty\)</span> limit. Up until now, we have avoided this issue by considering the finite-<span class="math inline">\(n\)</span> approximation of the mappings, which by construction is numerically bijective (that is, bijective on the discretization of <span class="math inline">\([0,1]^2\)</span> and <span class="math inline">\([0,1]\)</span> corresponding to finite <span class="math inline">\(n\)</span>). We illustrate the infinite-<span class="math inline">\(n\)</span> (numerically, large <span class="math inline">\(n\)</span>) limit of these two mappings in <a href="#fig-n-to-infty">Figure&nbsp;<span>3.9</span></a>.</p>
+<div id="fig-n-to-infty" class="cell quarto-layout-panel" data-execution_count="7">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-n-to-infty-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-n-to-infty-output-1.svg" class="img-fluid figure-img" data-ref-parent="fig-n-to-infty"></p>
+<figcaption class="figure-caption">(a) Z-mapping</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-n-to-infty-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-n-to-infty-output-2.svg" class="img-fluid figure-img" data-ref-parent="fig-n-to-infty"></p>
+<figcaption class="figure-caption">(b) Column mapping</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.9: The <span class="math inline">\(n\to\infty\)</span> limit of mappings.</figcaption><p></p>
+</figure>
+</div>
+<p>We see that the Column mapping converges to projection on <span class="math inline">\(v_1\)</span>, in other words, <span class="math inline">\(\alpha=C(v_1, v_2) = v_1\)</span>, showing that despite every <span class="math inline">\(C^{n}\)</span> being numerically bijective, the limit of the sequence is not bijective. This becomes clear when looking at the binary expansion of <span class="math inline">\(C\)</span> :</p>
+<p><span class="math display">\[
+\begin{aligned}
+C(v_1, v_2) &amp;= \lim_{n\to\infty} C^{(n)}(v_1,v_2)\\
+&amp;= \lim_{n\to\infty} 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n \\
+&amp;= \lim_{n\to\infty} 0.b^1_1 b^1_2 \cdots \\
+&amp;= v_1
+\end{aligned}
+\]</span></p>
+<p>The limit is not bijective, because the bits of <span class="math inline">\(v_2\)</span> are “lost” in the <span class="math inline">\(n\to\infty\)</span> limit, and the inverse <span class="math inline">\(C_2^{-1}(\alpha)\)</span> is not well-defined, since it “takes bits between <span class="math inline">\(\infty\)</span> and <span class="math inline">\(2\infty\)</span>”.</p>
+<p>The Z-mapping seems to converge to a fractal curve. Numerically, there seems to be an infinite number of discontinuities, but the sizes of these discontinuities are, for the most part, small, so that <em>on average</em> they vanish as <span class="math inline">\(n\to\infty\)</span>. We won’t go further into detail about this, but this gives some intuition for the arguments presented in <a href="4_locality.html"><span>Chapter&nbsp;4</span></a>.</p>
+<p>We finish this discussion on the limit of the sequence of mappings by asking if there are other mappings similar to the Z-mapping, in the sense that they are pointwise convergent and the limit is bijective. In an informal way, we established two conditions for this in the context of the mappings described in <a href="#sec-mappings-binary"><span>Section&nbsp;3.3.2.1</span></a>:</p>
+<!--
+[^zmapping-notbijective]:
+  We refer to @Sagan1994 for an in-depth study, and in particular chapter 6, in which the author shows that the Z-curve converges to the Lebesgue curve.<br> 
+  <!-- which is a Peano-type function (continuous and surjective from $[0,1]$ into $[0,1]^2$).<br> 
+  Despite what can often be found in online resources, the Z-curve is *not* a bijection.
+  <!-- because the added injectivity would violate Netto's theorem. 
+  For every point in $[0,1]^2$, there are at most 4 distinct preimages in $[0,1]$. The reason for this is the ambiguity in the writing of binary expansions, and in @sec-zcurve-noninjective we give proof that the Z-curve is not injective in the $n\to\infty$ limit.<br>
+  For the following, we will consider the Z-curve to be bijective by disallowing expansions of the type $0.1000\cdots=0.0111\cdots$.
+  <!-- We note that in @Sagan1994 many other Peano curves (continuous surjections $[0,1]\mapsto [0,1]^2$) are presented (albeit more difficult to implement numerically). 
+  <!-- Nicole: I don't say that the Lebesgue curve is continuous, because that opens up a whole other can of worms that I don't want to go into 
+<!-- Nicole: OK, after discussion with valentin, our definition of the Z-mapping is not exactly the same as Lebesgue curve.
+  Z-mapping might seem to approximate the Lebesgue curve, but it is not the same.
+  Lebesgue is defined on the Cantor set (the cantor set avoids the discontinuities, e.g. around alpha=0.5), then extended linearly, thus continuous
+  Our Z-mapping is defined through the bits OBTAINED FROM THE INDICATOR FUNCTIONS; and so it works on NON-AMBIGUOUS binary representations. Thus, our Z-mapping is a bijection.
+  Our Z-mapping is also not continuous, consider alpha=0.5. So we don't have a problem with Netto's theorem.
+-->
+<ol type="1">
+<li>condition of pointwise convergence: the LSB of the input must be mapped to the LSB of the output,</li>
+<li>condition of “no information loss”: the MSB of the input must be mapped to the MSB of the output.</li>
+</ol>
+<p>These two conditions do not leave a lot of flexibility in the design of new mappings. We can evidently define mappings where we interleave the bits in a different order, such as <span class="math inline">\(0.b^2_1 b^1_1 b^2_2 b^1_2 \cdots\)</span>; or mappings where we reorder the <span class="math inline">\(k\)</span> bits of the input, as in <span class="math inline">\(0.b^1_2 b^2_2 b^1_1 b^2_1 b^1_4 b^2_4 b^1_3 b^2_3 \cdots\)</span>, but the conditions restrict the reordering to be permutations of neighbouring bits. In essence, these mappings are not fundamentally different, and the Z-mapping can be seen as a “standard example” of the pointwise convergent mappings with bijective limits, which can be expressed as the permutation of binary digits.</p>
+<!-- ### Visualizing of the mappings of the dynamic 2D neural field
+
+It is time for a little treat. Before we argue about how to simulate the dynamics of the 1D neural field, let us simulate the dynamics of the 2D neural field, then at each timestep, we map the 2D neural field to the 1D embedding. This will give us a reference of how the 1D neural field is supposed to look under the condition that its dynamics are identical.
+
+![(TODO) Animation showing the image of the dynamics 2D neural field through different mappings $S : [0,1]^2 \mapsto [0,1]$](figures/photo_2023-06-10_17-21-19.jpg) -->
+</section>
+</section>
+</section>
+<section id="sec-coarse-graining" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="sec-coarse-graining"><span class="header-section-number">3.4</span> Coarse-graining the neural field in <span class="math inline">\([0,1]\)</span></h2>
+<section id="naive-simulations-of-the-neural-field-on-01" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="naive-simulations-of-the-neural-field-on-01"><span class="header-section-number">3.4.1</span> Naive simulations of the neural field on <span class="math inline">\([0,1]\)</span></h3>
+<p>In the continuation of the simulation methods established in the <a href="2_neural_fields.html#sec-simnf"><span>Section&nbsp;2.2</span></a>, we adopt a grid discretization scheme to simulate the neural field on <span class="math inline">\([0,1]\)</span>, as the grid naturally yields square populations, which can directly be used with the mappings introduced previously.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>We now address the elephant in the room: how do we numerically simulate a neural field defined on – what appears to be – a fractal curve? Naively, we could just proceed as follows :</p>
+<ol type="1">
+<li>Create a grid of <span class="math inline">\(2^n \times 2^n = 4^n\)</span> squares of size <span class="math inline">\(2^{-n} \times 2^{-n}\)</span> in the <span class="math inline">\([0,1]\times[0,1]\)</span> embedding. Each square is located by a position <span class="math inline">\(\boldsymbol{v_i} = (v_{1,i},v_{2,i}),\,i\in\{1,\cdots\,2^n\}\)</span>.</li>
+<li>Compute a discretized version of the 1D connectivity kernel <span class="math display">\[
+\begin{aligned}
+\tilde w(\alpha_i, \beta_j) &amp;= \tilde J_{\alpha_i,\beta_j}\\
+&amp;= \tilde J_{S(i),S(j)}\\
+&amp;\stackrel{\text{def}}{=} J_{ij}\\
+&amp;= w_U(\boldsymbol{v_i}, \boldsymbol{v_j})
+\end{aligned}
+\]</span> at every square location (where we denote for simplicity of notation <span class="math inline">\(S(i)=S(\boldsymbol{v_i})\)</span>).</li>
+<li>Simulate the neural field in <span class="math inline">\([0,1]\)</span> on the corresponding discretized space with discretization step <span class="math inline">\(4^{-n}\)</span>.</li>
+</ol>
+<p>The problem with this approach is that since the mappings are just <em>permutations</em> of the square populations, the resulting connectivity matrix <span class="math inline">\(\tilde J_{\alpha_i,\beta_j}\)</span> is just a permutation of the rows and columns of <span class="math inline">\(J_{ij}\)</span>, and will therefore trivially lead to the identical neural field dynamics.</p>
+</section>
+<section id="coarse-graining-the-one-dimensional-neural-field" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="coarse-graining-the-one-dimensional-neural-field"><span class="header-section-number">3.4.2</span> Coarse-graining the one-dimensional neural field</h3>
+<p>In some sense, we would like to “take into account” the fact that a mapping of the square populations has been performed. Simulations of the neural field equation on <span class="math inline">\([0,1]^2\)</span> are done by using <span class="math inline">\(4^n\)</span> square populations on a grid, but, as long as we have <span class="math inline">\(4^n\)</span> corresponding segment populations in <span class="math inline">\([0,1]\)</span>, the dynamics will trivially be the same, <em>independantly of the mapping</em> <span class="math inline">\(S^n\)</span>. Therefore, we need a way to reduce the number of segment populations in <span class="math inline">\([0,1]\)</span>.</p>
+<p>We do this using “coarse-graining”, in which we average <span class="math inline">\(2^n\)</span> consecutive segment populations, each of length <span class="math inline">\(4^{-n}\)</span>, in order to obtain <span class="math inline">\(2^n\)</span> coarse-grained segment populations, each of length <span class="math inline">\(2^{-n}\)</span>. This operation is illustrated in <a href="#fig-averaging">Figure&nbsp;<span>3.10</span></a>.</p>
+<div id="fig-averaging" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="figures/fig-cg.svg" class="img-fluid figure-img" width="400"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.10: Averaging <span class="math inline">\(2^n\)</span> of the <span class="math inline">\(4^n\)</span> segments populations of <span class="math inline">\(S^n\)</span> results in the <span class="math inline">\(2^n\)</span> segments populations</figcaption>
+</figure>
+</div>
+<p>Without coarse-graining, the mesh size along each spatial dimension is <span class="math inline">\(2^{-n}\)</span> in 2D, but directly applying the mapping results instead in a mesh size of <span class="math inline">\(4^{-n}\)</span> in 1D, which is much finer than the <span class="math inline">\(2^{-n}\)</span> per dimension. However, after coarse-graining, the effective mesh size in 1D becomes <span class="math inline">\(2^{-n}\)</span>, which matches the 2D mesh size. Therefore, we are are not compensating the reduction of dimensionality by an increase in the numerical resolution.</p>
+<!-- Let us consider what happens to the mapping when $n$ is large, and in particular how $S^{n/2}$ and $S^{n}$ behave. Since the mappings are pointwise convergent and we are considering large $n$, we argue that both $S^{n/2}$ and $S^{n}$ are good approximations of the true mapping $S$. More importantly, $S^{n/2}$ can be considered as an approximation of $S^{n}$. This is interesting from a numerical standpoint since it is feasible to compute $S^{n}$, and the approximation $S^{n/2}$ can be obtained by "coarse-graining" $S^n$. Another way of thinking about this is that $S^n$ is considered to be the "mathematically exact" fractal structure and $S^{n/2}$ the numerical approximation. The way we go from $S^n$ to $S^{n/2}$ is by averaging the segment populations by batches of $2^n$, as schematized in @fig-averaging. -->
+<p>A geometrical intuition we can give for the coarse-graining is how the averaging of the segment populations leads to sampling the connectivity kernel at the “average” positions in the <span class="math inline">\([0,1]^2\)</span> embedding. In <a href="#fig-averaging-geom">Figure&nbsp;<span>3.11</span></a>, we colour-code the square populations corresponding to the segment populations before coarse-graining.</p>
+<div id="fig-averaging-geom" class="cell quarto-layout-panel" data-execution_count="8">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-averaging-geom-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-averaging-geom-output-1.svg" class="img-fluid figure-img" data-ref-parent="fig-averaging-geom"></p>
+<figcaption class="figure-caption">(a) Z-mapping</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-averaging-geom-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="3_mappings_files/figure-html/fig-averaging-geom-output-2.svg" class="img-fluid figure-img" data-ref-parent="fig-averaging-geom"></p>
+<figcaption class="figure-caption">(b) Column mapping</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.11: Square populations corresponding to the segment populations before coarse-graining are colored identically when they are the same bin of 1D length <span class="math inline">\(2^{-n}\)</span>. Here we show <span class="math inline">\(n=3\)</span>.</figcaption><p></p>
+</figure>
+</div>
+<p>In summary, coarse-graining allows us to compare the dynamics of a neural field in <span class="math inline">\([0,1]^2\)</span> simulated using <span class="math inline">\(2^n \times 2^n = 4^n\)</span> square populations; with the dynamics of a neural field in <span class="math inline">\([0,1]\)</span> simulated using <span class="math inline">\(2^n\)</span> segment populations.</p>
+<!-- One question that may arise is why we take $n/2$ instead of $n-1$. The reason for this is that we want the number of averaged segment populations to scale with $n$. If we had chosen $S^{n-1}$, then the number of segment populations is related via
+
+$$
+N_\text{pop}(n-1) = 4^{n-1} = 4^{n} / 4 = N_\text{pop}(n) / 4.
+$$
+
+In other words, we would be averaging a constant number (4 in this case) of segment populations, independently of $n$. Choosing a fraction of $n$ for the approximation then allows us to ensure that we average $2^n$ populations, since
+
+$$
+N_\text{pop}(n/2) = 4^{n/2} = 4^n / 4^{n/2} = 4^{n} / 2^{n} = N_\text{pop}(n) / 2^n.
+$$
+
+Furthermore, this number of averaged populations still vanishes, since
+
+$$
+N_\text{pop}(n/2) / N_\text{pop}(n) = 2^{-n} \xrightarrow{n\to\infty} 0.
+$$ 
+
+For Nicole: This is adressed by the argument of mesh size !!
+-->
+</section>
+</section>
+<section id="simulations-of-neural-fields-in-3d-2d-and-1d" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="simulations-of-neural-fields-in-3d-2d-and-1d"><span class="header-section-number">3.5</span> Simulations of neural fields in 3D, 2D and 1D</h2>
+<p>In this section, we show numerical simulations of the neural field in <span class="math inline">\([0,1]\)</span>, obtained from mapping higher-dimensional neural fields in <span class="math inline">\([0,1]^p,\,p\geq 2\)</span>. We see that the coarse-graining procedure works when applied from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span>. Then, we demonstrate that it can be applied iteratively, to map from <span class="math inline">\([0,1]^3\)</span> to <span class="math inline">\([0,1]^2\)</span>, and from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span>.</p>
+<section id="practical-aspects-of-implementing-the-simulations-of-the-one-dimensional-neural-field" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="practical-aspects-of-implementing-the-simulations-of-the-one-dimensional-neural-field"><span class="header-section-number">3.5.1</span> Practical aspects of implementing the simulations of the one-dimensional neural field</h3>
+<p>We give a quick overview of the numerical details that go into implementing the methods presented above. Since the mappings (Z-mapping, Column mapping) can be written as binary expansions, they naturally lend themselves to numerical approximations. Furthermore, this is made especially easy since the mappings we defined are simply permutations of bits (in the <span class="math inline">\(n &lt; \infty\)</span> case), and so we can write a one-to-one correspondence between unsigned integers.</p>
+<p>We have implemented the mappings as all inheriting from the same abstract class, and each mapping simply has to define a method <code>indices_to_indices2d(indices: array[int, 1]) -&gt; array[int, 2]</code> to go from 1D to 2D (<span class="math inline">\(S^{-1}\)</span>), and a method <code>indices2d_to_indices(indices2d: array[int, 2]) -&gt; array[int, 1]</code> to go from 2D to 1D.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> The abstract class simply defines additional quality-of-life functionality, which makes use of these two methods.</p>
+<p>Finally, the coarse-graining is easily implemented as the combination of a reshape operation (to bring all consecutive sequences of <span class="math inline">\(2^n\)</span> populations together), followed by averaging (see the <a href="https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L186">implementation here</a>)</p>
+</section>
+<section id="application-of-s-from-012-to-01" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="application-of-s-from-012-to-01"><span class="header-section-number">3.5.2</span> Application of <span class="math inline">\(S\)</span> : from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span></h3>
+<p>To demonstrate the coarse-graining, we start with the cycling neural field presented in <a href="2_neural_fields.html#sec-cycling-nf"><span>Section&nbsp;2.4</span></a>. The kernel <span class="math inline">\(\tilde w\)</span> of the one-dimensional neural field is numerically approximated using the coarse-graining procedure of different mappings. Simulations are presented in <a href="#fig-cg-2d-1d">Figure&nbsp;<span>3.12</span></a> (we again set <span class="math inline">\(\delta=6\)</span> and the initial condition <span class="math inline">\(h(z_1, z_2, t &lt; 0) = z_1\)</span>), showing the activity levels, recurrent currents, and the latent trajectory <span class="math inline">\((\kappa_1(t), \kappa_2(t))\)</span>. In order, we discuss:</p>
+<ul>
+<li><a href="#fig-cg-2d-1d-random">Figure&nbsp;<span>3.12 (b)</span></a>: The random mapping can be numerically evaluated as a trivial case of a mapping that does not have locality. The coarse-graining averages out all the structure of the activity, and the recurrent currents are zero, because the contributions from excitatory and inhibitory populations cancel out. This results in the erasure of the cycling behavior in the latent trajectory.</li>
+<li><a href="#fig-cg-2d-1d-column">Figure&nbsp;<span>3.12 (c)</span></a>: The Column mapping shows the projection of the initial condition onto the <span class="math inline">\(z_1\)</span> axis, yielding the sigmoid in the <span class="math inline">\([0,1]\)</span> embedding. Again, the current currents cancel out and yield zero, and the latent trajectory quickly decays towards <span class="math inline">\((\kappa_1, \kappa_2) = (0,0)\)</span>.</li>
+<li><a href="#fig-cg-2d-1d-z">Figure&nbsp;<span>3.12 (d)</span></a>: The Z-mapping shows that despite the fractal structure of the activity, there is still regularity in the <span class="math inline">\([0,1]\)</span> embedding, resulting in non-zero recurrent currents. In consequence, the latent trajectory shows a clear cycling behavior, that closely matches that of the 2D neural field in <a href="#fig-cg-2d-1d-original">Figure&nbsp;<span>3.12 (a)</span></a>.</li>
+</ul>
+<!-- TODONE : we run simulations and compare latent trajectories. first show only column and z-mapping. add quick intro to diagonal, col/row, reclocal, mention cannot be expressed by bit permutation. diagonal, col/row do not work, despite the non-zero field and recurrent currents. reclocal does work. intuition is that the recursive approach (zmapping, reclocal) seems to give locality
+
+Nicole: we don't show the other mappings, because they are not as nice examples, and essentially they work the same
+-->
+<div id="fig-cg-2d-1d" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div id="fig-cg-2d-1d-original" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><video src="figures/coarse_graining_p=2_original.mp4" class="img-fluid" data-ref-parent="fig-cg-2d-1d" controls=""><a href="figures/coarse_graining_p=2_original.mp4">Video</a></video></p>
+<figcaption class="figure-caption">(a) Neural field in the 2D embedding</figcaption>
+</figure>
+</div>
+<div id="fig-cg-2d-1d-random" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><video src="figures/coarse_graining_p=2_random.mp4" class="img-fluid" data-ref-parent="fig-cg-2d-1d" controls=""><a href="figures/coarse_graining_p=2_random.mp4">Video</a></video></p>
+<figcaption class="figure-caption">(b) Random mapping followed by coarse-graining</figcaption>
+</figure>
+</div>
+<div id="fig-cg-2d-1d-column" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><video src="figures/coarse_graining_p=2_column.mp4" class="img-fluid" data-ref-parent="fig-cg-2d-1d" controls=""><a href="figures/coarse_graining_p=2_column.mp4">Video</a></video></p>
+<figcaption class="figure-caption">(c) Column mapping followed by coarse-graining</figcaption>
+</figure>
+</div>
+<div id="fig-cg-2d-1d-z" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><video src="figures/coarse_graining_p=2_z.mp4" class="img-fluid" data-ref-parent="fig-cg-2d-1d" controls=""><a href="figures/coarse_graining_p=2_z.mp4">Video</a></video></p>
+<figcaption class="figure-caption">(d) Z-mapping followed by coarse-graining</figcaption>
+</figure>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;3.12: The cycling 2D neural field (<span class="math inline">\(4^8\)</span> square populations) is mapped to <span class="math inline">\([0,1]\)</span> using different mappings, then coarse-grained (resulting in <span class="math inline">\(2^8\)</span> segment populations).</figcaption>
+</figure>
+</div>
+</section>
+<section id="sec-simulations-3d-2d-1d" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="sec-simulations-3d-2d-1d"><span class="header-section-number">3.5.3</span> Iterative application of <span class="math inline">\(S\)</span> : from <span class="math inline">\([0,1]^3\)</span> to <span class="math inline">\([0,1]^2\)</span>, then to <span class="math inline">\([0,1]\)</span></h3>
+<!-- #### Continuity on one axis and fractal on the other: from $[0,1]^3$ to $[0,1]^2$ -->
+<p>In the previous section, we showed that the coarse-graining procedure works from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span>. However, one might argue that the reason why it worked, is not the mapping, but also the continuity of the neural field in <span class="math inline">\([0,1]^2\)</span>. To show the generality of our results, we show that coarse-graining works, even when the original neural field is fractal.</p>
+<p>For this, we again consider the same cycling field, but with <span class="math inline">\(p=3\)</span>, such that the natural embedding space is <span class="math inline">\(\mathbb R^3\)</span>, with the equivalent formulation on <span class="math inline">\([0,1]^3\)</span>. We again consider a grid with a mesh size of <span class="math inline">\(2^{-n}\)</span> along each spatial dimension, resulting in <span class="math inline">\(2^n \times 2^n \times 2^n = 8^n\)</span> “cube populations”, at positions <span class="math inline">\((v_1, v_2, v_3) \in [0,1]^3\)</span>.</p>
+<p>To go from <span class="math inline">\([0,1]^3\)</span> to <span class="math inline">\([0,1]^2\)</span>, we consider a slice <span class="math inline">\((v_2, v_3)\)</span> at constant <span class="math inline">\(v_1\)</span>, map <span class="math inline">\((v_2, v_3)\)</span> to <span class="math inline">\(\alpha_{23}\)</span>, then perform coarse-graining, which brings down the number of square populations in <span class="math inline">\([0,1]^2\)</span> from <span class="math inline">\(8^n\)</span> to <span class="math inline">\(4^n\)</span>. The result of this is an embedding of the neural field on <span class="math inline">\((v_1, \alpha_{23}) \in [0,1]^2\)</span>. The corresponding neural field is continuous in its <span class="math inline">\(v_1\)</span> component, but fractal in <span class="math inline">\(\alpha_{23}\)</span>. This is visualized in <a href="#fig-cg-3d-2d-1d">Figure&nbsp;<span>3.13</span></a>, where we see that in the state <span class="math inline">\(h(z_1, z_2, z_3) = z_1\)</span>, the corresponding 2D neural field is constant along the <span class="math inline">\(\alpha_{23}\)</span> component, since the slice <span class="math inline">\((v_2, v_3)\)</span> has a constant activity level. However, as soon as <span class="math inline">\(h\)</span> evolves to a new state, non-orthogonal to <span class="math inline">\(z_2\)</span> and <span class="math inline">\(z_3\)</span>, the fractal structure becomes clear, because the slice <span class="math inline">\((v_2, v_3)\)</span> is no longer constant.</p>
+<div id="fig-cg-3d-2d-1d" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><video src="figures/embedding_3d_2d_1d.mp4" class="img-fluid" controls=""><a href="figures/embedding_3d_2d_1d.mp4">Video</a></video></p>
+<figcaption class="figure-caption">Figure&nbsp;3.13: Equivalence of dynamics, from 3D to 2D to 1D.</figcaption>
+</figure>
+</div>
+<p>We close this chapter by repeating the process to go from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span>, mapping <span class="math inline">\((v_1, \alpha_{23})\)</span> to <span class="math inline">\(\alpha_{123}\)</span>, and coarse-graining. In total, we have coarse-grained two times: once from <span class="math inline">\([0,1]^3\)</span> (<span class="math inline">\(8^n\)</span> cube populations) to <span class="math inline">\([0,1]^2\)</span> (<span class="math inline">\(4^n\)</span> square populations), and again from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span> (<span class="math inline">\(2^n\)</span> segment populations). The corresponding 1D neural field is now fully fractal, and again exhibits the same dynamics. This shows that “local mappings conserve regularity”: we started with a fully continous neural field in <span class="math inline">\([0,1]^3\)</span>, and obtained a partially fractal neural field in <span class="math inline">\([0,1]^2\)</span>. Despite the fractal structure, the 2D neural field is still regular enough that the dynamics are conserved, but more importantly that it can <em>again</em> be mapped to an equivalent 1D neural field. <!-- In @fig-averaging-geom-3d, we repeat a similar geometric view as @fig-averaging-geom: we see the Z-mapping in the slice $(v_2, v_3)$, how after coarse-graining the kernel is still effectively "sampled" at averaged locations, and crucially, how repeating the coarse-graining still leads to average locations that span the entire $[0,1]^3$ box (instead of being constrained to a plane embedded in $[0,1]^3$, as would have been the case with the Column mapping). --></p>
+<!-- ![(TODO what $n$) Effective sampling points after averaging.](figures/mapping_3d_2d_1d.png){width=400px #fig-averaging-geom-3d} -->
+
+
+<div id="refs" class="references csl-bib-body" role="list" style="display: none">
+<div id="ref-GerKis14" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">W. Gerstner, W. M. Kistler, R. Naud, and L. Paninski, <em>Neuronal dynamics: From single neurons to networks and models of cognition</em>. Cambridge University Press, 2014. </div>
+</div>
+<div id="ref-kharazishvili_strange_2017" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">A. Kharazishvili, <em><a href="https://doi.org/10.1201/9781315154473">Strange <span>Functions</span> in <span>Real</span> <span>Analysis</span></a></em>, 3rd ed. New York: Chapman; Hall/CRC, 2017. </div>
+</div>
+<div id="ref-sagan_space-filling_1994" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">H. Sagan, <em>Space-filling curves</em>. New York: Springer-Verlag, 1994. </div>
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Formally, we would write the cumulative sum <span class="math inline">\(K_a = \sum_{b=1}^a p_b\)</span>. Then, we have <span class="math inline">\(\alpha \in [K_{a-1}, K_{a})\)</span> and <span class="math inline">\(\beta \in [K_{b-1}, K_{b})\)</span>. We abusively wrote <span class="math inline">\(J^0_{ab}\)</span> since all neurons in each population are identical, therefore we can index into the connectivity <span class="math inline">\(J^0_{ij}\)</span> with the population indices <span class="math inline">\(a,b\)</span> instead of neuron indices <span class="math inline">\(i,j\)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Strictly speaking, we have the problem that <span class="math inline">\(\textrm{CDF}^{-1}(v) \xrightarrow{v \to 1} \infty\)</span>, and so the derivative diverges when <span class="math inline">\(v \to 1\)</span> (and similarly, when <span class="math inline">\(v \to 0\)</span>). However, this is not a problem, since these limits correspond to <span class="math inline">\(z \to \pm \infty\)</span>, where the density vanishes.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>We note to avoid any confusion, that in <a href="2_neural_fields.html#sec-mapping-cdf"><span>Section&nbsp;2.5</span></a> the CDF is taken component-wise, instead of jointly. The univariate Gaussian CDF defines a bijection between <span class="math inline">\(\mathbb R\)</span> and <span class="math inline">\((0,1)\)</span>, but the joint CDF does not.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>We note that in our definition, <span class="math inline">\(S^n\)</span> maps <span class="math inline">\((0., 0.)\)</span> onto <span class="math inline">\(0\)</span>. Numerically, we encounter the problem that the inverse of the Gaussian CDF, used to compute the connectivity, goes to infinity when <span class="math inline">\(v_\mu\)</span> (one of the components of <span class="math inline">\((v_1, v_2) = S^{-1}(\alpha)\)</span>) goes to <span class="math inline">\(0\)</span> (or <span class="math inline">\(1\)</span>). To avoid this, we offset the squares (by <span class="math inline">\(2^{-n-1}\)</span> along each dimension), so that geometrically their position is not indexed by their lower-left corner, but rather their center. Analytically, this is not a problem, because the kernel defined in <a href="2_neural_fields.html#eq-hu-wu">Equation&nbsp;<span>2.12</span></a> diverges only linearly, compared to the exponential cutoff of the Gaussian distribution, so that the integrand still vanishes at infinity.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>The Z-curve is often defined in a transpose manner, putting first the bits of <span class="math inline">\(v_2\)</span> (vertical component) then the bits of <span class="math inline">\(v_1\)</span>, instead of <span class="math inline">\(v_1\)</span> then <span class="math inline">\(v_2\)</span>. By doing this, we get the “upright” Z shapes, as <a href="https://en.wikipedia.org/wiki/Z-order_curve#/media/File:Four-level_Z.svg">shown here</a>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>In order to simulate the mappings using Monte-Carlo schemes, binning methods can be applied. The intuition behind this is that sampled populations inside a small square of size <span class="math inline">\(2^{-n} \times 2^{-n}\)</span> give rise to the notion of an “average connectivity kernel”, and in our case the notion of “mean patterns”. More details are given in <a href="../appendices/B_mean_patterns.html"><span>Appendix&nbsp;B</span></a>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>In the source code, only the method <code>indices(v12: array[float, 2]) -&gt; array[int, 1]</code> is defined. This is because some mappings are implemented (for instance, the <a href="https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L244"><code>RecursiveLocalMapping</code></a>, that we don’t discuss here), which don’t lend themselves to the simple permutation of bits formulation.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/2_neural_fields.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Neural field toy model and simulations</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/4_locality.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Locality and numerical convergence</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

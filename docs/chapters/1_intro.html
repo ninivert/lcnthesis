@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Equivalence of neural field dynamics with different embedding dimensionality - 1&nbsp; Introduction</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/2_neural_fields.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/1_intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Equivalence of neural field dynamics with different embedding dimensionality</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/ninivert/lcnthesis" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf">
+              <i class="bi bi-bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.epub">
+              <i class="bi bi-bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cover</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/1_intro.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/2_neural_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Neural field toy model and simulations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/3_mappings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Mapping neural fields to lower-dimensional embeddings</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/4_locality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Locality and numerical convergence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/5_conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A_fixed_points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Fixed point study in the network of neurons</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B_mean_patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Binned sampling of populations and visualization of kernels</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#neural-field-models-in-neuroscience" id="toc-neural-field-models-in-neuroscience" class="nav-link active" data-scroll-target="#neural-field-models-in-neuroscience"><span class="header-section-number">1.1</span> Neural field models in neuroscience</a></li>
+  <li><a href="#neural-fields-as-the-limit-of-spatially-structured-networks-of-neurons" id="toc-neural-fields-as-the-limit-of-spatially-structured-networks-of-neurons" class="nav-link" data-scroll-target="#neural-fields-as-the-limit-of-spatially-structured-networks-of-neurons"><span class="header-section-number">1.2</span> Neural fields as the limit of spatially-structured networks of neurons</a></li>
+  <li><a href="#motivation-for-a-one-dimensional-neural-field" id="toc-motivation-for-a-one-dimensional-neural-field" class="nav-link" data-scroll-target="#motivation-for-a-one-dimensional-neural-field"><span class="header-section-number">1.3</span> Motivation for a one-dimensional neural field</a></li>
+  <li><a href="#sec-intro-simnf" id="toc-sec-intro-simnf" class="nav-link" data-scroll-target="#sec-intro-simnf"><span class="header-section-number">1.4</span> Numerical simulations of neural fields</a></li>
+  <li><a href="#summary-of-contents" id="toc-summary-of-contents" class="nav-link" data-scroll-target="#summary-of-contents"><span class="header-section-number">1.5</span> Summary of contents</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="neural-field-models-in-neuroscience" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="neural-field-models-in-neuroscience"><span class="header-section-number">1.1</span> Neural field models in neuroscience</h2>
+<p>Early recordings of cat’s somatosensory <span class="citation" data-cites="Mou57"><a href="../references.html#ref-Mou57" role="doc-biblioref">[1]</a></span> and visual <span class="citation" data-cites="HubWie62"><a href="../references.html#ref-HubWie62" role="doc-biblioref">[2]</a></span> cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons.</p>
+<p>The putative columnar organization of the cortex motivated the design of spatially structured models of neural population dynamics, namely neural field models <span class="citation" data-cites="WilCow73 Nun74 Ama77"><a href="../references.html#ref-WilCow73" role="doc-biblioref">[3]</a>–<a href="../references.html#ref-Ama77" role="doc-biblioref">[5]</a></span>, where the spatial dimensions corresponded to the two dimensions of the cortical sheet.</p>
+<p>As models of spatiotemporal neural population dynamics on the cortical sheet, neural field models can be used to explain experimentally observed patterns of cortical activity, such as travelling waves in visual <span class="citation" data-cites="SatNau12 MulRey14"><a href="../references.html#ref-SatNau12" role="doc-biblioref">[6]</a>, <a href="../references.html#ref-MulRey14" role="doc-biblioref">[7]</a></span>, somatosensory <span class="citation" data-cites="PetHah03 FerBol06"><a href="../references.html#ref-PetHah03" role="doc-biblioref">[8]</a>, <a href="../references.html#ref-FerBol06" role="doc-biblioref">[9]</a></span>, motor <span class="citation" data-cites="RubRob06 TakKim15"><a href="../references.html#ref-RubRob06" role="doc-biblioref">[10]</a>, <a href="../references.html#ref-TakKim15" role="doc-biblioref">[11]</a></span>, and hippocampal <span class="citation" data-cites="LubSia09 PatFuj12 PatSch13"><a href="../references.html#ref-LubSia09" role="doc-biblioref">[12]</a>–<a href="../references.html#ref-PatSch13" role="doc-biblioref">[14]</a></span> cortices (see <span class="citation" data-cites="MulCha18"><a href="../references.html#ref-MulCha18" role="doc-biblioref">[15]</a></span> for a review), and are used to model large-scale brain signals, such as electroencephalography (EEG) recordings <span class="citation" data-cites="Bre17"><a href="../references.html#ref-Bre17" role="doc-biblioref">[16]</a></span> (see also <span class="citation" data-cites="DipRan18"><a href="../references.html#ref-DipRan18" role="doc-biblioref">[17]</a></span> for an example of neural field modelling of calcium imaging recording of the visual cortex).</p>
+<p>More recent recording methods, especially in rodents, have provided evidence of low-dimensional organization of neuronal activity that does not depend on the physical locations of neurons on the cortical sheet. For example, contrary to the cat’s visual cortex, the orientation selectivity of pyramidal neurons in a rat’s visual cortex does not depend on their locations, that is, orientation selectivity is heterogeneous at any given location <span class="citation" data-cites="OhkChu05"><a href="../references.html#ref-OhkChu05" role="doc-biblioref">[18]</a></span>. Moreover, the activity of interneurons in any small volume of the visual cortex is also heterogeneous and seems to be structured by a low-dimensional transcriptomic manifold of fine cell subtypes <span class="citation" data-cites="BugDuf22"><a href="../references.html#ref-BugDuf22" role="doc-biblioref">[19]</a></span>. The local functional heterogeneity of neuronal activity in the cortex challenges the old concept of functionally homogeneous cortical columns and, with it, classical neural field models.</p>
+<p>While, historically, the spatial dimensions in neural field models have been the two dimensions of the cortical sheet (with the notable exception of the ring models for orientation selectivity in the visual cortex <span class="citation" data-cites="BenBar95"><a href="../references.html#ref-BenBar95" role="doc-biblioref">[20]</a></span> and the head-direction system <span class="citation" data-cites="Zha96"><a href="../references.html#ref-Zha96" role="doc-biblioref">[21]</a></span>), the “space” in neural field models does not need to represent physical space but can represent any suitable abstract embedding space. Neural field models with abstract embedding spaces could constitute a generalization of classical neural field theory for cortical networks that are not solely structured by distances of neurons on the cortical sheet.</p>
+<p>If we consider neural fields in abstract embedding spaces, which embedding space should we choose? More fundamentally, given some spatiotemporal dynamics, is there a “natural” choice for the embedding space?</p>
+<p>The goal of this Master Thesis is to show that the answer to the second question is highly nontrivial because even the dimensionality of the embedding space, for some given spatiotemporal dynamics, is not clearly defined. This means that it is possible to find two embeddings (and connectivity kernels) of different dimensions that give rise to identical dynamics. <!-- ; *contradicting the intuition that the embedding dimension should at least be as high as the dimensionality of the dynamics* (the number of variables needed to fully describe the dynamical system). --></p>
+<p>In particular, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation, where the embedding space is simply the interval <span class="math inline">\([0,1]\)</span>, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square <span class="math inline">\([0,1]^2\)</span> and the interval <span class="math inline">\([0,1]\)</span>. Importantly, these bijections are not (and can’t be) diffeomorphisms. Also, we show that although the connectivity kernel of the one-dimensional equation seems to have a fractal structure, it is sufficiently regular for its solution to be numerically approximated using standard grid-based simulations.</p>
+<p>Our results suggest that the notion of (spatial) dimensionality in neural field dynamics is not well-defined if not associated with a constraint on the regularity of the neural fields (and the connectivity kernel). Thereby, by studying a simple toy model, this work illustrates the importance of the analytic notion of regularity when neural population dynamics over abstract continuous spaces are considered.</p>
+</section>
+<section id="neural-fields-as-the-limit-of-spatially-structured-networks-of-neurons" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="neural-fields-as-the-limit-of-spatially-structured-networks-of-neurons"><span class="header-section-number">1.2</span> Neural fields as the limit of spatially-structured networks of neurons</h2>
+<p>Let us now give a short introduction to the mathematical theory of neural fields. Neural field equations emerge from the spatial structure of networks of rate neurons (or Poisson spiking neurons <span class="citation" data-cites="Ger95 CheDua19"><a href="../references.html#ref-Ger95" role="doc-biblioref">[22]</a>, <a href="../references.html#ref-CheDua19" role="doc-biblioref">[23]</a></span>) when the number of neurons <span class="math inline">\(N\)</span> becomes large. Positions <span class="math inline">\(\boldsymbol{z}_i \in \mathbb R^p\)</span> are attributed to each neuron, where <span class="math inline">\(\mathbb R^p\)</span> is the <em>embedding space</em>. Each neuron has a potential <span class="math inline">\(h_i(t)\)</span> that evolves in time, and the weight with which the neurons interact with each other is given by the entries of the connectivity matrix <span class="math inline">\(J_{ij} \in \mathbb R^{N \times N}\)</span>. Additionally, the activation function <span class="math inline">\(\phi(h)\)</span> describes the firing rate of a given neuron with potential <span class="math inline">\(h\)</span>. Then, the product <span class="math inline">\(J_{ij} \phi(h_j)\)</span> gives the <em>recurrent current</em> of neuron <span class="math inline">\(j\)</span> on neuron <span class="math inline">\(i\)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/fig-rnn.svg" class="img-fluid figure-img" width="500"></p>
+<figcaption class="figure-caption">Every neuron in a rate neural network has a position in the <span class="math inline">\(p\)</span>-dimensional embedding space</figcaption>
+</figure>
+</div>
+<p>If the embedding is well-chosen,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> the connectivity matrix <span class="math inline">\(J_{ij}\)</span> approaches a connectivity kernel <span class="math inline">\(w(\boldsymbol{y}, \boldsymbol{z})\)</span> as <span class="math inline">\(N \rightarrow \infty\)</span>, and neurons close in the embedding space tend to have similar potentials, such that we can write the continuous <em>neural field</em> <span class="math inline">\(h(\boldsymbol{z}, t)\)</span> of neuron potentials. Before we write down the neural field equation which describes how the field evolves in time, we need to introduce the neuron density <span class="math inline">\(\rho(\boldsymbol{z})\)</span>, which measures the number of neurons per unit volume of the embedding space. The neural field equation writes:</p>
+<p><span id="eq-nf"><span class="math display">\[
+\partial_t h(\boldsymbol{z}, t) = -h(\boldsymbol{z}, t) + \int_{\mathbb{R}^p} w(\boldsymbol{z}, \boldsymbol{y}) \phi(h(\boldsymbol{y}, t)) \rho(\mathrm d \boldsymbol{y}).
+\tag{1.1}\]</span></span> <!-- 
+![(TODO add phi, add z instead of xi) The connectivity kernel defines the influence between localized neural populations in the embedding space](figures/connectivity_kernel.png) --></p>
+</section>
+<section id="motivation-for-a-one-dimensional-neural-field" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="motivation-for-a-one-dimensional-neural-field"><span class="header-section-number">1.3</span> Motivation for a one-dimensional neural field</h2>
+<p>This work was inspired by recent mathematical development in mean-field theories involving the theory of graphons <span class="citation" data-cites="JabPoy21"><a href="../references.html#ref-JabPoy21" role="doc-biblioref">[25]</a></span>. Informally, these recent results suggest that, even in the absence of any explicit spatial structure, as long as weights scale as <span class="math inline">\(1/N\)</span>, the dynamics of large networks can be described, as <span class="math inline">\(N \to \infty\)</span>, by a neural field equation where the embedding is simply the interval <span class="math inline">\([0,1]\)</span>, which motivates the search for a formulation of a one-dimensional neural embedding. <!-- Their main result is that under some boundedness assumptions of the connectivity between the components of a system, the equation of evolution incorporates only an integral over $[0,1]$. This is indeed the case in the toy model described next chapter, where weights scale as $J_{ij} \sim \frac 1N$, which motivates the search for a formulation of a one-dimensional neural embedding. --></p>
+<p>The main idea is to define a measurable bijective mapping <span class="math inline">\(S : \mathbb R^p\mapsto [0,1]\)</span> and a measure <span class="math inline">\(\lambda : \mathbb R^p\mapsto \mathbb{R}^+\)</span>, such that we can write a one-dimensional neural field <span class="math inline">\(\tilde h(\alpha, t)\)</span> with a connectivity kernel loosely defined as <span class="math inline">\(\tilde w = w \circ S^{-1}\)</span>.</p>
+<!--
+$$
+\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(t, \vec y)) \rho(\mathrm d \vec y) = \int_{[0,1]} [w(\vec z, \cdot) \phi(h(t, \cdot)) \rho(\cdot) \lambda(\cdot)] \circ S^{-1}(\d \alpha)
+$$
+Informally, we would like to define the one-dimensional field $\tilde h(\alpha, t) = h(S^{-1}(\alpha), t)$, connectivity $\tilde w(\alpha, \beta) = w(S^{-1}(\alpha), S^{-1}(\beta))$ and density $\tilde \rho(\alpha) = \rho(S^{-1}(\alpha))$, so that we can write the neural field in the $[0,1]$ embedding : -->
+<p><span class="math display">\[
+\partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta)
+\]</span></p>
+<p>This change of variable in the kernel seems counter-intuitive: how is it possible to map dynamics in the embedding space <span class="math inline">\(\mathbb R^p\)</span> to dynamics in the lower dimensional embedding space <span class="math inline">\([0,1]\)</span> without losing information? And even if mathematically such a change of variables is possible, is it even feasible to numerically simulate the dynamics in the lower dimensional embedding space?</p>
+</section>
+<section id="sec-intro-simnf" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="sec-intro-simnf"><span class="header-section-number">1.4</span> Numerical simulations of neural fields</h2>
+<p>The goal of this thesis is to not only give an intuition on the mappings between the <span class="math inline">\([0,1]\)</span> and <span class="math inline">\(\mathbb R^p\)</span> embedding spaces, but also show that the mathematical construction works numerically.</p>
+<p>We distinguish two types of numerical simulations for the neural field in <a href="#eq-nf">Equation&nbsp;<span>1.1</span></a>:</p>
+<ol type="1">
+<li><p>A neuron-based simulation of <span class="math inline">\(N\)</span> neurons. The location of each neuron is an independent sample from the distribution <span class="math inline">\(\rho(z_1, \cdots, z_p)\)</span>. This case then just reduces to simulating the network of rate neurons. In other words, we are simulating the full network of rate neurons, and the simulation converges to the true mathematical neural field equation as <span class="math inline">\(N\)</span> becomes large.</p></li>
+<li><p>A discretization-based simulation. In the <span class="math inline">\(\mathbb R^p\)</span> space, we discretize each dimension, forming a grid of <span class="math inline">\(p\)</span>-dimensional bins. Each bin effectively corresponds to an infinite population of neurons, which are approximated to be the same (this is a mean-field approximation). This works because by continuity of the field, neurons which are close in <span class="math inline">\(\mathbb R^p\)</span> also have similar potentials. As we increase the number of bins, the simulation becomes more precise and the dynamics approach that of the true mathematical neural field.</p></li>
+</ol>
+<p>With this in mind, we can try to understand why simulating a neural field in <span class="math inline">\([0,1]\)</span> might be difficult. Suppose we take bins in the <span class="math inline">\(\mathbb R^p\)</span> space, and map each bin to a random position in <span class="math inline">\([0,1]\)</span>. Intuitively, this won’t work (in the sense that the dynamics in <span class="math inline">\([0,1]\)</span> will not be the same as the dynamics in <span class="math inline">\(\mathbb R^p\)</span>), because the hypothesis of continuity is not longer true: the mapping is random, so the nearby neurons in <span class="math inline">\([0,1]\)</span> will no longer have similar potentials, and the error of the mean-field approximation will no longer vanish as we take increasingly many (and smaller) bins. <!-- NOTE : was "populations" before, this is explained later in the thesis. but OK, for the introduction, maybe we should use neurons
+the mapping is random, so the nearby populations in $[0,1]$ --></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/fig-locality.svg" class="img-fluid figure-img" width="600"></p>
+<figcaption class="figure-caption">Good mappings from <span class="math inline">\(\mathbb R^p\)</span> to <span class="math inline">\([0,1]\)</span> should maintain some sense of “locality”</figcaption>
+</figure>
+</div>
+<p>In some sense, we would like to find a mapping that conserves “locality”: populations that are close in <span class="math inline">\([0,1]\)</span> should represent nearby populations in <span class="math inline">\(\mathbb R^p\)</span>, or at least there shouldn’t be “too many large discontinuities”.</p>
+</section>
+<section id="summary-of-contents" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="summary-of-contents"><span class="header-section-number">1.5</span> Summary of contents</h2>
+<p><a href="2_neural_fields.html"><span>Chapter&nbsp;2</span></a> introduces a toy model for a neural field in <span class="math inline">\(p\)</span> dimensions, and tools to study its dynamics. We also discuss interpretations of numerical simulation schemes.</p>
+<p><a href="3_mappings.html"><span>Chapter&nbsp;3</span></a> is dedicated to the discussion of mappings from 2 dimensions to 1 dimension. We give intuitions accompanied by simulations, and discuss in detail how “locality” emerges from these mappings.</p>
+<p>Finally, <a href="4_locality.html"><span>Chapter&nbsp;4</span></a> tries to formalize the intuitive results obtained in the previous chapters. We build a metric to measure the “discretization error”, and provide the key arguments for a proof of convergence of the numerical approximations.</p>
+
+
+<div id="refs" class="references csl-bib-body" role="list" style="display: none">
+<div id="ref-Mou57" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">V. B. Mountcastle, <span>“Modality and topographic properties of single neurons of cat’s somatic sensory cortex,”</span> <em>Journal of neurophysiology</em>, vol. 20, no. 4, pp. 408–434, 1957. </div>
+</div>
+<div id="ref-HubWie62" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">D. H. Hubel and T. N. Wiesel, <span>“Receptive fields, binocular interaction and functional architecture in the cat’s visual cortex,”</span> <em>The Journal of physiology</em>, vol. 160, no. 1, p. 106, 1962. </div>
+</div>
+<div id="ref-WilCow73" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">H. R. Wilson and J. D. Cowan, <span>“A mathematical theory of the functional dynamics of cortical and thalamic nervous tissue,”</span> <em>Kybernetik</em>, vol. 13, no. 2, pp. 55–80, 1973. </div>
+</div>
+<div id="ref-Nun74" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">P. L. Nunez, <span>“The brain wave equation: A model for the <span>EEG</span>,”</span> <em>Mathematical Biosciences</em>, vol. 21, no. 3–4, pp. 279–297, 1974. </div>
+</div>
+<div id="ref-Ama77" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">S. Amari, <span>“Dynamics of pattern formation in lateral-inhibition type neural fields,”</span> <em>Biological cybernetics</em>, vol. 27, no. 2, pp. 77–87, 1977. </div>
+</div>
+<div id="ref-SatNau12" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[6] </div><div class="csl-right-inline">T. K. Sato, I. Nauhaus, and M. Carandini, <span>“Traveling waves in visual cortex,”</span> <em>Neuron</em>, vol. 75, no. 2, pp. 218–229, 2012. </div>
+</div>
+<div id="ref-MulRey14" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[7] </div><div class="csl-right-inline">L. Muller, A. Reynaud, F. Chavane, and A. Destexhe, <span>“The stimulus-evoked population response in visual cortex of awake monkey is a propagating wave,”</span> <em>Nature communications</em>, vol. 5, no. 1, p. 3675, 2014. </div>
+</div>
+<div id="ref-PetHah03" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[8] </div><div class="csl-right-inline">C. C. Petersen, T. T. Hahn, M. Mehta, A. Grinvald, and B. Sakmann, <span>“Interaction of sensory responses with spontaneous depolarization in layer 2/3 barrel cortex,”</span> <em>Proceedings of the National Academy of Sciences</em>, vol. 100, no. 23, pp. 13638–13643, 2003. </div>
+</div>
+<div id="ref-FerBol06" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[9] </div><div class="csl-right-inline">I. Ferezou, S. Bolea, and C. C. Petersen, <span>“Visualizing the cortical representation of whisker touch: Voltage-sensitive dye imaging in freely moving mice,”</span> <em>Neuron</em>, vol. 50, no. 4, pp. 617–629, 2006. </div>
+</div>
+<div id="ref-RubRob06" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[10] </div><div class="csl-right-inline">D. Rubino, K. A. Robbins, and N. G. Hatsopoulos, <span>“Propagating waves mediate information transfer in the motor cortex,”</span> <em>Nature neuroscience</em>, vol. 9, no. 12, pp. 1549–1557, 2006. </div>
+</div>
+<div id="ref-TakKim15" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[11] </div><div class="csl-right-inline">K. Takahashi <em>et al.</em>, <span>“Large-scale spatiotemporal spike patterning consistent with wave propagation in motor cortex,”</span> <em>Nature communications</em>, vol. 6, no. 1, p. 7169, 2015. </div>
+</div>
+<div id="ref-LubSia09" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[12] </div><div class="csl-right-inline">E. V. Lubenov and A. G. Siapas, <span>“Hippocampal theta oscillations are travelling waves,”</span> <em>Nature</em>, vol. 459, no. 7246, pp. 534–539, 2009. </div>
+</div>
+<div id="ref-PatFuj12" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[13] </div><div class="csl-right-inline">J. Patel, S. Fujisawa, A. Berényi, S. Royer, and G. Buzsáki, <span>“Traveling theta waves along the entire septotemporal axis of the hippocampus,”</span> <em>Neuron</em>, vol. 75, no. 3, pp. 410–417, 2012. </div>
+</div>
+<div id="ref-PatSch13" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[14] </div><div class="csl-right-inline">J. Patel, E. W. Schomburg, A. Berényi, S. Fujisawa, and G. Buzsáki, <span>“Local generation and propagation of ripples along the septotemporal axis of the hippocampus,”</span> <em>Journal of Neuroscience</em>, vol. 33, no. 43, pp. 17029–17041, 2013. </div>
+</div>
+<div id="ref-MulCha18" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[15] </div><div class="csl-right-inline">L. Muller, F. Chavane, J. Reynolds, and T. J. Sejnowski, <span>“Cortical travelling waves: Mechanisms and computational principles,”</span> <em>Nature Reviews Neuroscience</em>, vol. 19, no. 5, pp. 255–268, 2018. </div>
+</div>
+<div id="ref-Bre17" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[16] </div><div class="csl-right-inline">M. Breakspear, <span>“Dynamic models of large-scale brain activity,”</span> <em>Nature neuroscience</em>, vol. 20, no. 3, pp. 340–352, 2017. </div>
+</div>
+<div id="ref-DipRan18" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[17] </div><div class="csl-right-inline">M. Dipoppa, A. Ranson, M. Krumin, M. Pachitariu, M. Carandini, and K. D. Harris, <span>“Vision and locomotion shape the interactions between neuron types in mouse visual cortex,”</span> <em>Neuron</em>, vol. 98, no. 3, pp. 602–615, 2018. </div>
+</div>
+<div id="ref-OhkChu05" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[18] </div><div class="csl-right-inline">K. Ohki, S. Chung, Y. H. Ch’ng, P. Kara, and R. C. Reid, <span>“Functional imaging with cellular resolution reveals precise micro-architecture in visual cortex,”</span> <em>Nature</em>, vol. 433, no. 7026, pp. 597–603, 2005. </div>
+</div>
+<div id="ref-BugDuf22" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[19] </div><div class="csl-right-inline">S. Bugeon <em>et al.</em>, <span>“A transcriptomic axis predicts state modulation of cortical interneurons,”</span> <em>Nature</em>, 2022. </div>
+</div>
+<div id="ref-BenBar95" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[20] </div><div class="csl-right-inline">R. Ben-Yishai, R. L. Bar-Or, and H. Sompolinsky, <span>“Theory of orientation tuning in visual cortex.”</span> <em>Proceedings of the National Academy of Sciences</em>, vol. 92, no. 9, pp. 3844–3848, 1995. </div>
+</div>
+<div id="ref-Zha96" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[21] </div><div class="csl-right-inline">K. Zhang, <span>“Representation of spatial orientation by the intrinsic dynamics of the head-direction cell ensemble: A theory,”</span> <em>Journal of Neuroscience</em>, vol. 16, no. 6, pp. 2112–2126, 1996. </div>
+</div>
+<div id="ref-Ger95" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[22] </div><div class="csl-right-inline">W. Gerstner, <span>“Time structure of the activity in neural network models,”</span> <em>Phys. Rev. E</em>, vol. 51, no. 1, p. 738, 1995. </div>
+</div>
+<div id="ref-CheDua19" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[23] </div><div class="csl-right-inline">J. Chevallier, A. Duarte, E. Löcherbach, and G. Ost, <span>“Mean field limits for nonlinear spatially extended hawkes processes with exponential memory kernels,”</span> <em>Stochastic Processes and their Applications</em>, vol. 129, no. 1, pp. 1–27, 2019. </div>
+</div>
+<div id="ref-AGATHENERINE202286" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[24] </div><div class="csl-right-inline">Z. Agathe-Nerine, <span>“Multivariate hawkes processes on inhomogeneous random graphs,”</span> <em>Stochastic Processes and their Applications</em>, vol. 152, pp. 86–148, 2022, doi: <a href="https://doi.org/10.1016/j.spa.2022.06.019">https://doi.org/10.1016/j.spa.2022.06.019</a>. [Online]. Available: <a href="https://www.sciencedirect.com/science/article/pii/S0304414922001545">https://www.sciencedirect.com/science/article/pii/S0304414922001545</a></div>
+</div>
+<div id="ref-JabPoy21" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[25] </div><div class="csl-right-inline">P.-E. Jabin, D. Poyato, and J. Soler, <span>“Mean-field limit of non-exchangeable systems,”</span> <em>arXiv preprint arXiv:2112.15406</em>, 2021. </div>
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Rigorous proofs of convergence are still an active area of study <span class="citation" data-cites="CheDua19 AGATHENERINE202286"><a href="../references.html#ref-CheDua19" role="doc-biblioref">[23]</a>, <a href="../references.html#ref-AGATHENERINE202286" role="doc-biblioref">[24]</a></span> and are not the subject of this thesis.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Cover</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/2_neural_fields.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Neural field toy model and simulations</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

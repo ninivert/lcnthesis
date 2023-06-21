@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Equivalence of neural field dynamics with different embedding dimensionality - 4&nbsp; Locality and numerical convergence</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/5_conclusion.html" rel="next">
+<link href="../chapters/3_mappings.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/4_locality.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Locality and numerical convergence</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Equivalence of neural field dynamics with different embedding dimensionality</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/ninivert/lcnthesis" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.pdf">
+              <i class="bi bi-bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="../Equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.epub">
+              <i class="bi bi-bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cover</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/1_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/2_neural_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Neural field toy model and simulations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/3_mappings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Mapping neural fields to lower-dimensional embeddings</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/4_locality.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Locality and numerical convergence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/5_conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A_fixed_points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Fixed point study in the network of neurons</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B_mean_patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Binned sampling of populations and visualization of kernels</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#analytical-equivalence-of-the-dynamics-when-s-is-measurable-and-bijective" id="toc-analytical-equivalence-of-the-dynamics-when-s-is-measurable-and-bijective" class="nav-link active" data-scroll-target="#analytical-equivalence-of-the-dynamics-when-s-is-measurable-and-bijective"><span class="header-section-number">4.1</span> Analytical equivalence of the dynamics when <span class="math inline">\(S\)</span> is measurable and bijective</a></li>
+  <li><a href="#locality" id="toc-locality" class="nav-link" data-scroll-target="#locality"><span class="header-section-number">4.2</span> Locality</a>
+  <ul>
+  <li><a href="#sec-Vn" id="toc-sec-Vn" class="nav-link" data-scroll-target="#sec-Vn"><span class="header-section-number">4.2.1</span> Locality as vanishing average binned variation</a></li>
+  <li><a href="#computations-of-average-variation" id="toc-computations-of-average-variation" class="nav-link" data-scroll-target="#computations-of-average-variation"><span class="header-section-number">4.2.2</span> Computations of average variation</a>
+  <ul class="collapse">
+  <li><a href="#z-mapping" id="toc-z-mapping" class="nav-link" data-scroll-target="#z-mapping"><span class="header-section-number">4.2.2.1</span> Z-mapping</a></li>
+  <li><a href="#column-mapping" id="toc-column-mapping" class="nav-link" data-scroll-target="#column-mapping"><span class="header-section-number">4.2.2.2</span> Column mapping</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#numerical-convergence-of-the-finite-n-estimations" id="toc-numerical-convergence-of-the-finite-n-estimations" class="nav-link" data-scroll-target="#numerical-convergence-of-the-finite-n-estimations"><span class="header-section-number">4.3</span> Numerical convergence of the finite-<span class="math inline">\(n\)</span> estimations</a></li>
+  <li><a href="#generalizing-to-01p-mapsto-01" id="toc-generalizing-to-01p-mapsto-01" class="nav-link" data-scroll-target="#generalizing-to-01p-mapsto-01"><span class="header-section-number">4.4</span> Generalizing to <span class="math inline">\([0,1]^p \mapsto [0,1]\)</span></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-locality" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Locality and numerical convergence</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The previous chapter gave a detailed description of the mappings <span class="math inline">\(S : [0,1]^2 \mapsto [0,1]\)</span>, as well as a few numerical considerations. We found that mappings that yield equivalent dynamics crucially seem to have in common the property of <em>locality</em> (from 1D to 2D), even if the image seems to have a fractal structure. Intuitively, we saw that the locality seems to emerge from the mapping having for the most part small discontinuities.</p>
+<p>In this chapter, we will further explore these results, and attempt to formulate a measure of this “locality”. As a preamble, we show that bijectivity and measurability are sufficient conditions for the 2D and 1D neural field dynamics to be equivalent. Then, we apply our measure of “locality” to the special cases of the Column and Z-mappings, and show how this notion can discriminate between the two mappings. Finally, we show that our measure of locality is sufficient to ensure that the numerical estimation of the integral converges to the analytical integral; therefore, such embeddings can be simulated numerically.</p>
+<section id="analytical-equivalence-of-the-dynamics-when-s-is-measurable-and-bijective" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="analytical-equivalence-of-the-dynamics-when-s-is-measurable-and-bijective"><span class="header-section-number">4.1</span> Analytical equivalence of the dynamics when <span class="math inline">\(S\)</span> is measurable and bijective</h2>
+<!-- In the previous chapter, we introduced Cantor and Peano functions, and argued that if have to choose between the two, then the non-injective Peano functions are preferable, because, by Netto's theorem, they are the only ones that can be space-filling and reach all the square populations. -->
+<!-- Let us make the assumption that $S$ is a bijective function. However, to not break Netto's theorem, we do not make any assumptions regarding its continuity.
+
+Nicole: let's not mention Netto's theorem here. It applies to S^{-1}, and it becomes difficult to reason about when we talk about S. I don't think the proof works strictly in our case, because the Z-mapping is not a bijection, but let us assume uwuwuwu
+
+Nicole again: our Z-mapping is not defined in the same way as the Lebesgue curve, because we use indicator functions to take bit representations. We are stepwise functions. Our Z-mapping is a bijection, and not continuous.
+-->
+<p>Let us assume that the mapping <span class="math inline">\(S\)</span> is bijective and measurable. This is not a strong assumption, since the limit of pointwise convergent measurable functions is also measurable. In our case, we have written the finite-<span class="math inline">\(n\)</span> expansions <span class="math inline">\(S^n\)</span>, which, by being sums of piecewise constant functions, are also measurable. The measurability of <span class="math inline">\(S\)</span> allows us to write <span class="math inline">\(\lambda \circ S^{-1}\)</span>, the pushforward measure (or image measure) of <span class="math inline">\(\lambda\)</span> under the mapping <span class="math inline">\(S\)</span>.</p>
+<p>With these two assumptions, let us prove that by defining the initial condition and connectivity <span class="math display">\[
+\begin{aligned}
+\tilde h(\alpha, t=0) &amp;= h_U(S^{-1}(\alpha), t=0)\\
+\tilde w(\alpha, \beta) &amp;= w_U(S^{-1}(\alpha), S^{-1}(\beta)),
+\end{aligned}
+\]</span></p>
+<p>then the solution <span class="math inline">\(h_U(\boldsymbol{v}, t)\)</span> of the neural field equation in <span class="math inline">\([0,1]^2\)</span> uniquely defines the solution of the neural field equation in <span class="math inline">\([0,1]\)</span> by writing</p>
+<p><span id="eq-analytical-equivalence-tildeh"><span class="math display">\[
+\tilde h(\alpha, t) = h_U(\cdot, t) \circ S^{-1}(\alpha).
+\tag{4.1}\]</span></span></p>
+<p>We start by recalling the expression of the one-dimensional neural field, then substitute <a href="#eq-analytical-equivalence-tildeh">Equation&nbsp;<span>4.1</span></a> and <span class="math inline">\(\boldsymbol{v} = S^{-1}(\alpha),\, \boldsymbol{u} = S^{-1}(\beta)\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\partial_t \tilde h(\alpha, t) &amp;= -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \\
+\iff&amp;\\
+\partial_t h_U(S^{-1}(\alpha), t) &amp;=
+\begin{aligned}[t]
+    &amp;-h_U(S^{-1}(\alpha), t)\\&amp;+ \int_{[0,1]} w(S^{-1}(\alpha), S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta)
+\end{aligned}\\
+&amp;= \begin{aligned}[t]
+    &amp;-h_U(\boldsymbol{v}, t)\\&amp;+ \int_{[0,1]} w(\boldsymbol{v}, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta)
+\end{aligned}\\
+&amp;= -h_U(\boldsymbol{v}, t) + \int_{[0,1]^2} w(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(\boldsymbol{u}, t)) \lambda(\mathrm d\boldsymbol{u})
+\end{aligned}
+\]</span></p>
+<p>In the last line, we used a basic property of the pushfoward measure (see <span class="citation" data-cites="Bogachev2007"><a href="../references.html#ref-Bogachev2007" role="doc-biblioref">[1]</a></span>, Theorem 3.6.1, p.&nbsp;190). The Lebesgue measure <span class="math inline">\(\lambda : [0,1]^2 \mapsto \mathbb R^+\)</span> simply plays the role of a uniform distribution on <span class="math inline">\([0,1]^2\)</span>, and we simply write</p>
+<p><span class="math display">\[
+\partial_t h_U(\boldsymbol{v}, t) = -h_U(\boldsymbol{v}, t) + \int_{[0,1]^2} w(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(\boldsymbol{u}, t)) \mathrm d\boldsymbol{u}.
+\]</span></p>
+<p>Therefore, if <span class="math inline">\(h_U(\boldsymbol{v}, t)\)</span> solves the neural field equation in <span class="math inline">\([0,1]^2\)</span>, then <span class="math inline">\(\tilde h(t) = h_U(t) \circ S^{-1}\)</span> solves the equivalent neural field equation in <span class="math inline">\([0,1]\)</span>. The same reasoning applies in reverse: if <span class="math inline">\(\tilde h(\alpha, t)\)</span> solves the neural field equation in <span class="math inline">\([0,1]\)</span>, then <span class="math inline">\(h_U(t) = \tilde h \circ S\)</span> solves the neural field in <span class="math inline">\([0,1]^2\)</span>.</p>
+<p>We do not address the question of well-posedness of the neural field equations in this thesis; for proofs of the well-posedness of neural field equations, we refer the reader to <span class="citation" data-cites="faugeras2008absolute faugeras2009persistent veltz2009localglobal"><a href="../references.html#ref-faugeras2008absolute" role="doc-biblioref">[2]</a>–<a href="../references.html#ref-veltz2009localglobal" role="doc-biblioref">[4]</a></span>.</p>
+</section>
+<section id="locality" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="locality"><span class="header-section-number">4.2</span> Locality</h2>
+
+<!-- ### The total variation attempt
+
+The previous chapter gave the intuition that local mappings map populations close in 1D to populations close in 2D. To verify this, we might try to compare the distance between all segment populations and the population at $\alpha=0$, to the distance of all square populations to the population at $S^{-1}(\alpha=0)$. This is done in @fig-distance-2d-1d, where the 2D distance is taken to be the $\ell^2$ norm. If the distances matched perfectly, then we would see a line with slope $\sqrt 2$ in the graph. 
+
+![(TODO random, column and zcurve only, rename neuron to population) Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope $\sqrt 2$.](figures/distance_2d_1d.png){#fig-distance-2d-1d}
+
+For control, we also demonstrate that the random mapping has no locality: there is no correlation between the positions in 1D and the positions in 2D.
+Both Column and Z-mappings show a clear trend, the distances in 2D are correlated to the distances in 1D. The notable difference is that distances for the Column mapping seem to "oscillate" wildly, while the Z-mapping seems much more regular and matches the straight line more closely.
+
+This analysis motivates the following hypothesis: the property that sets the mappings apart, is that of total variation. The idea is to "project and sum up" all of the variations defined by the curves as they trace a path in the $[0,1]^2$ embedding. As $n\to\infty$, we expect to see that the total variation of the Z-mapping grows much more slowly than that of the Column mapping.
+
+Denoting $\alpha_i,\,i \in \{1, \cdots, 4^n\}$ the positions of the grid in the $[0,1]$ embedding, we define the total variation as the projection of all the corresponding 2D jumps onto the axes:[^tv]
+
+$$
+\begin{aligned}
+\mathrm{TV}(S^{-1}) &= \sum_{i=2}^{4^n} \norm{S^{-1}(\alpha_i) - S^{-1}(\alpha_{i-1})}_1 \\
+&= \sum_{i=2}^{4^n} |S_1^{-1}(\alpha_i) - S_1^{-1}(\alpha_{i-1})| + |S_2^{-1}(\alpha_i) - S_2^{-1}(\alpha_{i-1})|.
+\end{aligned}
+$$ {#eq-tv}
+
+[^tv]:
+  This definition is slightly different from other definitions of total variation, which involve a supremum over all partitions $P = \{0 \leq \alpha_1 < \cdots < \alpha_{N_p} \leq 1\}$.
+  <!-- The total variation is then defined as
+  $$
+  \mathrm{TV}(S^{-1}) = \sup_{P} \sum_{i=1}^{N_P} \norm{S^{-1}(\alpha_i) - S^{-1}(\alpha_{i-1})}_1.
+  $$
+  We don't use the more complex definition, because our version of total variation is just used for illustration purposes. Additionally, we make use of the $\ell^1$ norm because it lends itself to the nice geometric intuition of "projecting the jumps" on the axes. This choice of the norm is irrelevant, however, because analytically all norms are equivalent up to a constant.
+
+It is easy to see that $2\times 4^n$ is an upper bound of $\mathrm{TV}(S^{-1})$, since the image of $S^{-1}$ is bounded in $[0,1]^2$. In @fig-tv, we compute the total variation for different $n$ corresponding to different mappings.
+
+![(TODO $2\times 4^n$) Total variation for different mappings, as a function of $n$](figures/tv.png){#fig-tv}
+
+Disappointingly, all mappings seem to exhibit the same growth of total variation. It seems like our notion of total variation is not adequate to help discriminate between the mappings. We need to rethink our intuition.
+
+In some sense, having the constraint that the mapping traces a path in the bounded space $[0,1]^2$ that can go through each point of the grid only once leaves little flexibility. For fixed $n$, there are only finitely many "large jumps" the mapping can make, and the large number of "small jumps" still add up, so that the total variation still grows at approximately the same rate. -->
+<section id="sec-Vn" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-Vn"><span class="header-section-number">4.2.1</span> Locality as vanishing average binned variation</h3>
+<p>The previous chapter gave the intuition that local mappings map populations close in 1D to populations close in 2D. To verify this, we might try to compare the distance between all segment populations and the population at <span class="math inline">\(\alpha=0\)</span>, to the distance of all square populations to the population at <span class="math inline">\(S^{-1}(\alpha=0)\)</span>. This is done in <a href="#fig-distance-2d-1d">Figure&nbsp;<span>4.1</span></a>, where the 2D distance is taken to be the <span class="math inline">\(\ell^2\)</span> norm. If the distances matched perfectly, then we would see a line with slope <span class="math inline">\(\sqrt 2\)</span> in the graph.</p>
+<div class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-distance-2d-1d" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="4_locality_files/figure-html/fig-distance-2d-1d-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.1: Distance between the first population and all other populations, in 1D and 2D. The dotted line has a slope <span class="math inline">\(\sqrt 2\)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For control, we also demonstrate that the random mapping has no locality: there is no correlation between the positions in 1D and the positions in 2D. Both Column and Z-mappings show a clear trend, the distances in 2D are correlated to the distances in 1D. The notable difference is that distances for the Column mapping seem to “oscillate” wildly, while the Z-mapping seems much more regular and matches the straight line more closely.</p>
+<p>With this view, we understand that the coarse-grained performed in <a href="3_mappings.html#sec-coarse-graining"><span>Section&nbsp;3.4</span></a> was making use of that fact that locality helps by bounding the variation inside of each averaged bin. Therefore, we would like for mathematically formulate that on average, the variation inside of each bin before coarse-graining is small. <a href="#fig-sketch-binned-variation">Figure&nbsp;<span>4.2</span></a> gives an intuition of this. Even though the <span class="math inline">\([0,1]\)</span> embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.</p>
+<div id="fig-sketch-binned-variation" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="figures/fig-variation.svg" class="img-fluid figure-img" width="600"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.2: Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions. 4 bins are shown with a different colour. The horizontal line represents the average activity in the bin. From top to bottom: random, column, Z mapping.</figcaption>
+</figure>
+</div>
+<p>Given <span class="math inline">\(n\)</span>, let us define the average binned variation as the maximum difference of the 2D positions associated to segment populations in the same bin of size <span class="math inline">\(2^{-n}\)</span>:</p>
+<p><span id="eq-Vn"><span class="math display">\[
+V_n(S^{-1}) = \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \lVert{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}\rVert_1
+\tag{4.2}\]</span></span></p>
+<p>The definition of locality can essentially be seen as a weakened version of continuity, or “continuity on average”. A continuous function <span class="math inline">\(f\)</span> evidently verifies <span class="math inline">\(V_n(f) \xrightarrow{n \to \infty} 0\)</span>, since small neighbourhoods are mapped to small neighbourhoods. The reverse is obviously not true, since for instance the metric <span class="math inline">\(V_n\)</span> vanishes when applied to a step function, which is only piecewise continuous.</p>
+<!--
+variation inside the bins, strong version. basically, we take the max over all binning methods that have bins smaller than $\delta$. Let $P_\delta$ be a permutation of $[0,1]$ with $n_{P_\delta}$ elements $\{\alpha_1 \leq \alpha_2 \leq \cdots \alpha_{n_{P_\delta}}\}$, where $\alpha_{i}-\alpha_{i-1} \leq \delta$, and $\mathcal{P}_\delta$ the set of such permutations.
+
+$$
+\begin{aligned}
+V_\delta(S^{-1}) &= \sup_{P_\delta \in \mathcal{P}_\delta} \delta \sum_{i=1}^{n_{P_\delta}} \sup_{\alpha, \alpha^\prime \in [\alpha_{i-1}, \alpha_{i}]^2} \norm{S^{-1}(\alpha^\prime) - S^{-1}(\alpha)}_1 \\
+V &= \limsup_{\delta \to 0} V_\delta
+\end{aligned}
+$$
+
+evidently,
+
+$$
+0 \leq V_n \leq V_\delta
+$$
+-->
+<!-- TODONE : I have removed the definition involving the sup over all permutations, because we don't end up using it. Still mention for completeness ? 
+
+Valentin: For the master thesis, it is ok to not mention it.
+-->
+<!-- TODONE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This is adressed by a footnote in @sec-mappings-binary -->
+<p>Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is <span class="math inline">\(V_n\)</span> vanishes a <span class="math inline">\(n\to\infty\)</span> for local mappings, whereas <span class="math inline">\(V_n\)</span> is lower bounded by a constant for non-local mappings. <a href="#fig-vnum">Figure&nbsp;<span>4.3</span></a> shows this is indeed the case, rejoice!</p>
+<div class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-vnum" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="4_locality_files/figure-html/fig-vnum-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.3: (Numerator of the) average binned variation as a function of <span class="math inline">\(n\)</span>. The local mappings have a growth slower than the upper bound <span class="math inline">\(2\times 2^n\)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="computations-of-average-variation" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="computations-of-average-variation"><span class="header-section-number">4.2.2</span> Computations of average variation</h3>
+<p>To compute (a bound on) <span class="math inline">\(V_n\)</span> for some mappings, we consider the binary expansion of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\alpha^\prime\)</span> which appear in the supremum. For clarity and to represent actual numerical implementations, we furthermore truncate the binary expansion to <span class="math inline">\(2m\)</span> bits (on most machines, <span class="math inline">\(2m=64\)</span> bits).</p>
+<p><span class="math display">\[
+\begin{aligned}
+\alpha &amp;= 0. b_1 b_2 \cdots b_{2m-1} b_{2m}\\
+\alpha^\prime &amp;= 0. b_1^\prime b_2^\prime \cdots b_{2m-1}^\prime b_{2m}^\prime \\
+\end{aligned}
+\]</span></p>
+<p>Furthermore, since <span class="math inline">\(\alpha \in \left[\frac{i-1}{2^n}, \frac{i}{2^n} \right],\, i \in \{1, \cdots, 2^n\}\)</span>, we may express the first <span class="math inline">\(n\)</span> (where <span class="math inline">\(n &lt; 2m\)</span>) bits of <span class="math inline">\(\alpha\)</span> with the bits of <span class="math inline">\(i=\sum_{k=0}^{n-1} i_k 2^k\)</span> (we ignore <span class="math inline">\(i=2^n\)</span> for the sake of simplicity, which would introduce one more bit, <span class="math inline">\(n+1\)</span> in total).</p>
+<p><span class="math display">\[
+\begin{aligned}
+\alpha &amp;= 0. i_{n-1} i_{n-2} \cdots i_1 i_0 b_n b_{n+1} \cdots b_{2m-1} b_{2m}\\
+\alpha^\prime &amp;= 0. i_{n-1} i_{n-2} \cdots i_1 i_0 b^\prime_n b^\prime_{n+1} \cdots b^\prime_{2m-1} b^\prime_{2m}
+\end{aligned}
+\]</span></p>
+<section id="z-mapping" class="level4" data-number="4.2.2.1">
+<h4 data-number="4.2.2.1" class="anchored" data-anchor-id="z-mapping"><span class="header-section-number">4.2.2.1</span> Z-mapping</h4>
+<p>Let us consider the Z-mapping, and the two terms compositing its inverse. In the case of <span class="math inline">\(\alpha, \alpha^\prime\)</span> above, we have if <span class="math inline">\(n\)</span> is even:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Z^{-1}_1(\alpha) &amp;= 0.\underbrace{i_{n-1} i_{n-3} \cdots i_1}_\text{$n/2$ bits} b_n b_{n+2} \cdots b_{2m-1} \\
+Z^{-1}_2(\alpha) &amp;= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_0}_\text{$n/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}
+\end{aligned}
+\]</span></p>
+<p>If <span class="math inline">\(n\)</span> is odd, we have :</p>
+<p><span class="math display">\[
+\begin{aligned}
+Z^{-1}_1(\alpha) &amp;= 0.\underbrace{i_{n-1} i_{n-3} \cdots i_0}_\text{$(n+1)/2$ bits} b_n b_{n+2} \cdots b_{2m-1} \\
+Z^{-1}_2(\alpha) &amp;= 0.\underbrace{i_{n-2} i_{n-4} \cdots i_1}_\text{$(n-1)/2$ bits} b_{n+1} b_{n+3} \cdots b_{2m}
+\end{aligned}
+\]</span></p>
+<p>We only consider even <span class="math inline">\(n\)</span> in the following, as the proof remains very similar.</p>
+<p>The core of the proof relies on the fact the first <span class="math inline">\(n/2\)</span> bits of the difference of the inverses cancel out when computing the average binned variation.</p>
+<p><span class="math display">\[
+\begin{aligned}
+|Z^{-1}_1(\alpha) - Z^{-1}_1(\alpha^\prime)| &amp;= \left|0.0 \cdots 0 (b_n b_{n+2} \cdots b_{2m-1} - b^\prime_n b^\prime_{n+2} \cdots b^\prime_{2m-1})\right| \\
+&amp;= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k-1} - b^\prime_{n+2k-1}) 2^{-k}\right| \\
+&amp;\leq 2^{-n/2} \\
+|Z^{-1}_2(\alpha) - Z^{-1}_2(\alpha^\prime)| &amp;= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b_{n+2k} - b^\prime_{n+2k}) 2^{-k}\right| \\
+&amp;\leq 2^{-n/2}
+\end{aligned}
+\]</span></p>
+<p>Putting everything together, we get a vanishing upper bound for the average binned variation.</p>
+<p><span class="math display">\[
+V_n(Z^{-1}) \leq \frac{1}{2^n} \sum_{i=1}^{2^n} 2^{-n/2} + 2^{-n/2} = 2^{-n/2+1} \xrightarrow{n \to \infty} 0
+\]</span></p>
+</section>
+<section id="column-mapping" class="level4" data-number="4.2.2.2">
+<h4 data-number="4.2.2.2" class="anchored" data-anchor-id="column-mapping"><span class="header-section-number">4.2.2.2</span> Column mapping</h4>
+<p>We now consider the Column mapping. Since here we consider finite-precision <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\alpha^\prime\)</span>, the invere is well-defined and we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+C^{-1}_1(\alpha) &amp;= 0.i_{n-1} i_{n-2} \cdots i_1 i_0 b_n b_{n+1} \cdots b_m \\
+C^{-1}_2(\alpha) &amp;= 0.b_{m+1} b_{m+2} \cdots b_{2m}.
+\end{aligned}
+\]</span></p>
+<p>The first component can be bounded using the same trick from the previous proof :</p>
+<p><span class="math display">\[
+\begin{aligned}
+|C^{-1}_1(\alpha) - C^{-1}_1(\alpha^\prime)| &amp;= \left| 2^{-n} \sum_{k=1}^{m-n+1} (b_{n+k-1} - b^\prime_{n+k-1}) 2^{-k} \right| \\
+&amp;\leq 2^{-n}.
+\end{aligned}
+\]</span></p>
+<p>However, now problems arise when we compute the averge binned variation, since the second component is not well-behaved. In particular, since we take the supremum on <span class="math inline">\(\alpha,\alpha^\prime \in \left[\tfrac{i-1}{2^n},\tfrac{i}{2^n}\right]^2\)</span>, we can pick the specific values such that <span class="math inline">\(b_k=1\)</span> and <span class="math inline">\(b^\prime_k=0\)</span> for all <span class="math inline">\(k \in \{m+1, \cdots 2m\}\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+|C^{-1}_2(\alpha) - C^{-1}_2(\alpha^\prime)| &amp;= \left| \sum_{k=m+1}^{2m} (b_k - b^\prime_k) 2^{-(k-m)} \right| \\
+&amp;= \sum_{k=m+1}^{2m} 2^{-(k-m)} \\
+&amp;&gt; \frac 12
+\end{aligned}
+\]</span></p>
+<p>Putting both together, we can write :</p>
+<p><span class="math display">\[
+\begin{aligned}
+V_n(C^{-1}) &amp;= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)| + |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)| \\
+&amp;\geq
+\begin{aligned}[t]
+    \frac{1}{2^n}\sum_{i=1}^{2^n}&amp;
+    \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C_1^{-1}(\alpha)|\\
+    &amp;+ \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_2(\alpha^\prime) - C_2^{-1}(\alpha)|
+\end{aligned}\\
+&amp;\geq \frac 12 + \mathcal{O}(2^{-n})
+\end{aligned}
+\]</span></p>
+<p>Therefore we have found a lower bound, which proves the average binned variation does not converge to zero (if it converges at all).</p>
+<p><span class="math display">\[
+V_n(C^{-1}) &gt; \frac 12 \implies \lim_{n \to \infty} V_n &gt; \frac 12
+\]</span></p>
+</section>
+</section>
+</section>
+<section id="numerical-convergence-of-the-finite-n-estimations" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="numerical-convergence-of-the-finite-n-estimations"><span class="header-section-number">4.3</span> Numerical convergence of the finite-<span class="math inline">\(n\)</span> estimations</h2>
+<!-- In @sec-coarse-graining we discussed how we approximate the fractal mappings numerically, and introduced the coarse-graining procedure, in which we average the populations in segments of length $2^{-n}$, and end up with $2^n$ "binned" segment populations, compared to the $4^n$ we started with.
+
+By doing this, we were able to numerically estimate the integral on the one-dimensional fractal space, and showed that local mappings exhibited the property that they conserved the dynamics between two spaces of different dimensions. @sec-Vn introduced the analytical metric $V_n$ of this locality. Assuming that $V_n \xrightarrow{n\to\infty} 0$, is this enough to prove that the numerical estimation of the integral goes to its analytical value? -->
+<p>In <a href="#sec-Vn"><span>Section&nbsp;4.2.1</span></a>, we have introduced the average variation metric <span class="math inline">\(V_n\)</span>. Assuming that <span class="math inline">\(V_n \xrightarrow{n\to\infty} 0\)</span> (which expresses the locality property), does this imply that the numerical estimation of the integral in the neural field equation in <span class="math inline">\([0,1]\)</span> converges to its true value?</p>
+<p>The intuition behind the proof of convergence is that the variation, coming from the coarse-graining, inside each numerical bin vanishes as we increase the number of iterations <span class="math inline">\(n\)</span>, even though the the neural field <span class="math inline">\(\tilde{h}\)</span> and the connectivity kernel <span class="math inline">\(\tilde{w}\)</span> become fractal.</p>
+<p>We define the one-dimensional field on the grid:</p>
+<p><span class="math display">\[
+\tilde h_i(t) = \tilde h(\tfrac{i-1}{2^n}, t) = \tilde h(\beta_i, t),\,\beta_i=\tfrac{i-1}{2^n},\,i\in\{1,\cdots,2^n\}.
+\]</span></p>
+<p>Let us first recall the numerical and analytical integral. For any <span class="math inline">\(\alpha \in [0,1]\)</span>, let us define: <span class="math display">\[
+\begin{aligned}
+\mathrm{NI}_n &amp;= \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) \\
+\mathrm{AI} &amp;= \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta).
+\end{aligned}
+\]</span></p>
+<p>We wish to prove that <span class="math inline">\(|\mathrm{NI}_n - \mathrm{AI}| \xrightarrow{n \to \infty} 0\)</span>.</p>
+<p>The first part of the proof involves splitting the integral on <span class="math inline">\([0,1]\)</span> into <span class="math inline">\(2^n\)</span> integral over segments of length <span class="math inline">\(2^{-n}\)</span>, and using the triangle inequality.</p>
+<p><span class="math display">\[
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &amp;= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \int_{0}^{1} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \right| \\
+&amp;= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \sum_{i=1}^{2^n} \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \right| \\
+&amp;= \left| \sum_{i=1}^{2^n} \frac{1}{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \right| \\
+&amp;\leq \sum_{i=1}^{2^n} \left| \frac{1}{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \right| \\
+\end{aligned}
+\]</span></p>
+<p>We now want to prove that evaluating the integrand at <span class="math inline">\(\beta_i = \tfrac{i-1}{2^n}\)</span> gives a good approximation of the integral. Let us assume that <span class="math inline">\(S\)</span> is the Z-mapping. Then, <span class="math inline">\(S\)</span> is measure-preserving (if <span class="math inline">\(\lambda\)</span> is the Lebesgue measure on <span class="math inline">\([0,1]^2\)</span>, then <span class="math inline">\(\lambda \circ S^{-1}\)</span> is the Lebesgue measure on <span class="math inline">\([0,1]\)</span>). This implies that we have <span class="math inline">\(\int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \left[\lambda \circ S^{-1}\right](\mathrm d\beta) = \tfrac{1}{2^n}\)</span>, and we write</p>
+<p><span class="math display">\[
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &amp;\leq \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \Delta(\beta) \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \right| \\
+\text{where}\ \Delta(\beta) &amp;= \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t))\\
+&amp;= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t))
+\end{aligned}
+\]</span></p>
+<p>The main source of variance inside the integrand <span class="math inline">\(\Delta(\beta)\)</span> is the term <span class="math inline">\(S^{-1}\)</span>, since <span class="math inline">\(w_U\)</span> and <span class="math inline">\(h_U\)</span> are “nice” functions. We express this regularity by the added assumption that <span class="math inline">\(w_U(\alpha, \boldsymbol{u}) \phi(h_U(t, \boldsymbol{u}))\)</span> is Lipschitz in <span class="math inline">\(\boldsymbol{u}\)</span>, with Lipschitz constant <span class="math inline">\(L(\alpha)\)</span>, and <span class="math inline">\(\lVert{\alpha}\rVert\)</span> the corresponding norm on <span class="math inline">\([0,1]^2\)</span>. We argue this is not a strong assumption, because this is just expressing the regularity of the integrand in the integral over <span class="math inline">\([0,1]^2\)</span>.</p>
+<p>A more pragmatic justification of this is to notice that the recurrent currents are expressed as:</p>
+<p><span class="math display">\[
+I^\text{rec}_U(\boldsymbol{v}) = w_U(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(t, \boldsymbol{u})),
+\]</span></p>
+<p>and that in <a href="2_neural_fields.html#sec-cycling-nf"><span>Section&nbsp;2.4</span></a>, numerical simulations showed that <span class="math inline">\(I^\text{rec}_U(\boldsymbol{v})\)</span> is a well-behaved function.</p>
+<p>Applying the Lipschitz assumption yields the following inequality on the integrand:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Delta(\beta) &amp;= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \\
+&amp;\leq L(\alpha) \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert
+\end{aligned}
+\]</span></p>
+<p>We now make use of our intuition of “locality”: points close in <span class="math inline">\([0,1]\)</span> should be (on average) mapped to points close in <span class="math inline">\([0,1]^2\)</span>. Therefore, taking the sup inside each <span class="math inline">\(2^{-n}\)</span> segment does not introduce a too large error.</p>
+<p><span class="math display">\[
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &amp;\leq L(\alpha) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert \left[\lambda \circ S^{-1}\right](\mathrm d\beta) \right| \\
+&amp;\leq L(\alpha) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert \left[\lambda \circ S^{-1}\right](\mathrm d\beta^\prime) \right| \\
+&amp;= L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \lVert{S^{-1}(\beta_i) - S^{-1}(\beta)}\rVert \\
+&amp;\leq L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \lVert{S^{-1}(\beta^\prime) - S^{-1}(\beta)}\rVert \\
+&amp;= L(\alpha) V_n \\
+&amp;\xrightarrow{n \to \infty} 0
+\end{aligned}
+\]</span></p>
+<p>We see that it is the notion of “locality” of the mapping <span class="math inline">\(S\)</span> that allowed us to write the convergence of the numerical integral to the analytical value. In doing so, we exploited the fact that the “variance” inside each small segment in <span class="math inline">\([0,1]\)</span> is small on average, and that the errors vanish as we take finer and finer bins.</p>
+</section>
+<section id="generalizing-to-01p-mapsto-01" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="generalizing-to-01p-mapsto-01"><span class="header-section-number">4.4</span> Generalizing to <span class="math inline">\([0,1]^p \mapsto [0,1]\)</span></h2>
+<p>We finish this thesis by tying up the loose ends. In the abstract, we wrote that any <span class="math inline">\(p\)</span>-dimensional neural field equation is equivalent to a neural field equation in <span class="math inline">\([0,1]\)</span>, but we only gave demonstrations for <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span>. <a href="3_mappings.html#sec-simulations-3d-2d-1d"><span>Section&nbsp;3.5.3</span></a> showed that it is possible to iteratively apply the mapping <span class="math inline">\(Z : [0,1]^2 \mapsto [0,1]\)</span> to reduce dimensionality of the neural field, but it might be more practical to have a direct mapping <span class="math inline">\(Z_p : [0,1]^p \mapsto [0,1]\)</span>.</p>
+<p>Let us give a generalization of the Z-mapping. Defining <span class="math inline">\(\boldsymbol{v^{(n)}} = (v^{(n)}_1, \cdots, v^{(n)}_p)\)</span>, and the finite binary expansions <span class="math inline">\(v^{(n)}_\mu = \sum_{k=1}^{n} b^\mu_k 2^{-k}\)</span>, we can define <span class="math inline">\(Z^n_p\)</span> as</p>
+<p><span class="math display">\[
+\begin{aligned}
+Z_p^n(\boldsymbol{v^{(n)}}) &amp;= \sum_{k=1}^{n} \sum_{\mu=1}^p b^{\mu}_k 2^{-(p(k-1)+\mu)} \\
+&amp;= 0.b^1_1 b^2_1 \cdots b^p_1 b^1_2 b^2_2 \cdots b^p_{n-1} b^1_n b^2_n \cdots b^p_n
+\end{aligned}
+\]</span></p>
+<p>The same arguments apply to show that this generalized Z-mapping converges pointwise to <span class="math inline">\(Z_p\)</span>, has the locality property, and that <span class="math inline">\(V_n(Z_p) \xrightarrow{n\to\infty} 0\)</span>. Then the proof of convergence, albeit more laborious, can be repeated using the same procedure.</p>
+
+
+<div id="refs" class="references csl-bib-body" role="list" style="display: none">
+<div id="ref-Bogachev2007" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline"><span>“Operations on measures and functions,”</span> in <em>Measure theory</em>, Berlin, Heidelberg: Springer Berlin Heidelberg, 2007, pp. 175–248 [Online]. Available: <a href="https://doi.org/10.1007/978-3-540-34514-5_3">https://doi.org/10.1007/978-3-540-34514-5_3</a></div>
+</div>
+<div id="ref-faugeras2008absolute" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">O. Faugeras, F. Grimbert, and J.-J. Slotine, <span>“Absolute stability and complete synchronization in a class of neural fields models,”</span> <em>SIAM Journal on applied mathematics</em>, vol. 69, no. 1, pp. 205–250, 2008. </div>
+</div>
+<div id="ref-faugeras2009persistent" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">O. Faugeras, R. Veltz, and F. Grimbert, <span>“Persistent neural states: Stationary localized activity patterns in nonlinear continuous n-population, q-dimensional neural networks,”</span> <em>Neural computation</em>, vol. 21, no. 1, pp. 147–187, 2009. </div>
+</div>
+<div id="ref-veltz2009localglobal" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">R. Veltz and O. Faugeras, <span>“Local/global analysis of the stationary solutions of some neural field equations.”</span> 2009 [Online]. Available: <a href="https://arxiv.org/abs/0910.2247">https://arxiv.org/abs/0910.2247</a></div>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/3_mappings.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Mapping neural fields to lower-dimensional embeddings</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/5_conclusion.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
