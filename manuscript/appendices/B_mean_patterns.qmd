@@ -32,11 +32,11 @@ $$
 $$ {#eq-evolution-network}
 
 For now, we do not use the fact that in our setting, $J_{ij}$ is low-rank.
-Applying the finite-$n$ mapping $S^n$,[^details] the neurons $\A = \{i_1, \cdots, i_{|\A |}\}$ will end up in the same 1D bin at position $\alpha$. There are 1D $4^n$ bins, each of length $4^{-n}$.
+Applying the finite-$n$ mapping $S^n$,[^details] the neurons $\A = \{i_1, \cdots, i_{|\A |}\}$ will end up in the same 1D bin at position $\alpha$. We stress that $|\A| \neq 2^n$ in general, because we sample the distribution, instead of applying a grid. There are, however, still $4^n$ 1D bins, each of length $4^{-n}$.
 
 [^details]: We are glossing over the fact that $S^n : [0,1]^2 \mapsto [0,1]$, but the positions $\vec{z_i} \in \R^2$. In the code, we can deal with these by either applying the inverse CDF (as described in @sec-mapping-cdf), or considering a bounding box $[\min_i(z_{1,i}), \max_i(z_{1,i})] \times [\min_i(z_{2,i}), \max_i(z_{2,i})]$ of the sampled points, which is then rescaled to $[0,1] \times [0,1]$ (see implementation for [`Box`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L24)). Both approaches are equivalent, in the sense that they give rise to the same dynamics as $n$ becomes large, although the obtained connectivity matrix $\tilde J_{\alpha\beta}$ may not be the identical.
 
-As explained in the main text, we average the neurons together in a bin, and we write the corresponding potential of the segment population at location $\alpha$:
+As explained in the main text, we average the segment together in a bin, and we write the corresponding potential of the segment population at location $\alpha$:
 
 $$
 H_\alpha(t) = \frac{1}{|\A|} \sum_{i \in \A} h_i(t).
@@ -65,7 +65,7 @@ $$
 \end{aligned}
 $$
 
-We now make the mean-field approximation by dropping $\sum_{i \in \A}$, that is, that all the neurons inside of each bin are the same (or at least, sufficiently similar so that the mean-field is not a big mistake). Doing so, we recover @eq-evolution-network, which concludes the proof.
+We now make the mean-field approximation by dropping $\sum_{i \in \A}$, that is, that all the neurons inside of each bin are the same (or at least, sufficiently similar so that the mean-field approximation is not a big mistake, in the sense that there is a lot of variation inside each bin, see @sec-locality). Doing so, we recover @eq-evolution-network, which concludes the proof.
 
 ## Sampling populations conserves the low-rank structure
 
@@ -100,7 +100,7 @@ which shows that $\tilde J_{\alpha\beta}$ has a low-rank structure.[^selfconnect
   $$
   We see that the correction is still of order $\bO(\tfrac{1}{N})$, and therefore can be again ignored in the $N \to \infty$ limit.
 
-@eq-Jab-mean-lr also nicely complements the intuition that the more neurons are in each bin, the more "important" this bin should be. This is expressed through the weights $\frac{|\B|}{\sum_{\beta^\prime} |\B^\prime|}$. 
+@eq-Jab-mean-lr also nicely complements the intuition that the more neurons there are in each bin, the more "important" this bin should be. This is expressed through the weights $\frac{|\B|}{\sum_{\beta^\prime} |\B^\prime|}$. 
 
 <!-- The weighting also shows up if we express the overlap with respect to the mean-field $H_\alpha(t)$:
 $$
@@ -111,15 +111,15 @@ We have hereby shown that sampling neurons in the 2D embeddings, and binning the
 
 ## Numerical examples of methods for estimating the $[0,1]$ connectivity kernel
 
-For the sake of illustration, let us compare the connectivity kernels obtained using different methods in @fig-kernels.
+For the sake of illustration, let us compare the connectivity kernels obtained using different methods in @fig-kernels. These three approximations are equivalent, since they yield the same dynamics in the $N \to \infty$ limit.
 
-* @fig-kernels-1 is the method described in this appendix, based on sampling $N$ neurons in the PDF space $\R^2$, applying the mapping on the obtained positions $\vec{z_i}$, the applying the binning (downsampling). We see, through the empty rows in the connectivity, that due to finite-$N$ effect, locations where $\rho$ is small are not represented, and, as a consequence, no neurons are present in the corresponding 1D bin. When this happens, we set these rows to zero.
+* @fig-kernels-1 is the method described in this appendix, based on sampling $N$ neurons in the PDF space $\R^2$, applying the mapping on the obtained positions $\vec{z_i}$, and finally applying the binning (this is coarse-graining). We see, through the empty rows in the connectivity, that due to finite-$N$ effects, locations where $\rho$ is small are not represented, and, as a consequence, no neurons are present in the corresponding 1D bin. When this happens, we set these rows to zero.
 * To obtain @fig-kernels-2, we make the approximation that the support of $\rho(z_1, z_2)$ is compact in $[-4,4]\times[-4,4]$, which of course is not true, but in the case of a Gaussian distribution this is a reasonable approximation, because $\CDF(4) \approx 0.999968$. Defining $\tilde \rho = \rho \circ S^{-1}$, the grid is numerically renormalized so that despite the compact support approximation, the probabilities sum up to one, and the connectivity matrix is modified so that the columns are weighed by $\tilde \rho(\beta)$:
   $$
   \tilde J_{\alpha\beta} = \tilde \rho(\beta) \sum_{\mu=1}^p \tilde F_{\mu \alpha} \tilde G_{\mu \beta}
   $$
-  We see that compared to @fig-kernels-1, using the grid method allows us to "sample" the locations where the density is small, and this results in less "whited-out" rows. The vertical bands of white correspond to the reweighing of the columns with $\tilde \rho(\beta)$.
-* Finally, @fig-kernels-3 shows the kernel obtained from applying the grid method in the CDF $[0,1]^2$ described in @sec-mapping-cdf. We see that the connectivity seems much more "uniform", because each point of the grid has "equal weight" in the CDF space.
+  We see that compared to @fig-kernels-1, using the grid method allows us to "sample" the locations where the density is small, and this results in less "whited-out" *rows*. Still, vertical bands of very fade colour correspond to the reweighing of the *columns* where $\tilde \rho(\beta)$ is small.
+* Finally, @fig-kernels-3 shows the kernel obtained from applying the grid method in the CDF space $[0,1]^2$, as described in @sec-mapping-cdf. We see that the connectivity seems much more "uniform", because each point of the grid has "equal weight" in the CDF space.
 
 ```{python}
 #| label: fig-kernels
