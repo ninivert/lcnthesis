@@ -16,6 +16,7 @@ __all__ = [
 	'plot_2D_to_1D_mapping',
 	'add_headers', 'scale_lightness',
 	'cmap_bi', 'cmap_bi_r', 'cmap_pan', 'cmap_pan_r', 'cmap_trans',
+	'mktrans',
 ]
 
 def _unwrap_figax(figax: tuple[Figure, Axes] | None = None, **kwargs) -> tuple[Figure, Axes]:
@@ -216,3 +217,9 @@ def scale_lightness(rgb, scale_l):
 	h, l, s = colorsys.rgb_to_hls(*rgb)
 	# manipulate h, l, s values and return as rgb
 	return colorsys.hls_to_rgb(h, min(1, l * scale_l), s = s)
+
+
+def mktrans(fig, ax):
+	"""Makes figure and axes transparent"""
+	fig.patch.set_facecolor('#FFFFFF00')
+	ax.patch.set_facecolor('#FFFFFF00')

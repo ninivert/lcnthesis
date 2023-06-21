@@ -163,7 +163,7 @@ Both Column and Z-mappings show a clear trend, the distances in 2D are correlate
 
 With this view, we understand that the coarse-grained performed in @sec-coarse-graining was making use of that fact that locality helps by bounding the variation inside of each averaged bin. Therefore, we would like for mathematically formulate that on average, the variation inside of each bin before coarse-graining is small. @fig-sketch-binned-variation gives an intuition of this. Even though the $[0,1]$ embedding might be discontinuous in places, on average nearby neurons should exhibit the same activity levels.
 
-![(TODO the variation for the lower one should be lesser) Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions.](figures/photo_2023-06-15_00-44-43.jpg){width=400px #fig-sketch-binned-variation}
+![Intuition behind the average binned variation. To simplify the visualization, activity levels are used in lieu of the 2D positions. 4 bins are shown with a different colour. The horizontal line represents the average activity in the bin. From top to bottom: random, column, Z mapping.](figures/fig-variation.svg){width=600px #fig-sketch-binned-variation}
 
 Given $n$, let us define the average binned variation as the maximum difference of the 2D positions associated to segment populations in the same bin of size $2^{-n}$:
 

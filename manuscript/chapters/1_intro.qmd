@@ -75,7 +75,7 @@ With this in mind, we can try to understand why simulating a neural field in $[0
 <!-- NOTE : was "populations" before, this is explained later in the thesis. but OK, for the introduction, maybe we should use neurons
 the mapping is random, so the nearby populations in $[0,1]$ -->
 
-![(TODO) Good mappings from $\Rp$ to $[0,1]$ should maintain some sense of "locality"](figures/photo_2023-06-13_18-15-50.jpg){width=500px}
+![Good mappings from $\Rp$ to $[0,1]$ should maintain some sense of "locality"](figures/fig-locality.svg){width=600px}
 
 In some sense, we would like to find a mapping that conserves "locality": populations that are close in $[0,1]$ should represent nearby populations in $\Rp$, or at least there shouldn't be "too many large discontinuities".
 

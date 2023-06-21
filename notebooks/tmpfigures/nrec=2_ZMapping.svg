@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="144pt" height="108pt" viewBox="0 0 144 108" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2023-06-21T11:58:03.395371</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.7.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 108 
+L 144 108 
+L 144 0 
+L 0 0 
+L 0 108 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="line2d_1">
+    <defs>
+     <path id="mf5bcb65cbf" d="M 0 2.5 
+C 0.663008 2.5 1.29895 2.236584 1.767767 1.767767 
+C 2.236584 1.29895 2.5 0.663008 2.5 0 
+C 2.5 -0.663008 2.236584 -1.29895 1.767767 -1.767767 
+C 1.29895 -2.236584 0.663008 -2.5 0 -2.5 
+C -0.663008 -2.5 -1.29895 -2.236584 -1.767767 -1.767767 
+C -2.236584 -1.29895 -2.5 -0.663008 -2.5 0 
+C -2.5 0.663008 -2.236584 1.29895 -1.767767 1.767767 
+C -1.29895 2.236584 -0.663008 2.5 0 2.5 
+z
+" style="stroke: #000000"/>
+    </defs>
+    <g clip-path="url(#p99007a4ae5)">
+     <use xlink:href="#mf5bcb65cbf" x="18.327273" y="91.309091" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="25.483636" y="75.865578" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="32.64" y="84.335245" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="39.796364" y="66.124536" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="46.952727" y="60.577587" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="54.109091" y="39.50609" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="61.265455" y="49.904052" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="68.421818" y="30.027948" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="75.578182" y="77.972052" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="82.734545" y="58.095948" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="89.890909" y="68.49391" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="97.047273" y="47.422413" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="104.203636" y="41.875464" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="111.36" y="23.664755" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="118.516364" y="32.134422" style="stroke: #000000"/>
+     <use xlink:href="#mf5bcb65cbf" x="125.672727" y="16.690909" style="stroke: #000000"/>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p99007a4ae5">
+   <rect x="12.96" y="12.96" width="118.08" height="82.08"/>
+  </clipPath>
+ </defs>
+</svg>
