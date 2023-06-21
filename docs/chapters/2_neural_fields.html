@@ -146,7 +146,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Cover</span></a>
+ <span class="menu-text">Abstract</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -221,7 +221,7 @@ div.csl-indent {
   <li><a href="#sec-networks-of-neurons-to-neural-fields" id="toc-sec-networks-of-neurons-to-neural-fields" class="nav-link active" data-scroll-target="#sec-networks-of-neurons-to-neural-fields"><span class="header-section-number">2.1</span> Networks of neurons to neural fields</a>
   <ul>
   <li><a href="#sec-low-rank-network" id="toc-sec-low-rank-network" class="nav-link" data-scroll-target="#sec-low-rank-network"><span class="header-section-number">2.1.1</span> Low-rank networks of neurons</a></li>
-  <li><a href="#gaussian-mathcalnboldsymbol0-mathbb1_n-low-rank-network-of-neurons" id="toc-gaussian-mathcalnboldsymbol0-mathbb1_n-low-rank-network-of-neurons" class="nav-link" data-scroll-target="#gaussian-mathcalnboldsymbol0-mathbb1_n-low-rank-network-of-neurons"><span class="header-section-number">2.1.2</span> Gaussian <span class="math inline">\(\mathcal{N}(\boldsymbol{0}, \mathbb{1}_N)\)</span> low-rank network of neurons</a></li>
+  <li><a href="#gaussian-low-rank-network-of-neurons" id="toc-gaussian-low-rank-network-of-neurons" class="nav-link" data-scroll-target="#gaussian-low-rank-network-of-neurons"><span class="header-section-number">2.1.2</span> Gaussian low-rank network of neurons</a></li>
   <li><a href="#emergence-of-structure-in-the-networks-of-neurons" id="toc-emergence-of-structure-in-the-networks-of-neurons" class="nav-link" data-scroll-target="#emergence-of-structure-in-the-networks-of-neurons"><span class="header-section-number">2.1.3</span> Emergence of structure in the networks of neurons</a>
   <ul class="collapse">
   <li><a href="#numerical-aspects-of-simulating-a-low-rank-network-of-neurons" id="toc-numerical-aspects-of-simulating-a-low-rank-network-of-neurons" class="nav-link" data-scroll-target="#numerical-aspects-of-simulating-a-low-rank-network-of-neurons"><span class="header-section-number">2.1.3.1</span> Numerical aspects of simulating a low-rank network of neurons</a></li>
@@ -282,8 +282,8 @@ J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu i} G_{\mu j}.
 <p>We would like to add a few remarks on the physical units of <a href="#eq-lowrank-evolution">Equation&nbsp;<span>2.2</span></a>. Strictly speaking, a prefactor <span class="math inline">\(\tau\)</span> with units of <span class="math inline">\(\mathrm{seconds}^{-1}\)</span> should be multiplied with <span class="math inline">\(\dot h_i(t)\)</span> of units <span class="math inline">\(\mathrm{volt}\cdot\mathrm{seconds}^{-1}\)</span>, such that the left-hand side of the equation is consistent with the unit of voltage. Similarly, the activation function has units <span class="math inline">\(\mathrm{seconds}^{-1}\)</span> and the connectivity matrix units of <span class="math inline">\(\mathrm{coulomb}\)</span>, and a multiplicative term <span class="math inline">\(R\)</span> with units <span class="math inline">\(\mathrm{ohm}\)</span> should multiply the recurrent currents in order to yield a voltage. By rescaling time or connection weights, both <span class="math inline">\(\tau\)</span> and <span class="math inline">\(R\)</span> can be set to one, and so we omit to write them.</p>
 <p>One last remark is that in our model, there is no external current; we only study the autonomous dynamics of the system.</p>
 </section>
-<section id="gaussian-mathcalnboldsymbol0-mathbb1_n-low-rank-network-of-neurons" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="gaussian-mathcalnboldsymbol0-mathbb1_n-low-rank-network-of-neurons"><span class="header-section-number">2.1.2</span> Gaussian <span class="math inline">\(\mathcal{N}(\boldsymbol{0}, \mathbb{1}_N)\)</span> low-rank network of neurons</h3>
+<section id="gaussian-low-rank-network-of-neurons" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="gaussian-low-rank-network-of-neurons"><span class="header-section-number">2.1.2</span> Gaussian low-rank network of neurons</h3>
 <p>Let us now specify the low-rank model introduced in the previous section, and use the model introduced in <span class="citation" data-cites="schmutz2023convergence"><a href="../references.html#ref-schmutz2023convergence" role="doc-biblioref">[2]</a></span>, which can be seen as a simple example of a “Gaussian mixture low-rank network” <span class="citation" data-cites="Beiran2021"><a href="../references.html#ref-Beiran2021" role="doc-biblioref">[3]</a></span>. This paper defines the low-rank vectors <span class="math inline">\(F_{\mu i}\)</span> such that each component independently samples a standard Gaussian (zero mean, unit variance). In other words, every neuron <span class="math inline">\(i\)</span> samples a vector <span class="math inline">\(\boldsymbol{F_i} = (F_{1i}, \cdots, F_{pi})\)</span> from the <span class="math inline">\(p\)</span>-dimensional gaussian. We write</p>
 <p><span class="math display">\[
 \boldsymbol{F_i} = \boldsymbol{z_i},\ \boldsymbol{z_i} \stackrel{\text{iid}}{\sim} \rho(z_1, \cdots, z_p),
@@ -329,7 +329,7 @@ $$
 </ol>
 <p>In our case, this analysis in Taylor expansions was sufficient to explain the observed stability resulting from a logistic activation function.</p>
 <p>We should however note that the results obtained in <a href="../appendices/A_fixed_points.html"><span>Appendix&nbsp;A</span></a> are valid in the <span class="math inline">\(N \to \infty\)</span> limit. A numerical analysis shows in <a href="#fig-spectrum">Figure&nbsp;<span>2.1</span></a> that at <span class="math inline">\(N=250\)</span>, the numerical eigenvalues approximate the analytical eigenvalues, and this correspondence improves when we take larger <span class="math inline">\(N\)</span> (typically we will for the rest of this thesis take <span class="math inline">\(N &gt; 10^3\)</span>).</p>
-<div id="fig-spectrum" class="cell quarto-layout-panel" data-execution_count="3">
+<div id="fig-spectrum" class="cell quarto-layout-panel" data-execution_count="2">
 <figure class="figure">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
@@ -370,6 +370,15 @@ $$
 <figcaption class="figure-caption">Figure&nbsp;2.2: Simulation of the Gaussian network of neurons with <span class="math inline">\(p=1\)</span>. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis.</figcaption>
 </figure>
 </div>
+<!-- :::: {.content-visible when-format="pdf" layout-nrow=2}
+:::{#fig-p1 layout-nrow=2}
+![First frame](figures/embedding_p=1.mp4-1.jpg)
+
+![Last frame](figures/embedding_p=1.mp4-2.jpg)
+
+Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis. The first and the last frame of the animation are shown, [available here](https://ninivert.github.io/lcnthesis/chapters/figures/embedding_p=1.mp4).
+:::
+:::: -->
 <p>The results of the simulation show that the random ordering of the neurons does not yield a smooth embedding, in contrast to the smooth surface that appears when we order the neurons by their position <span class="math inline">\(z_{1i}\)</span>. The simulation serves as a demonstration that the neurons converge to the stable fixed point <span class="math inline">\(h^\star_i = z_{1i}\)</span>, as well as confirming that the zero fixed point is unstable. Indeed, despite the zero initialization, the simulation did not stay there because small numerical fluctuations were amplified by the instability.</p>
 <p>The observed smooth surface corresponds to the activation function <span class="math inline">\(\phi(h^\star) = \phi(z_1)\)</span>. Therefore, the Gaussian patterns define a natural embedding of the network, and the neural field at the fixed point reads <span class="math inline">\(h^\star(z_1, t) = z_1\)</span>. We can write the neural field equation for <span class="math inline">\(p=1\)</span> in the Gaussian embedding as</p>
 <p><span id="eq-nf-gaussian-p1"><span class="math display">\[
@@ -493,7 +502,7 @@ h^\perp(\boldsymbol{z}, 0) &amp;= h(\boldsymbol{z}, 0) - \sum_{\mu=1}^p \kappa_\
 \partial_t h(\boldsymbol{z}, t) = -h(\boldsymbol{z}, t) + \sum_{\mu=1}^p \int_{\mathbb{R}^p} z_{\mu+1} \tilde \phi (y_\mu) \phi(h(\boldsymbol{y}, t - \delta)) \mathcal{N}^p(\mathrm d \boldsymbol{y})
 \tag{2.11}\]</span></span></p>
 <p>The geometric intuition behind this formulation is that now the recurrent currents are “rotated by half a turn” (around the axis normal to the plane <span class="math inline">\((z_\mu, z_{\mu+1})\)</span>) in the embedding. When the network is at a pattern fixed point <span class="math inline">\(\mu\)</span>, the recurrent drive will then push it towards the pattern <span class="math inline">\(\mu+1\)</span>. <a href="#fig-cycling-irec">Figure&nbsp;<span>2.4</span></a> shows the difference in the behaviour of the original and the cycling neural field.</p>
-<div class="cell" data-execution_count="4">
+<div class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div id="fig-cycling-irec" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -534,7 +543,7 @@ With this, we see that the projections "alternate" back and forth with period $\
 \mathrm{CDF}(z) = \int_{-\infty}^z \mathcal{N}(\mathrm dy)
 \]</span></p>
 <p>and maps <span class="math inline">\(\mathbb R\)</span> to <span class="math inline">\([0,1]\)</span>,<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> as pictured in <a href="#fig-gaussian-cdf">Figure&nbsp;<span>2.6</span></a>.</p>
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div id="fig-gaussian-cdf" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -556,7 +565,7 @@ w_U(\boldsymbol{v}, \boldsymbol{u}) &amp;= w(\mathrm{CDF}^{-1}(\boldsymbol{v}), 
 \partial_t h_U(t, \boldsymbol{v}) = -h_U(t, \boldsymbol{v}) + \int_{[0,1]^p} w_U(\boldsymbol{v}, \boldsymbol{u}) \phi(h_U(t, \boldsymbol{u})) \mathrm d \boldsymbol{u}.
 \]</span></p>
 <p>Defining the neural field in <span class="math inline">\([0,1]^p\)</span> also addresses the problem that we tried to hide in <a href="#sec-gridmethod"><span>Section&nbsp;2.2.2</span></a> relating to the difficulties of defining a grid on <span class="math inline">\(\mathbb R^p\)</span>. With the integral on <span class="math inline">\([0,1]^p\)</span>, we can simply use a uniform grid, which maps back to samples in <span class="math inline">\(\mathbb R^p\)</span> by using the inverse CDF, as shown in <a href="#fig-grid-correspondance">Figure&nbsp;<span>2.7</span></a>.</p>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div id="fig-grid-correspondance" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">

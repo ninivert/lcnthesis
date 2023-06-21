@@ -146,7 +146,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Cover</span></a>
+ <span class="menu-text">Abstract</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -444,7 +444,7 @@ Let's not mention space-filling curves, because the Column mapping is not space-
 \alpha^{(n)} = C(v^{(n)}_1,v^{(n)}_2) = 0.b^1_1 b^1_2 \cdots b^1_n b^2_1 b^2_2 \cdots b^2_n
 \tag{3.6}\]</span></span></p>
 <p>The intuition behind this mapping is that we enumerate the populations on a grid column by column, letting the index of the rows vary the fastest. We visualize this mapping in <a href="#fig-col">Figure&nbsp;<span>3.5</span></a>, by coloring the square populations by the position of the corresponding <span class="math inline">\([0,1]\)</span> population, and additionally drawing lines between the points to help guide the eye.</p>
-<div class="cell" data-execution_count="3">
+<div class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div id="fig-col" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -477,7 +477,7 @@ v^{(n)}_2 = Z^{-1}_2(\alpha^{(n)}) &amp;= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n
 \end{aligned}
 \tag{3.9}\]</span></span></p>
 <p><a href="#fig-z">Figure&nbsp;<span>3.6</span></a> is a visualization of the Z-mapping when <span class="math inline">\(n=2\)</span>, and shows how it is composed of the “Z” shapes giving it its name.</p>
-<div class="cell" data-execution_count="4">
+<div class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div id="fig-z" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -489,7 +489,7 @@ v^{(n)}_2 = Z^{-1}_2(\alpha^{(n)}) &amp;= 0.b_2 b_4 \cdots b_{2n} = \sum_{k=1}^n
 </div>
 <p>To illustrate this notion of locality, we take a few consecutive populations in 1D and show where the corresponding populations fall in the 2D embedding. This is done in <a href="#fig-locality">Figure&nbsp;<span>3.7</span></a>, in which we see that the Z-mapping seems to conserve locality from 1D to 2D: populations close in 1D seem to be close in 2D.</p>
 <p>We also see that the Column mapping is not local in this sense, since there is a large variation along the vertical direction, which seems to always be “of order one”. This can be explained by looking at the expression for <span class="math inline">\(C^{-1}_2(\alpha^{(n)}) = 0.b_{n+1} b_{n+2} \cdots b_{2n}\)</span> : small variations of the order of <span class="math inline">\(2^{-n}\)</span> in the value of <span class="math inline">\(\alpha\)</span> always result in variations of order one in <span class="math inline">\(C^{-1}_2\)</span>.e</p>
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div id="fig-locality" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -556,7 +556,7 @@ v^{(n)}_1 &amp;= A^{-1}_1(\alpha^{(n)}) = 0.b_{2n-1} b_{2n-3} \cdots b_{1} = \su
 v^{(n)}_2 &amp;= A^{-1}_2(\alpha^{(n)}) = 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_{k=1}^n b_{2(n+1-k)} 2^{-k}.
 \end{aligned}
 \]</span></p>
-<div id="fig-anti-z" class="cell quarto-layout-panel" data-execution_count="6">
+<div id="fig-anti-z" class="cell quarto-layout-panel" data-execution_count="5">
 <figure class="figure">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
@@ -595,7 +595,7 @@ v^{(n)}_2 &amp;= A^{-1}_2(\alpha^{(n)}) = 0.b_{2n} b_{2n-2} \cdots b_{2} = \sum_
 <section id="sec-ninfty-bijection" class="level4" data-number="3.3.3.2">
 <h4 data-number="3.3.3.2" class="anchored" data-anchor-id="sec-ninfty-bijection"><span class="header-section-number">3.3.3.2</span> Bijectivity in the <span class="math inline">\(n\to\infty\)</span> limit</h4>
 <p>However, the behavior of the Column mapping and that of the Z-mapping are very different in the <span class="math inline">\(n\to\infty\)</span> limit. Up until now, we have avoided this issue by considering the finite-<span class="math inline">\(n\)</span> approximation of the mappings, which by construction is numerically bijective (that is, bijective on the discretization of <span class="math inline">\([0,1]^2\)</span> and <span class="math inline">\([0,1]\)</span> corresponding to finite <span class="math inline">\(n\)</span>). We illustrate the infinite-<span class="math inline">\(n\)</span> (numerically, large <span class="math inline">\(n\)</span>) limit of these two mappings in <a href="#fig-n-to-infty">Figure&nbsp;<span>3.9</span></a>.</p>
-<div id="fig-n-to-infty" class="cell quarto-layout-panel" data-execution_count="7">
+<div id="fig-n-to-infty" class="cell quarto-layout-panel" data-execution_count="6">
 <figure class="figure">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
@@ -692,7 +692,7 @@ It is time for a little treat. Before we argue about how to simulate the dynamic
 <p>Without coarse-graining, the mesh size along each spatial dimension is <span class="math inline">\(2^{-n}\)</span> in 2D, but directly applying the mapping results instead in a mesh size of <span class="math inline">\(4^{-n}\)</span> in 1D, which is much finer than the <span class="math inline">\(2^{-n}\)</span> per dimension. However, after coarse-graining, the effective mesh size in 1D becomes <span class="math inline">\(2^{-n}\)</span>, which matches the 2D mesh size. Therefore, we are are not compensating the reduction of dimensionality by an increase in the numerical resolution.</p>
 <!-- Let us consider what happens to the mapping when $n$ is large, and in particular how $S^{n/2}$ and $S^{n}$ behave. Since the mappings are pointwise convergent and we are considering large $n$, we argue that both $S^{n/2}$ and $S^{n}$ are good approximations of the true mapping $S$. More importantly, $S^{n/2}$ can be considered as an approximation of $S^{n}$. This is interesting from a numerical standpoint since it is feasible to compute $S^{n}$, and the approximation $S^{n/2}$ can be obtained by "coarse-graining" $S^n$. Another way of thinking about this is that $S^n$ is considered to be the "mathematically exact" fractal structure and $S^{n/2}$ the numerical approximation. The way we go from $S^n$ to $S^{n/2}$ is by averaging the segment populations by batches of $2^n$, as schematized in @fig-averaging. -->
 <p>A geometrical intuition we can give for the coarse-graining is how the averaging of the segment populations leads to sampling the connectivity kernel at the “average” positions in the <span class="math inline">\([0,1]^2\)</span> embedding. In <a href="#fig-averaging-geom">Figure&nbsp;<span>3.11</span></a>, we colour-code the square populations corresponding to the segment populations before coarse-graining.</p>
-<div id="fig-averaging-geom" class="cell quarto-layout-panel" data-execution_count="8">
+<div id="fig-averaging-geom" class="cell quarto-layout-panel" data-execution_count="7">
 <figure class="figure">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
@@ -751,9 +751,9 @@ For Nicole: This is adressed by the argument of mesh size !!
 <h3 data-number="3.5.2" class="anchored" data-anchor-id="application-of-s-from-012-to-01"><span class="header-section-number">3.5.2</span> Application of <span class="math inline">\(S\)</span> : from <span class="math inline">\([0,1]^2\)</span> to <span class="math inline">\([0,1]\)</span></h3>
 <p>To demonstrate the coarse-graining, we start with the cycling neural field presented in <a href="2_neural_fields.html#sec-cycling-nf"><span>Section&nbsp;2.4</span></a>. The kernel <span class="math inline">\(\tilde w\)</span> of the one-dimensional neural field is numerically approximated using the coarse-graining procedure of different mappings. Simulations are presented in <a href="#fig-cg-2d-1d">Figure&nbsp;<span>3.12</span></a> (we again set <span class="math inline">\(\delta=6\)</span> and the initial condition <span class="math inline">\(h(z_1, z_2, t &lt; 0) = z_1\)</span>), showing the activity levels, recurrent currents, and the latent trajectory <span class="math inline">\((\kappa_1(t), \kappa_2(t))\)</span>. In order, we discuss:</p>
 <ul>
-<li><a href="#fig-cg-2d-1d-random">Figure&nbsp;<span>3.12 (b)</span></a>: The random mapping can be numerically evaluated as a trivial case of a mapping that does not have locality. The coarse-graining averages out all the structure of the activity, and the recurrent currents are zero, because the contributions from excitatory and inhibitory populations cancel out. This results in the erasure of the cycling behavior in the latent trajectory.</li>
-<li><a href="#fig-cg-2d-1d-column">Figure&nbsp;<span>3.12 (c)</span></a>: The Column mapping shows the projection of the initial condition onto the <span class="math inline">\(z_1\)</span> axis, yielding the sigmoid in the <span class="math inline">\([0,1]\)</span> embedding. Again, the current currents cancel out and yield zero, and the latent trajectory quickly decays towards <span class="math inline">\((\kappa_1, \kappa_2) = (0,0)\)</span>.</li>
-<li><a href="#fig-cg-2d-1d-z">Figure&nbsp;<span>3.12 (d)</span></a>: The Z-mapping shows that despite the fractal structure of the activity, there is still regularity in the <span class="math inline">\([0,1]\)</span> embedding, resulting in non-zero recurrent currents. In consequence, the latent trajectory shows a clear cycling behavior, that closely matches that of the 2D neural field in <a href="#fig-cg-2d-1d-original">Figure&nbsp;<span>3.12 (a)</span></a>.</li>
+<li>The random mapping can be numerically evaluated as a trivial case of a mapping that does not have locality. The coarse-graining averages out all the structure of the activity, and the recurrent currents are zero, because the contributions from excitatory and inhibitory populations cancel out. This results in the erasure of the cycling behavior in the latent trajectory.</li>
+<li>The Column mapping shows the projection of the initial condition onto the <span class="math inline">\(z_1\)</span> axis, yielding the sigmoid in the <span class="math inline">\([0,1]\)</span> embedding. Again, the current currents cancel out and yield zero, and the latent trajectory quickly decays towards <span class="math inline">\((\kappa_1, \kappa_2) = (0,0)\)</span>.</li>
+<li>The Z-mapping shows that despite the fractal structure of the activity, there is still regularity in the <span class="math inline">\([0,1]\)</span> embedding, resulting in non-zero recurrent currents. In consequence, the latent trajectory shows a clear cycling behavior, that closely matches that of the 2D neural field.</li>
 </ul>
 <!-- TODONE : we run simulations and compare latent trajectories. first show only column and z-mapping. add quick intro to diagonal, col/row, reclocal, mention cannot be expressed by bit permutation. diagonal, col/row do not work, despite the non-zero field and recurrent currents. reclocal does work. intuition is that the recursive approach (zmapping, reclocal) seems to give locality
 
@@ -827,7 +827,7 @@ Nicole: we don't show the other mappings, because they are not as nice examples,
 <li id="fn4"><p>We note that in our definition, <span class="math inline">\(S^n\)</span> maps <span class="math inline">\((0., 0.)\)</span> onto <span class="math inline">\(0\)</span>. Numerically, we encounter the problem that the inverse of the Gaussian CDF, used to compute the connectivity, goes to infinity when <span class="math inline">\(v_\mu\)</span> (one of the components of <span class="math inline">\((v_1, v_2) = S^{-1}(\alpha)\)</span>) goes to <span class="math inline">\(0\)</span> (or <span class="math inline">\(1\)</span>). To avoid this, we offset the squares (by <span class="math inline">\(2^{-n-1}\)</span> along each dimension), so that geometrically their position is not indexed by their lower-left corner, but rather their center. Analytically, this is not a problem, because the kernel defined in <a href="2_neural_fields.html#eq-hu-wu">Equation&nbsp;<span>2.12</span></a> diverges only linearly, compared to the exponential cutoff of the Gaussian distribution, so that the integrand still vanishes at infinity.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>The Z-curve is often defined in a transpose manner, putting first the bits of <span class="math inline">\(v_2\)</span> (vertical component) then the bits of <span class="math inline">\(v_1\)</span>, instead of <span class="math inline">\(v_1\)</span> then <span class="math inline">\(v_2\)</span>. By doing this, we get the “upright” Z shapes, as <a href="https://en.wikipedia.org/wiki/Z-order_curve#/media/File:Four-level_Z.svg">shown here</a>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>In order to simulate the mappings using Monte-Carlo schemes, binning methods can be applied. The intuition behind this is that sampled populations inside a small square of size <span class="math inline">\(2^{-n} \times 2^{-n}\)</span> give rise to the notion of an “average connectivity kernel”, and in our case the notion of “mean patterns”. More details are given in <a href="../appendices/B_mean_patterns.html"><span>Appendix&nbsp;B</span></a>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>In the source code, only the method <code>indices(v12: array[float, 2]) -&gt; array[int, 1]</code> is defined. This is because some mappings are implemented (for instance, the <a href="https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L244"><code>RecursiveLocalMapping</code></a>, that we don’t discuss here), which don’t lend themselves to the simple permutation of bits formulation.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>In the source code, only the method <code>indices(v12: array[float, 2]) -&gt; array[int, 1]</code> is defined. This is because some mappings are implemented (for instance, the <a href="https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L244"><code>RecursiveLocalMapping</code></a>, that we don’t discuss here), that don’t lend themselves to the simple permutation of bits formulation.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

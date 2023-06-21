@@ -629,7 +629,7 @@ We give a quick overview of the numerical details that go into implementing the 
 
 We have implemented the mappings as all inheriting from the same abstract class, and each mapping simply has to define a method `indices_to_indices2d(indices: array[int, 1]) -> array[int, 2]` to go from 1D to 2D ($S^{-1}$), and a method `indices2d_to_indices(indices2d: array[int, 2]) -> array[int, 1]` to go from 2D to 1D.[^indices] The abstract class simply defines additional quality-of-life functionality, which makes use of these two methods.
 
-[^indices]: In the source code, only the method `indices(v12: array[float, 2]) -> array[int, 1]` is defined. This is because some mappings are implemented (for instance, the [`RecursiveLocalMapping`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L244), that we don't discuss here), which don't lend themselves to the simple permutation of bits formulation.
+[^indices]: In the source code, only the method `indices(v12: array[float, 2]) -> array[int, 1]` is defined. This is because some mappings are implemented (for instance, the [`RecursiveLocalMapping`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_mapping.py#L244), that we don't discuss here), that don't lend themselves to the simple permutation of bits formulation.
 
 Finally, the coarse-graining is easily implemented as the combination of a reshape operation (to bring all consecutive sequences of $2^n$ populations together), followed by averaging (see the [implementation here](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L186))
 
@@ -637,16 +637,18 @@ Finally, the coarse-graining is easily implemented as the combination of a resha
 
 To demonstrate the coarse-graining, we start with the cycling neural field presented in @sec-cycling-nf. The kernel $\tilde w$ of the one-dimensional neural field is numerically approximated using the coarse-graining procedure of different mappings. Simulations are presented in @fig-cg-2d-1d (we again set $\delta=6$ and the initial condition $h(z_1, z_2, t < 0) = z_1$), showing the activity levels, recurrent currents, and the latent trajectory $(\kappa_1(t), \kappa_2(t))$. In order, we discuss:
 
-* @fig-cg-2d-1d-random: The random mapping can be numerically evaluated as a trivial case of a mapping that does not have locality. The coarse-graining averages out all the structure of the activity, and the recurrent currents are zero, because the contributions from excitatory and inhibitory populations cancel out. This results in the erasure of the cycling behavior in the latent trajectory.
-* @fig-cg-2d-1d-column: The Column mapping shows the projection of the initial condition onto the $z_1$ axis, yielding the sigmoid in the $[0,1]$ embedding. Again, the current currents cancel out and yield zero, and the latent trajectory quickly decays towards $(\kappa_1, \kappa_2) = (0,0)$.
-* @fig-cg-2d-1d-z: The Z-mapping shows that despite the fractal structure of the activity, there is still regularity in the $[0,1]$ embedding, resulting in non-zero recurrent currents. In consequence, the latent trajectory shows a clear cycling behavior, that closely matches that of the 2D neural field in @fig-cg-2d-1d-original.
+* The random mapping can be numerically evaluated as a trivial case of a mapping that does not have locality. The coarse-graining averages out all the structure of the activity, and the recurrent currents are zero, because the contributions from excitatory and inhibitory populations cancel out. This results in the erasure of the cycling behavior in the latent trajectory.
+* The Column mapping shows the projection of the initial condition onto the $z_1$ axis, yielding the sigmoid in the $[0,1]$ embedding. Again, the current currents cancel out and yield zero, and the latent trajectory quickly decays towards $(\kappa_1, \kappa_2) = (0,0)$.
+* The Z-mapping shows that despite the fractal structure of the activity, there is still regularity in the $[0,1]$ embedding, resulting in non-zero recurrent currents. In consequence, the latent trajectory shows a clear cycling behavior, that closely matches that of the 2D neural field.
 
 <!-- TODONE : we run simulations and compare latent trajectories. first show only column and z-mapping. add quick intro to diagonal, col/row, reclocal, mention cannot be expressed by bit permutation. diagonal, col/row do not work, despite the non-zero field and recurrent currents. reclocal does work. intuition is that the recursive approach (zmapping, reclocal) seems to give locality
 
 Nicole: we don't show the other mappings, because they are not as nice examples, and essentially they work the same
 -->
 
-::: {#fig-cg-2d-1d}
+::: {.content-visible when-format="html"}
+
+:::::: {#fig-cg-2d-1d}
 
 ![Neural field in the 2D embedding](figures/coarse_graining_p=2_original.mp4){#fig-cg-2d-1d-original}
 
@@ -657,6 +659,37 @@ Nicole: we don't show the other mappings, because they are not as nice examples,
 ![Z-mapping followed by coarse-graining](figures/coarse_graining_p=2_z.mp4){#fig-cg-2d-1d-z}
 
 The cycling 2D neural field ($4^8$ square populations) is mapped to $[0,1]$ using different mappings, then coarse-grained (resulting in $2^8$ segment populations).
+::::::
+
+:::
+
+::: {.content-visible when-format="pdf"}
+```{python}
+#| label: fig-cg-2d-1d
+#| layout-ncol: 2
+#| layout-nrow: 4
+#| fig-cap: The cycling 2D neural field ($4^8$ square populations) is mapped to $[0,1]$ using different mappings, then coarse-grained (resulting in $2^8$ segment populations).
+#| fig-subcap:
+#|   - Neural field in the 2D embedding. First frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_original.mp4).
+#|   - Neural field in the 2D embedding. Last frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_original.mp4).
+#|   - Random mapping followed by coarse-graining. First frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_random.mp4).
+#|   - Random mapping followed by coarse-graining. Last frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_random.mp4).
+#|   - Column mapping followed by coarse-graining. First frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_column.mp4).
+#|   - Column mapping followed by coarse-graining. Last frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_column.mp4).
+#|   - Z-mapping followed by coarse-graining. First frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_z.mp4).
+#|   - Z-mapping followed by coarse-graining. Last frame, animation [available here](https://ninivert.github.io/lcnthesis/chapters/figures/coarse_graining_p=2_z.mp4).
+#| echo: false
+# Note: I have to do this wizardry because Quarto *really* doesn't seem to like nested divs with conditional content...
+from IPython.display import Image
+display(Image('figures/coarse_graining_p=2_original.mp4-1.jpg'))
+display(Image('figures/coarse_graining_p=2_original.mp4-2.jpg'))
+display(Image('figures/coarse_graining_p=2_random.mp4-1.jpg'))
+display(Image('figures/coarse_graining_p=2_random.mp4-2.jpg'))
+display(Image('figures/coarse_graining_p=2_column.mp4-1.jpg'))
+display(Image('figures/coarse_graining_p=2_column.mp4-2.jpg'))
+display(Image('figures/coarse_graining_p=2_z.mp4-1.jpg'))
+display(Image('figures/coarse_graining_p=2_z.mp4-2.jpg'))
+```
 :::
 
 ### Iterative application of $S$ : from $[0,1]^3$ to $[0,1]^2$, then to $[0,1]$ {#sec-simulations-3d-2d-1d}
@@ -674,7 +707,19 @@ To go from $[0,1]^3$ to $[0,1]^2$, we consider a slice $(v_2, v_3)$ at constant 
 :::
 
 ::: {.content-visible when-format="pdf"}
-![(TODO PDF. initial state and final state) Equivalence of dynamics, from 3D to 2D to 1D.](figures/lol7.jpg){#fig-cg-3d-2d-1d}
+```{python}
+#| label: fig-cg-3d-2d-1d
+#| layout-nrow: 2
+#| fig-cap: Equivalence of dynamics, from 3D to 2D to 1D. The first and the last frame of the animation are shown, [available here](https://ninivert.github.io/lcnthesis/chapters/figures/embedding_3d_2d_1d.mp4).
+#| fig-subcap:
+#|   - First frame
+#|   - Last frame
+#| echo: false
+# Note: I have to do this wizardry because Quarto *really* doesn't seem to like nested divs with conditional content...
+from IPython.display import Image
+display(Image('figures/embedding_3d_2d_1d.mp4-1.jpg'))
+display(Image('figures/embedding_3d_2d_1d.mp4-2.jpg'))
+```
 :::
 
 We close this chapter by repeating the process to go from $[0,1]^2$ to $[0,1]$, mapping $(v_1, \alpha_{23})$ to $\alpha_{123}$, and coarse-graining. In total, we have coarse-grained two times: once from $[0,1]^3$ ($8^n$ cube populations) to $[0,1]^2$ ($4^n$ square populations), and again from $[0,1]^2$ to $[0,1]$ ($2^n$ segment populations). The corresponding 1D neural field is now fully fractal, and again exhibits the same dynamics. This shows that "local mappings conserve regularity": we started with a fully continous neural field in $[0,1]^3$, and obtained a partially fractal neural field in $[0,1]^2$. Despite the fractal structure, the 2D neural field is still regular enough that the dynamics are conserved, but more importantly that it can *again* be mapped to an equivalent 1D neural field.

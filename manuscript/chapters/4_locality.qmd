@@ -201,7 +201,7 @@ Before we move to analytical derivations applying the average variation to mappi
 
 ```{python}
 #| label: fig-vnum
-#| fig-cap: (Numerator of the) average binned variation as a function of $n$. The local mappings have a growth slower than the upper bound $2\times 2^n$.
+#| fig-cap: (Numerator of the) average binned variation as a function of $n$. The Z-mapping has a growth slower than the upper bound $2\times 2^n$.
 #| echo: false
 
 def V(F: np.ndarray) -> np.ndarray:

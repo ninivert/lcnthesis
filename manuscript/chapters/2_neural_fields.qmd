@@ -47,7 +47,7 @@ We would like to add a few remarks on the physical units of @eq-lowrank-evolutio
 
 One last remark is that in our model, there is no external current; we only study the autonomous dynamics of the system.
 
-### Gaussian $\mathcal{N}(\vec 0, \mathbb{1}_N)$ low-rank network of neurons
+### Gaussian low-rank network of neurons
 
 Let us now specify the low-rank model introduced in the previous section, and use the model introduced in @schmutz2023convergence, which can be seen as a simple example of a "Gaussian mixture low-rank network" @Beiran2021. This paper defines the low-rank vectors $F_{\mu i}$ such that each component independently samples a standard Gaussian (zero mean, unit variance). In other words, every neuron $i$ samples a vector $\vec{F_i} = (F_{1i}, \cdots, F_{pi})$ from the $p$-dimensional gaussian. We write
 
@@ -175,8 +175,30 @@ Initially, we set all the potentials to zero, then simulate the differential equ
 ![Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis.](figures/embedding_p=1.mp4){#fig-p1}
 :::
 
+<!-- :::: {.content-visible when-format="pdf" layout-nrow=2}
+:::{#fig-p1 layout-nrow=2}
+![First frame](figures/embedding_p=1.mp4-1.jpg)
+
+![Last frame](figures/embedding_p=1.mp4-2.jpg)
+
+Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis. The first and the last frame of the animation are shown, [available here](https://ninivert.github.io/lcnthesis/chapters/figures/embedding_p=1.mp4).
+:::
+:::: -->
+
 ::: {.content-visible when-format="pdf"}
-![(TODO) Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis.](figures/lol7.jpg){#fig-p1}
+```{python}
+#| label: fig-p1
+#| layout-nrow: 2
+#| fig-cap: Simulation of the Gaussian network of neurons with $p=1$. Every neuron is represented by a dot, of which the height represents its activity level, and the colorbar doubles as a y-axis. The first and the last frame of the animation are shown, [available here](https://ninivert.github.io/lcnthesis/chapters/figures/embedding_p=1.mp4).
+#| fig-subcap:
+#|   - First frame
+#|   - Last frame
+#| echo: false
+# Note: I have to do this wizardry because Quarto *really* doesn't seem to like nested divs with conditional content...
+from IPython.display import Image
+display(Image('figures/embedding_p=1.mp4-1.jpg'))
+display(Image('figures/embedding_p=1.mp4-2.jpg'))
+```
 :::
 
 The results of the simulation show that the random ordering of the neurons does not yield a smooth embedding, in contrast to the smooth surface that appears when we order the neurons by their position $z_{1i}$. The simulation serves as a demonstration that the neurons converge to the stable fixed point $h^\star_i = z_{1i}$, as well as confirming that the zero fixed point is unstable. Indeed, despite the zero initialization, the simulation did not stay there because small numerical fluctuations were amplified by the instability. 
@@ -198,7 +220,19 @@ The question of finding a one-dimensional embedding becomes non-trivial when we 
 :::
 
 ::: {.content-visible when-format="pdf"}
-![(TODO PDF) Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level. Projections are shown by gray points.](figures/lol7.jpg){width=500px #fig-p2}
+```{python}
+#| label: fig-p2
+#| layout-ncol: 2
+#| fig-cap: Simulation of the Gaussian network of neurons with $p=2$. Every neuron is represented by a dot, of which the height represents its activity level. Projections are shown by gray points. The first and the last frame of the animation are shown, [available here](https://ninivert.github.io/lcnthesis/chapters/figures/embedding_p=2.mp4).
+#| fig-subcap:
+#|   - First frame
+#|   - Last frame
+#| echo: false
+# Note: I have to do this wizardry because Quarto *really* doesn't seem to like nested divs with conditional content...
+from IPython.display import Image
+display(Image('figures/embedding_p=2.mp4-1.jpg'))
+display(Image('figures/embedding_p=2.mp4-2.jpg'))
+```
 :::
 
 We however note that in this case, there are two pattern fixed points that the network can converge to. In the example given here, the network coincidentally converged again to the first pattern fixed point. The network is in the $\mu=1$ pattern, which we can see because the neural field is constant in the $z_2$ direction. We write the fixed point $h^\star(z_1, z_2, t) = z_1$. The neural field is now written as
@@ -411,7 +445,19 @@ With these considerations, we simulate a $p=2$ cycling neural field with $\delta
 :::
 
 ::: {.content-visible when-format="pdf"}
-![(TODO PDF) A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour.](figures/lol7.jpg){#fig-cycling-anim}
+```{python}
+#| label: fig-cycling-anim
+#| layout-nrow: 2
+#| fig-cap: A cycling neural field with $\delta=6$ and initial condition $h(z_1, z_2, t < 0) = z_1$. The latent trajectory is also computed, and demonstrates the oscillatory behaviour. The first and the last frame of the animation are shown, [available here](https://ninivert.github.io/lcnthesis/chapters/figures/embedding_p=2_cycling.mp4).
+#| fig-subcap:
+#|   - First frame
+#|   - Last frame
+#| echo: false
+# Note: I have to do this wizardry because Quarto *really* doesn't seem to like nested divs with conditional content...
+from IPython.display import Image
+display(Image('figures/embedding_p=2_cycling.mp4-1.jpg'))
+display(Image('figures/embedding_p=2_cycling.mp4-2.jpg'))
+```
 :::
 
 Relating to @sec-closed-system, the dynamics of the projection now read:

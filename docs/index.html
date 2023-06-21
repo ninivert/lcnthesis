@@ -8,6 +8,7 @@
 
 <meta name="author" content="Nicole Vadot">
 <meta name="author" content="(Supervisor) Valentin Schmutz">
+<meta name="author" content="(Supervisor, Director of LCN) Wulfram Gerstner">
 <meta name="dcterms.date" content="2023-06-21">
 
 <title>Equivalence of neural field dynamics with different embedding dimensionality</title>
@@ -80,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Cover</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Abstract</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -129,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Cover</span></a>
+ <span class="menu-text">Abstract</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -205,6 +206,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Equivalence of neural field dynamics with different embedding dimensionality</h1>
+<p class="subtitle lead"><img src="epfl.svg" class="img-fluid" style="width:30.0%"></p>
 </div>
 
 
@@ -216,6 +218,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="quarto-title-meta-contents">
              <p>Nicole Vadot </p>
              <p>(Supervisor) Valentin Schmutz </p>
+             <p>(Supervisor, Director of LCN) Wulfram Gerstner </p>
           </div>
   </div>
     
@@ -229,17 +232,13 @@ ul.task-list li input[type="checkbox"] {
     
   </div>
   
-<div>
-  <div class="abstract">
-    <div class="abstract-title">Abstract</div>
-    <p>Literature around the study of biological networks of neurons shows evidence that neurons can be spatially structured, leading to the developement of neural field models. In early papers, this structure emerges from the observation that functionally similar neurons tend to share similar positions in the cortex. Later it has been shown that not only the physical position of the neurons can be used to parametrize their function, but also their location in more abstract “embedding spaces”, for example a space of “neuron celltypes”.</p>
-    <p>Decoupling the embedding space from the physical position of neurons on the cortical sheet leads to asking the question of uniqueness of the embedding space. Given an embedding space and neural dynamics thereon, do there exist other embedding spaces which can express the same behavior ? Is there a “natural” choice for the embedding space ?</p>
-    <p>In this work, we show that the answer to the second question is highly nontrivial because given some neural dynamics, we can find multiple equivalent embedding spaces in different dimensions. We illustrate this using a toy example of a 2 (or 3)-dimensional embedding that is mapped to an equivalent 1-dimensional embedding. This is done by applying measurable bijective mappings <span class="math inline">\(S : [0,1]^2 \mapsto [0,1]\)</span>, which we additionally show are well-behaved under numerical simulation schemes. In this, we exploit the key concept of “locality”, which expresses the property of (possibly fractal) neural fields, in which neighbouring neurons in the embedding space <em>tend</em> to have similar functions.</p>
-  </div>
-</div>
 
 </header>
 
+<p><strong>Abstract</strong></p>
+<p>Early recordings of cat’s somatosensory and visual cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons. The columnar organization of the cortex motivated the design of spatially structured models of neural population dynamics, namely neural field models, where the spatial dimensions corresponded to the two dimensions of the cortical sheet. Later it has been shown that not only the physical position of the neurons can be used to parametrize their function, but also their location in more abstract “embedding spaces”, for example a space of “neuron celltypes”.</p>
+<p>Decoupling the embedding space from the physical position of neurons on the cortical sheet begs the question of uniqueness of the embedding space. Given an embedding space and neural dynamics thereon, are there other embedding spaces which can express the same behavior? Is there a “natural” choice for the embedding space?</p>
+<p>In this work, we show that the answer to the second question is highly nontrivial because given some neural dynamics, we can find multiple equivalent embedding spaces in different dimensions. We illustrate this using a toy example of a 2 (or 3)-dimensional embedding that is mapped to an equivalent 1-dimensional embedding. This is done by applying measurable bijective mappings <span class="math inline">\(S : [0,1]^2 \mapsto [0,1]\)</span>, which lead, as we show, to well-behaved numerical simulation schemes. In this, we exploit the key concept of “locality”, which expresses the property of (possibly fractal) neural fields, in which neighbouring neurons in the embedding space <em>tend</em> to have similar functions.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="chapters/figures/fig-cover.svg" class="img-fluid figure-img"></p>

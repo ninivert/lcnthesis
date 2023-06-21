@@ -146,7 +146,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Cover</span></a>
+ <span class="menu-text">Abstract</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -338,7 +338,7 @@ In some sense, having the constraint that the mapping traces a path in the bound
 <section id="sec-Vn" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-Vn"><span class="header-section-number">4.2.1</span> Locality as vanishing average binned variation</h3>
 <p>The previous chapter gave the intuition that local mappings map populations close in 1D to populations close in 2D. To verify this, we might try to compare the distance between all segment populations and the population at <span class="math inline">\(\alpha=0\)</span>, to the distance of all square populations to the population at <span class="math inline">\(S^{-1}(\alpha=0)\)</span>. This is done in <a href="#fig-distance-2d-1d">Figure&nbsp;<span>4.1</span></a>, where the 2D distance is taken to be the <span class="math inline">\(\ell^2\)</span> norm. If the distances matched perfectly, then we would see a line with slope <span class="math inline">\(\sqrt 2\)</span> in the graph.</p>
-<div class="cell" data-execution_count="3">
+<div class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div id="fig-distance-2d-1d" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -383,12 +383,12 @@ Valentin: For the master thesis, it is ok to not mention it.
 -->
 <!-- TODONE : in the definition of $V$, we use the converged version of $S$, instead of a finite truncation $S^n$. we need to convince people this is not a big mistake, since $S^n \to S$, and we can take both limits (binning and $S^n$) "at the same time". This is adressed by a footnote in @sec-mappings-binary -->
 <p>Before we move to analytical derivations applying the average variation to mappings, we can first check numerically if it gives the expected results; that is <span class="math inline">\(V_n\)</span> vanishes a <span class="math inline">\(n\to\infty\)</span> for local mappings, whereas <span class="math inline">\(V_n\)</span> is lower bounded by a constant for non-local mappings. <a href="#fig-vnum">Figure&nbsp;<span>4.3</span></a> shows this is indeed the case, rejoice!</p>
-<div class="cell" data-execution_count="4">
+<div class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div id="fig-vnum" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="4_locality_files/figure-html/fig-vnum-output-1.svg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.3: (Numerator of the) average binned variation as a function of <span class="math inline">\(n\)</span>. The local mappings have a growth slower than the upper bound <span class="math inline">\(2\times 2^n\)</span>.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.3: (Numerator of the) average binned variation as a function of <span class="math inline">\(n\)</span>. The Z-mapping has a growth slower than the upper bound <span class="math inline">\(2\times 2^n\)</span>.</figcaption>
 </figure>
 </div>
 </div>
