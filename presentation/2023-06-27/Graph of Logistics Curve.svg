@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="600"
+   height="400"
+   viewBox="0 0 600 400"
+   version="1.1"
+   id="svg68"
+   sodipodi:docname="Graph of Logistics Curve.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs72" />
+  <sodipodi:namedview
+     id="namedview70"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.5291184"
+     inkscape:cx="284.47764"
+     inkscape:cy="206.98201"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="0"
+     inkscape:window-y="1080"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg68" />
+  <title
+     id="title2">Graph of Logistics Curve</title>
+  <desc
+     id="desc4">Originally Produced by GNUPLOT 4.2 patchlevel 2, hand compressed  </desc>
+  <g
+     style="fill:none;stroke-width:4;stroke-linecap:butt;stroke-dasharray:none"
+     id="g36">
+    <g
+       stroke="#888"
+       id="g26"
+       style="stroke-width:4;stroke-dasharray:none">
+      <path
+         d="M38.5,346.8 H 561.5 "
+         id="path6"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M38.5,185.5 H 561.5 "
+         id="path8"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M38.5, 24.2 H 561.5 "
+         id="path10"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M 38.5,346.0 V 25.0 "
+         id="path12"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M125.7,346.0 V 25.0 "
+         id="path14"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M212.8,346.0 V 25.0 "
+         id="path16"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M300.0,346.0 V 25.0 "
+         id="path18"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M387.2,346.0 V 25.0 "
+         id="path20"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M474.3,346.0 V 25.0 "
+         id="path22"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M561.5,346.0 V 25.0 "
+         id="path24"
+         style="stroke-width:4;stroke-dasharray:none" />
+    </g>
+    <g
+       stroke="#000"
+       stroke-width="2"
+       id="g34"
+       style="stroke-width:4;stroke-dasharray:none">
+      <path
+         d="M300.0,346.8 h-12 M300.0,185.5 h-12 M300.0, 24.2 h-12"
+         id="path28"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M 38.5,346.0 v-14 M125.7,346.0 v-14 M212.8,346.0 v-14           M300.0,346.0 v-14 M387.2,346.0 v-14 M474.3,346.0 v-14 M561.5,346.0 v-14"
+         id="path30"
+         style="stroke-width:4;stroke-dasharray:none" />
+      <path
+         d="M300.0,346.0 V 25.0 M38.5, 346.0 H 561.5"
+         id="path32"
+         style="stroke-width:4;stroke-dasharray:none" />
+    </g>
+  </g>
+  <g
+     style="stroke:none; fill:black; font-family:Deja Vu Sans,Lucida Sans; font-size:18.00pt"
+     id="g62">
+    <g
+       text-anchor="end"
+       transform="translate(287,0)"
+       id="g44">
+      <text
+         y="353.5"
+         id="text38">0</text>
+      <text
+         y="192.2"
+         id="text40">0.5</text>
+      <text
+         y="30.9"
+         id="text42">1</text>
+    </g>
+    <g
+       text-anchor="middle"
+       transform="translate(0,379.7)"
+       id="g60">
+      <text
+         x="38.5"
+         id="text46">−6</text>
+      <text
+         x="125.7"
+         id="text48">−4</text>
+      <text
+         x="212.8"
+         id="text50">−2</text>
+      <text
+         x="300.0"
+         id="text52"> 0</text>
+      <text
+         x="387.2"
+         id="text54"> 2</text>
+      <text
+         x="474.3"
+         id="text56"> 4</text>
+      <text
+         x="561.5"
+         id="text58"> 6</text>
+    </g>
+  </g>
+  <g
+     fill="none"
+     stroke-width="2.0"
+     transform="translate(168.6,249.5)scale(.995,1.038)"
+     id="g66">
+    <path
+       stroke="#4050C0"
+       d="M-132.0,93.0 L-107.8,92.4 L-94.6,92.0 L-81.4,91.3 L-68.2,90.5       L-55.0,89.4 L-41.8,87.9 L-28.6,85.9 L-15.4,83.2 L-2.2,79.7 L11.0,75.0 L24.2,69.0       C28.7,66.7 33.1,64.1 37.4,61.3 C41.9,58.3 46.3,55.0 50.6,51.5       C55.1,47.7 59.5,43.6 63.8,39.3 C68.3,34.6 72.7,29.7 77.0,24.4       C81.5,18.9 85.9,13.0 90.2,6.9       L103.4,-13.0 L116.6,-34.9 L129.8,-58.0 L138.6,-73.5       L151.8,-96.3 L165.0,-117.6 L178.2,-136.8       C182.5,-142.6 186.9,-148.2 191.4,-153.4 C195.7,-158.4 200.1,-163.0 204.6,-167.4       C208.9,-171.5 213.3,-175.3 217.8,-178.7 C222.1,-182.1 226.5,-185.1 231.0,-187.8       C235.3,-190.5 239.8,-192.8 244.2,-195.0       L257.4,-200.5 L270.6,-204.7 L283.8,-207.9 L297.0,-210.3 L310.2,-212.2 L323.4,-213.5       L336.6,-214.6 L349.8,-215.3 L363.0,-215.9 L374.0,-216.2 L393.8,-216.7"
+       id="path64"
+       style="stroke-width:13.77583139;stroke-dasharray:none" />
+  </g>
+</svg>
