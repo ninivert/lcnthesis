@@ -397,7 +397,7 @@ Simulation of the Gaussian network of neurons with $p=1$. Every neuron is repres
 \begin{aligned}
 \partial_t h(\boldsymbol{z}, t) &amp;= -h(\boldsymbol{z}, t) + \int_{\mathbb R^p} w(\boldsymbol{z}, \boldsymbol{y}) \phi(h(\boldsymbol{y}, t)) \mathcal{N}^p(\mathrm d\boldsymbol{y}) \\
 w(\boldsymbol{z}, \boldsymbol{y}) &amp;= \sum_{\mu=1}^p z_\mu \tilde\phi(y_\mu) \\
-\mathcal{N}^p(\mathrm d\boldsymbol{y}) &amp;= \frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p z_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} y_1 \cdots \mathrm d y_p.
+\mathcal{N}^p(\mathrm d\boldsymbol{y}) &amp;= \frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p y_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} y_1 \cdots \mathrm d y_p.
 \end{aligned}
 \tag{2.6}\]</span></span></p>
 </section>

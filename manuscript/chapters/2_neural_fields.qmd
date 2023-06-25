@@ -250,7 +250,7 @@ $$
 \begin{aligned}
 \partial_t h(\vec z, t) &= -h(\vec z, t) + \int_{\Rp} w(\vec z, \vec y) \phi(h(\vec y, t)) \mathcal{N}^p(\d \vec y) \\
 w(\vec z, \vec y) &= \sum_{\mu=1}^p z_\mu \tilde\phi(y_\mu) \\
-\mathcal{N}^p(\d \vec y) &= \frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p z_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} y_1 \cdots \mathrm d y_p.
+\mathcal{N}^p(\d \vec y) &= \frac{\mathrm{exp}(\frac12\sum_{\mu=1}^p y_\mu^2)}{(2\pi)^{p/2}} \mathrm{d} y_1 \cdots \mathrm d y_p.
 \end{aligned}
 $$ {#eq-nf-gaussian-p}
 

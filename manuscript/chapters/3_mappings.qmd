@@ -561,7 +561,7 @@ A geometrical intuition we can give for the coarse-graining is how the averaging
 
 ```{python}
 #| label: fig-averaging-geom
-#| fig-cap: Square populations corresponding to the segment populations before coarse-graining are colored identically when they are the same bin of 1D length $2^{-n}$. Here we show $n=3$.
+#| fig-cap: Square populations corresponding to the segment populations before coarse-graining are colored identically when they are the same bin of 1D length $2^{-n}$. A cross marks the "average position" in each bin. Here we show $n=3$.
 #| fig-subcap:
 #|   - Z-mapping
 #|   - Column mapping
@@ -579,7 +579,10 @@ def plot_averaging_geom(mapping_cls, nrec=3):
 	fig, ax = plt.subplots()
 	ax.plot(*F.T, color='gray')
 	colors = cycle(['#750087','#001997','#06bd01','#ffff00','#fe941e','#ff1e26','#fcaec5','#74d4ea','#603814','#010101','#fbf7f4'])
-	for i in range(2**nrec): ax.scatter(*F_[i, :, :].T, zorder=10, color=next(colors), ec='k')
+	for i in range(2**nrec):
+		c = next(colors)
+		ax.scatter(*F_[i, :, :].T, zorder=10, color=c, ec='k')
+		ax.scatter(*F_[i, :, :].mean(axis=0), zorder=10, s=80, marker='X', ec='k', color=c)
 	ax.set(
 		xlim=(0,1), ylim=(0,1),
 		xlabel='$v_1$', ylabel='$v_2$', aspect='equal',
