@@ -484,4 +484,6 @@ TSWLatexianTemp*
 # option is specified. Footnotes are the stored in a file with suffix Notes.bib.
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
+
 manuscript/Neural-field-dynamics-and-equivalence-of-embeddings-in-different-dimensions.tex
+manuscript/chapters/figures/fig-cover-600dpi.png

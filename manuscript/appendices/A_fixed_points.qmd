@@ -167,7 +167,7 @@ $$
 &\implies
 \begin{cases}
 h_i^\star=0 &\implies \lambda_\nu = \avg{\tilde\phi(z) \partial \phi(0) z} - 1 \approx 0.19061 \pm 0.00014 \\
-h_i^\star=F_{\nu i} &\implies \lambda_\nu = \avg{\tilde\phi(z) \partial \phi(z) z} - 1 \approx -0.28090 ± 0.00006
+h_i^\star=F_{\nu i} &\implies \lambda_\nu = \avg{\tilde\phi(z) \partial \phi(z) z} - 1 \approx -0.28090 \pm 0.00006
 \end{cases}
 \end{aligned}
 $$

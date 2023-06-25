@@ -530,7 +530,7 @@ In the continuation of the simulation methods established in the @sec-simnf, we 
 
 We now address the elephant in the room: how do we numerically simulate a neural field defined on -- what appears to be -- a fractal curve? Naively, we could just proceed as follows:
 
-1. Create a grid of $2^n \times 2^n = 4^n$ squares of size $2^{-n} \times 2^{-n}$ in the $[0,1]\times[0,1]$ embedding. Each square is located by a position $\vec{v_i} = (v_{1,i},v_{2,i}),\,i\in\{1,\cdots\,2^n\}$.
+1. Create a grid of $2^n \times 2^n = 4^n$ squares of size $2^{-n} \times 2^{-n}$ in the $[0,1]\times[0,1]$ embedding. Each square is located by a position $\vec{v_i} = (v_{1,i},v_{2,i}),\,i\in\{1,\cdots\,4^n\}$.
 2. Compute a discretized version of the 1D connectivity kernel
    $$
    \begin{aligned}
