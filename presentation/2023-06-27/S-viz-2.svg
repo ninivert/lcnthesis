@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="576pt" height="36pt" viewBox="0 0 576 36" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2023-06-26T18:26:26.713513</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.7.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 36 
+L 576 36 
+L 576 0 
+L 0 0 
+L 0 36 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 72 32.04 
+L 518.4 32.04 
+L 518.4 4.32 
+L 72 4.32 
+L 72 32.04 
+z
+" style="fill: none"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <!-- 0,0000 -->
+      <g transform="translate(76.285397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <defs>
+        <path id="NewCM10-Book-30" d="M 1594 -141 
+C 2496 -141 2944 589 2944 2048 
+C 2944 3027 2739 3680 2336 4000 
+C 2112 4173 1862 4262 1600 4262 
+C 698 4262 250 3526 250 2048 
+C 250 870 563 -141 1594 -141 
+z
+M 2310 3354 
+C 2355 3130 2374 2720 2374 2125 
+C 2374 1536 2349 1101 2304 819 
+C 2221 307 1984 51 1594 51 
+C 1446 51 1299 109 1165 218 
+C 992 365 890 666 845 1126 
+C 826 1286 819 1619 819 2125 
+C 819 2682 838 3072 870 3283 
+C 928 3635 1043 3859 1222 3955 
+C 1363 4032 1485 4070 1594 4070 
+C 2010 4070 2240 3731 2310 3354 
+z
+" transform="scale(0.015625)"/>
+        <path id="NewCM10-Book-2c" d="M 550 320 
+C 550 128 698 -32 890 -32 
+C 973 -32 1043 -6 1107 38 
+C 1107 -384 973 -749 698 -1056 
+C 666 -1088 646 -1120 646 -1139 
+C 646 -1203 672 -1235 730 -1235 
+C 768 -1235 832 -1184 922 -1082 
+C 1114 -858 1299 -397 1299 0 
+C 1299 454 1165 678 890 678 
+C 691 678 550 518 550 320 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <!-- 0,0001 -->
+      <g transform="translate(104.185397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <defs>
+        <path id="NewCM10-Book-31" d="M 1722 4262 
+C 1459 3994 1075 3859 570 3859 
+L 570 3610 
+C 902 3610 1178 3661 1389 3763 
+L 1389 525 
+C 1389 410 1363 333 1306 301 
+C 1248 269 1088 250 832 250 
+L 608 250 
+L 608 0 
+C 768 13 1114 19 1645 19 
+C 2176 19 2522 13 2682 0 
+L 2682 250 
+L 2458 250 
+C 2195 250 2035 269 1984 301 
+C 1933 333 1901 410 1901 525 
+L 1901 4070 
+C 1901 4224 1888 4262 1722 4262 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3"/>
+     <g id="text_3">
+      <!-- 0,0010 -->
+      <g transform="translate(132.085397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4"/>
+     <g id="text_4">
+      <!-- 0,0011 -->
+      <g transform="translate(159.985397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5"/>
+     <g id="text_5">
+      <!-- 0,0100 -->
+      <g transform="translate(187.885397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6"/>
+     <g id="text_6">
+      <!-- 0,0101 -->
+      <g transform="translate(215.785397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7"/>
+     <g id="text_7">
+      <!-- 0,0110 -->
+      <g transform="translate(243.685397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8"/>
+     <g id="text_8">
+      <!-- 0,0111 -->
+      <g transform="translate(271.585397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-30" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9"/>
+     <g id="text_9">
+      <!-- 0,1000 -->
+      <g transform="translate(299.485397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_10"/>
+     <g id="text_10">
+      <!-- 0,1001 -->
+      <g transform="translate(327.385397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_11"/>
+     <g id="text_11">
+      <!-- 0,1010 -->
+      <g transform="translate(355.285397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_12"/>
+     <g id="text_12">
+      <!-- 0,1011 -->
+      <g transform="translate(383.185397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-30" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_13">
+     <g id="line2d_13"/>
+     <g id="text_13">
+      <!-- 0,1100 -->
+      <g transform="translate(411.085397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_14">
+     <g id="line2d_14"/>
+     <g id="text_14">
+      <!-- 0,1101 -->
+      <g transform="translate(438.985397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-30" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_15"/>
+     <g id="text_15">
+      <!-- 0,1110 -->
+      <g transform="translate(466.885397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-30" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_16">
+     <g id="line2d_16"/>
+     <g id="text_16">
+      <!-- 0,1111 -->
+      <g transform="translate(494.785397 69.501162) rotate(-45) scale(0.12 -0.12)">
+       <use xlink:href="#NewCM10-Book-30"/>
+       <use xlink:href="#NewCM10-Book-2c" x="49.999985"/>
+       <use xlink:href="#NewCM10-Book-31" x="77.799973"/>
+       <use xlink:href="#NewCM10-Book-31" x="127.799957"/>
+       <use xlink:href="#NewCM10-Book-31" x="177.799942"/>
+       <use xlink:href="#NewCM10-Book-31" x="227.799927"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="line2d_17">
+    <path d="M 72 32.04 
+L 72 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_18">
+    <path d="M 99.9 32.04 
+L 99.9 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_19">
+    <path d="M 127.8 32.04 
+L 127.8 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_20">
+    <path d="M 155.7 32.04 
+L 155.7 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_21">
+    <path d="M 183.6 32.04 
+L 183.6 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_22">
+    <path d="M 211.5 32.04 
+L 211.5 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_23">
+    <path d="M 239.4 32.04 
+L 239.4 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_24">
+    <path d="M 267.3 32.04 
+L 267.3 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_25">
+    <path d="M 295.2 32.04 
+L 295.2 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_26">
+    <path d="M 323.1 32.04 
+L 323.1 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_27">
+    <path d="M 351 32.04 
+L 351 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_28">
+    <path d="M 378.9 32.04 
+L 378.9 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_29">
+    <path d="M 406.8 32.04 
+L 406.8 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_30">
+    <path d="M 434.7 32.04 
+L 434.7 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_31">
+    <path d="M 462.6 32.04 
+L 462.6 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_32">
+    <path d="M 490.5 32.04 
+L 490.5 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_33">
+    <path d="M 518.4 32.04 
+L 518.4 4.32 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_34">
+    <path d="M 72 18.18 
+L 518.4 18.18 
+" style="fill: none; stroke: #808080; stroke-linecap: square"/>
+   </g>
+  </g>
+ </g>
+</svg>

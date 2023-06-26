@@ -1,5 +1,6 @@
 2023-04-20/*.png
 # *.pdf
 *.autosave.xopp
+.~lock*
 
 # 2023-06-27
