@@ -107,7 +107,7 @@ The analysis of stability from @sec-fixedpoints-stability can be summarized by t
 
 In our case, this analysis in Taylor expansions was sufficient to explain the observed stability resulting from a logistic activation function.
 
-We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that at $N=250$, the numerical eigenvalues approximate the analytical eigenvalues, and this correspondence improves when we take larger $N$ (typically we will for the rest of this thesis take $N > 10^3$).
+We should however note that the results obtained in @sec-fixedpoints are valid in the $N \to \infty$ limit. A numerical analysis shows in @fig-spectrum that at $N=1024$, the numerical eigenvalues approximate the analytical eigenvalues, and this correspondence improves when we take larger $N$ (typically we will for the rest of this thesis take $N > 10^4$).
 
 ```{python}
 #| label: fig-spectrum
