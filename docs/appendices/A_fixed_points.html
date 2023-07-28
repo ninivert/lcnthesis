@@ -327,14 +327,14 @@ F_{\mu i} = f_\mu(z_{1 i}, \cdots, z_{p i}), \, G_{\mu i} = g_\mu(z_{1 i}, \cdot
 &amp;\stackrel{N \gg 1}{\approx} \sum_{\mu \neq \nu}^p F_{\mu i} \langle{g^\prime_\mu(\boldsymbol{z}) f_\nu(\boldsymbol{z})}\rangle + F_{\nu i} \langle{g^\prime_\nu(\boldsymbol{z}) f_\nu(\boldsymbol{z})}\rangle
 \end{aligned}
 \]</span></p>
-<p>We study each term separately. Additionally (and similarly as before), we assume that the functions <span class="math inline">\(g_\mu\)</span> and the functions <span class="math inline">\(f_\mu\)</span> are component-wise, and that the distribution <span class="math inline">\(\rho\)</span> factorises.</p>
+<p>We study each term separately. Additionally (and similarly as before), we assume that the functions <span class="math inline">\(g_\mu\)</span> and the functions <span class="math inline">\(f_\mu\)</span> are component-wise, and that the distribution <span class="math inline">\(\rho\)</span> factorises. When <span class="math inline">\(\mu \neq \nu\)</span>, we compute:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \langle{g^\prime_\mu(\boldsymbol{z}) f_\nu(\boldsymbol{z})}\rangle &amp;=
 \int_{\mathbb R^p} g^\prime_\mu(\boldsymbol{z}) f_\nu(\boldsymbol{z}) \rho(\mathrm d\boldsymbol{z}) \\
 &amp;= \int_{\mathbb R} \int_{\mathbb R} g^\prime_\mu(z_\mu) f_\nu(z_\nu) \rho_\mu(\mathrm dz_\mu) \rho_\nu(\mathrm dz_\nu) \\
 &amp;= \int_{\mathbb R} g^\prime_\mu(z_\mu) \rho_\mu(\mathrm dz_\mu) \int_{\mathbb R} f_\nu(z_\nu) \rho_\nu(\mathrm dz_\nu) \\
-&amp;= \langle{g^\prime_\mu(z_\mu)}\rangle \langle{f_\nu(z_\nu)}\rangle
+&amp;= \langle{g^\prime_\mu(z_\mu)}\rangle \langle{f_\nu(z_\nu)}\rangle.
 \end{aligned}
 \]</span></p>
 <p>In our case, <span class="math inline">\(\langle{f_\nu(z_\nu)}\rangle = \langle{z_\nu}\rangle = \int_{\mathbb R} z_\nu \mathcal{N}(\mathrm dz_\nu) = 0\)</span> and so the term vanishes. Therefore, we are left with</p>

@@ -27,13 +27,13 @@ In this chapter, we introduce a toy model so that we can later study the mapping
 
 ### Low-rank networks of neurons {#sec-low-rank-network}
 
-The toy model we introduce is an instance of a low-rank neural network. Such models hold their name from the form of their connectivity matrix, which has a rank of (at most) $p$. We write the connectivity matrix as follows:
+The toy model we introduce is an instance of a low-rank neural network. Such models hold their name from the form of their connectivity matrix, which has a rank $p$. We write the connectivity matrix as follows:
 
 $$
 J_{ij} = \frac 1N \sum_{\mu=1}^p F_{\mu i} G_{\mu j}.
 $$ {#eq-lowrankj}
 
-The geometric view of these networks is that the recurrent currents lie in a $p$-dimensional subspace of $\R^N$ spanned by the vectors $\{\vec{F_1}, \cdots, \vec{F_\mu},\cdots, \vec{F_p}\}$ (where each $\vec{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})$), which therefore define a "natural" linear embedding (in the sense of @JazOst21) of the neural population activity.
+The geometric view of these networks is that the recurrent currents lie in a $p$-dimensional subspace of $\R^N$ spanned by the linearly independant vectors $\{\vec{F_1}, \cdots, \vec{F_\mu},\cdots, \vec{F_p}\}$ (where each $\vec{F_\mu}=(F_{\mu 1}, \cdots F_{\mu N})$), which therefore define a "natural" linear embedding (in the sense of @JazOst21) of the neural population activity.
 
 Recalling the notation from the introduction, the $h_i(t)$ are neuron potentials (with initial condition $h_i(0)$), $\phi : \R \mapsto \R^+$ is the monotonic increasing activation function, and we write the evolution equation for this network of neurons:
 
@@ -45,7 +45,7 @@ The exponential decay term describes how, in isolation, a neuron's potential ten
 
 We would like to add a few remarks on the physical units of @eq-lowrank-evolution. Strictly speaking, a prefactor $\tau$ with units of $\mathrm{seconds}^{-1}$ should be multiplied with $\dot h_i(t)$ of units $\mathrm{volt}\cdot\mathrm{seconds}^{-1}$, such that the left-hand side of the equation is consistent with the unit of voltage. Similarly, the activation function has units $\mathrm{seconds}^{-1}$ and the connectivity matrix units of $\mathrm{coulomb}$, and a multiplicative term $R$ with units $\mathrm{ohm}$ should multiply the recurrent currents in order to yield a voltage. By rescaling time or connection weights, both $\tau$ and $R$ can be set to one, and so we omit to write them.
 
-One last remark is that in our model, there is no external current; we only study the autonomous dynamics of the system.
+In our model we make the simplifying assumption that there is no external current (we only study the autonomous dynamics of the system), but this does not hurt the generalizability of our results.
 
 ### Gaussian low-rank network of neurons
 
@@ -73,7 +73,7 @@ $$
 The motivation for this choice will be presented in a few paragraphs. Finally, the activation function remains to be defined. For simplicity, we take it to be the logistic function, although the following results are not sensitive to this choice,
 
 $$
-\phi(h) = \frac{1}{1 + \mathrm{e}^h}.
+\phi(h) = \frac{1}{1 + \mathrm{e}^{-h}}.
 $$
 
 Putting everything together, we get the following expression for the equation of evolution of the network of neurons:
@@ -82,7 +82,7 @@ $$
 \dot h_i(t) = -h_i(t) + \frac 1N \sum_{\mu=1}^p \sum_{j=1}^{N} z_{\mu i} \tilde \phi(z_{\mu j}) \phi(h_j(t)) =: \mathrm{RHS}(h_1, \cdots, h_N).
 $$ {#eq-toymodel-evolution}
 
-We note that contrary to the model introduced in @schmutz2023convergence, we ignore the self-connections term, because it introduces a vanishing correction of order $\bO(1/N)$.
+We note that contrary to the model introduced in @schmutz2023convergence, which excludes the self-connection term by effectively setting $J_{ii} = 0$, we do not do this, because it introduces a vanishing correction of order $\bO(1/N)$.
 
 To understand this model better, we can analyze its fixed points and their stability. Here we summarize the results from the derivation presented in @sec-fixedpoints. We use the notation $h^\star$ to refer to fixed points of the network. The fixed points solve the roots of the evolution equation:
 
@@ -111,30 +111,44 @@ We should however note that the results obtained in @sec-fixedpoints are valid i
 
 ```{python}
 #| label: fig-spectrum
-#| fig-cap: Spectrum of $K$ for $N=250$ and $p=2$. The numerical estimation (black, eigenvalues $\lambda_\mu$ and $\lambda_\perp=-1$) of the eigenvalues is close to the analytical ($N \to \infty$) derivation (red, only eigenvalues $\lambda_\mu$). Eigenvalues above the dotted gray line (positive values) correspond to unstable fixed points, and below (negative values) correspond to stable fixed points.
+#| fig-cap: Spectrum of $K$ for $N=1024$ and $p=5$. Numerical estimations (black, every line represents the sorted spectrum of one random sample of $K$, 20 samples total) of the eigenvalues are close to the analytical ($N \to \infty$) derivation (red, only eigenvalues $\lambda_\mu$). Eigenvalues above the dotted gray line (positive values) correspond to unstable fixed points, and below (negative values) correspond to stable fixed points. The first $p$ eigenvalues correspond to $\lambda_\mu$ ($\mu\in\{1,\cdots,p\}$), and the remaining eigenvalues correspond to $\lambda_\perp=-1$.
 #| fig-subcap:
 #|   - Pattern (stable) fixed point
 #|   - Zero (unstable) fixed point
 #| layout-ncol: 2
 #| echo: false
 
+N = 1024
+p = 5
+numeig = 20  # number of stored numerical eigenvalues
 dsigmoid = lambda x: sigmoid(x) * (1 - sigmoid(x))
 
 def plot_spectrum(hstar_str: str):
-	params = LowRankRNNParams.new_valentin(p=2, N=250, phi=sigmoid, I_ext=zero, exclude_self_connections=False)
-	if hstar_str == 'pattern': hstar = params.F[:, 0]
-	elif hstar_str == 'zero': hstar = np.zeros(params.N)
-	dphi = dsigmoid(hstar)
-	J = np.einsum('im,jm->ij', params.F, params.G * dphi[:, None]) / params.N - np.eye(params.N)
-	eig_num = np.sort(np.linalg.eigvals(J).real)[::-1]
+	nruns = 20
+	eig_nums = np.zeros((nruns, numeig))
+
+	for i, seed in enumerate(range(nruns)):
+		params = LowRankRNNParams.new_valentin(p=p, N=N, phi=sigmoid, I_ext=zero, exclude_self_connections=False, random_state=seed)
+		if hstar_str == 'pattern': hstar = params.F
+		elif hstar_str == 'zero': hstar = np.zeros_like(params.F)
+		dphi = dsigmoid(hstar)
+		J = np.einsum('im,jm->ij', params.F, params.G * dphi) / params.N - np.eye(params.N)
+		eig_nums[i] = np.sort(np.linalg.eigvals(J).real)[::-1][:numeig]
+
+	eig_num = eig_nums.mean(axis=0)
+	eig_num_std = eig_nums.std(axis=0, ddof=1) / np.sqrt(nruns)  # std of the mean estimator
 	eig_ana = { 'zero': 0.19061, 'pattern': -0.28090 }[hstar_str]  # see appendix A
 	
 	fig, ax = plt.subplots()
 	mktrans(fig, ax)
+	# numerical estimations
 	ax.axhline(0, color='gray', linestyle='--')
-	ax.plot(eig_num[:8], marker='o', clip_on=False)
-	ax.plot([7,8,8.5], eig_num[8:11], linestyle='--', color='k', clip_on=False)
-	ax.plot(np.arange(params.p), np.full(params.p, eig_ana), color='r', marker='o', clip_on=False)
+	# ax.plot(eig_num[:8], marker='o', clip_on=False)
+	# ax.errorbar(np.arange(8), eig_num[:8], yerr=eig_num_std[:8], marker='o', clip_on=False, linestyle=':')
+	ax.plot(eig_nums[:, :8].T, marker='.', color='k', alpha=0.2, clip_on=False, linestyle=':')
+	ax.plot([7,8,8.5], eig_num[8:11], linestyle='--', color='k', clip_on=False)  # dashed line "fadeout"
+	# analytical estimations
+	ax.plot(np.arange(params.p), np.full(params.p, eig_ana), color='r', marker='o', linestyle=':', clip_on=False)
 	ax.set_ylim((-1, 0.5))
 	ax.set_xlim((0, 8.5))
 	ax.set_ylabel('Eigenvalues')
@@ -260,7 +274,7 @@ Now that we have introduced the analytical neural fields, let us discuss how we 
 
 ### Sampling method (Monte Carlo integration) {#sec-mc}
 
-Due to the formulation of the neural field weighed by a probability distribution $\rho(y_1, \cdots, y_p)$, a natural way to estimate the integral is by Monte Carlo integration.
+Due to the formulation of the neural field weighted by a probability distribution $\rho(y_1, \cdots, y_p)$, a natural way to estimate the integral is by Monte Carlo integration.
 The essence of this method is to use the Central Limit Theorem, where we take $N$ independent samples $\vec{y_i} = (y_{1i}, \cdots, y_{pi})$ from the distribution $\rho$, and use them to estimate the integrand $I(\vec z, \vec y)$.
 
 $$
@@ -436,7 +450,7 @@ for ax in axes.flat:
 display(fig)
 ```
 
-We note however that @eq-nf-cycling-p no longer is a partial differential equation, but rather a delayed differential equation, which are in general much more complicated to solve. A simplifying assumption that we make is we extend the initial condition back in time, such that $h(\vec z, t < 0) = h(\vec z, 0)$ is a constant function. Numerically, this also means that we have to store a history of the neural fields instead of only the current one. Since the [`solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html) method dynamically adapts the timestep of integration, we use linear interpolation between two known points in the stored neural field states to estimate $h(\vec z, t-\delta)$ (see [`lagging.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_lagging.py) and [its use](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L334)).
+We note however that @eq-nf-cycling-p no longer is a partial differential equation, but rather a delayed differential equation, which are in general much more complicated to solve. We make a simplifying assumption to extend the initial condition back in time, such that $h(\vec z, t < 0) = h(\vec z, 0)$ is a constant function. Numerically, the delayed partial differential equation also means that we have to store a history of the neural fields instead of only the current one. Since the [`solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html) method dynamically adapts the timestep of integration, we use linear interpolation between two known points in the stored neural field states to estimate $h(\vec z, t-\delta)$ (see [`lagging.py`](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_lagging.py) and [its use](https://github.com/ninivert/lcnthesis/blob/master/notebooks/neurodyn/_rnn.py#L334)).
 
 With these considerations, we simulate a $p=2$ cycling neural field with $\delta=6$ (since the membrane time constant has been fixed to one, this means that $\delta = 6\tau = 6$) and initial condition $h(z_1, z_2, t < 0) = z_1$ in @fig-cycling-anim. The latent trajectory is estimated from the simulation results, and animated simultaneously with the neural field. We clearly see the oscillations between the patterns $\mu=1$ and $\mu=2$.
 

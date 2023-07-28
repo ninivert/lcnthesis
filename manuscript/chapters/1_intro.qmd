@@ -38,6 +38,9 @@ If the embedding is well-chosen,[^1] the connectivity matrix $J_{ij}$ approaches
 $$
 \partial_t h(\vec z, t) = -h(\vec z, t) + \int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\mathrm d \vec y).
 $$ {#eq-nf}
+
+In this equation, as well as for the rest of this work, we will use the notation $\rho(\mathrm d \vec y) := \rho(\vec y) \mathrm d \vec y$ to emphasize that the integral is weighted by the neuron density.
+
 <!-- 
 ![(TODO add phi, add z instead of xi) The connectivity kernel defines the influence between localized neural populations in the embedding space](figures/connectivity_kernel.png) -->
 
@@ -47,7 +50,7 @@ This work was inspired by recent mathematical development in mean-field theories
 Informally, these recent results suggest that, as long as weights scale as $1/N$, the dynamics of large networks can be described, as $N \to \infty$, by a neural field equation where the embedding is simply the interval $[0,1]$, which motivates the search for a formulation of a one-dimensional neural embedding.
 <!-- Their main result is that under some boundedness assumptions of the connectivity between the components of a system, the equation of evolution incorporates only an integral over $[0,1]$. This is indeed the case in the toy model described next chapter, where weights scale as $J_{ij} \sim \frac 1N$, which motivates the search for a formulation of a one-dimensional neural embedding. -->
 
-The main idea is to define a measurable bijective mapping $S : \Rp \mapsto [0,1]$ and a measure $\lambda : \Rp \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel loosely defined as $\tilde w = w \circ S^{-1}$.
+The main idea is to define a measurable bijective mapping $S : \Rp \mapsto [0,1]$ and a measure $\lambda : \Rp \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel loosely defined as $\tilde w(\alpha, \beta) = w(S^{-1}(\alpha), S^{-1}(\beta))$.
 
 <!--
 $$

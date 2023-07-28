@@ -137,7 +137,7 @@ $$
 \end{aligned}
 $$
 
-We study each term separately. Additionally (and similarly as before), we assume that the functions $g_\mu$ and the functions $f_\mu$ are component-wise, and that the distribution $\rho$ factorises.
+We study each term separately. Additionally (and similarly as before), we assume that the functions $g_\mu$ and the functions $f_\mu$ are component-wise, and that the distribution $\rho$ factorises. When $\mu \neq \nu$, we compute:
 
 $$
 \begin{aligned}
@@ -145,7 +145,7 @@ $$
 \int_{\Rp} g^\prime_\mu(\vec z) f_\nu(\vec z) \rho(\d \vec z) \\
 &= \int_{\R} \int_{\R} g^\prime_\mu(z_\mu) f_\nu(z_\nu) \rho_\mu(\d z_\mu) \rho_\nu(\d z_\nu) \\
 &= \int_{\R} g^\prime_\mu(z_\mu) \rho_\mu(\d z_\mu) \int_{\R} f_\nu(z_\nu) \rho_\nu(\d z_\nu) \\
-&= \avg{g^\prime_\mu(z_\mu)} \avg{f_\nu(z_\nu)}
+&= \avg{g^\prime_\mu(z_\mu)} \avg{f_\nu(z_\nu)}.
 \end{aligned}
 $$
 

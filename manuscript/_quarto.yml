@@ -35,7 +35,7 @@ bibliography:
   - references2.bib
 csl: ieee-with-url.csl
 
-# cache: true
+# cache: true  # TODO: comment out on final render
 
 format:
   html:
@@ -59,7 +59,15 @@ format:
     fontsize: 12pt
     include-in-header: 
       - text: |
+          \usepackage{graphicx}
           \usepackage{authblk}
           \usepackage{makeidx}
           \makeindex
       - file: macros.tex
+    include-before-body: 
+      - text: |
+          \textit{This thesis is available online at \href{https://ninivert.github.io/lcnthesis}{https://ninivert.github.io/lcnthesis}, which offers easier access to the animations and a more interactive reading experience.}
+          
+          \includegraphics[width=0.5\linewidth]{qrcode.png}
+          
+          \newpage
