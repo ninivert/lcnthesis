@@ -91,7 +91,7 @@
 %\keywords{Work, Leisure, Normative, Microscopic,  Reinforcement Learning, Economics}
 
 \begin{abstract}
-Classical neural field models describe interactions between neurons positioned in an embedding; often a physical space (for instance, that of the cortical sheet) or, later, abstract spaces (for instance, that of neuron celltypes), in which the dynamics are highly regular in space and time. Recent improvements in recordings of neural activity have shined the light on the smoothness of the neural dynamics, when placed in an appropriate embedding space.
+Classical neural field models describe interactions between neurons positioned in an embedding; often a physical space (for instance, that of the cortical sheet) or, later, abstract spaces (for instance, that of neuron celltypes), in which the dynamics are highly regular in space and time. Recent improvements in recordings of neural activity have further demonstrated the smoothness of the neural dynamics, when placed in an appropriate embedding space.
 
 Decoupling the embedding space from the physical position of neurons begs the question of uniqueness of the embedding space. Given an embedding space and neural dynamics theron, are there other embedding spaces which can express the same behavior?
 
@@ -112,7 +112,7 @@ To illustrate these results through numerical models, we describe a coarse-grain
 % kind of in the same "story-telling"-way that I did in the master thesis.
 % This also allows to introduce some of the notation that I use later on.
 
-\subsection{Neural field models in neuroscience}
+% \subsection{Neural field models in neuroscience}
 
 Early recordings of cats' somatosensory \citep{Mou57} and visual \citep{HubWie62} cortices suggested that the cortical sheet is organized in vertical columns of functionally similar neurons.
 
@@ -124,9 +124,9 @@ More recent recording methods, especially in rodents, have provided evidence of 
 
 While, historically, the spatial dimensions in neural field models have been the two dimensions of the cortical sheet (with the notable exception of the ring models for orientation selectivity in the visual cortex \citep{BenBar95} and the head-direction system \citep{Zha96}), the "space" in neural field models does not need to represent physical space but can represent any suitable abstract embedding space. Neural field models with abstract embedding spaces could constitute a generalization of classical neural field theory for cortical networks that are not solely structured by distances of neurons on the cortical sheet.
 
-Moreover, this work is motivated by recent mathematical developments \citep{JabPoy21} in mean-field theories involving the theory of graphons. Informally, these results suggest that, as long as the connectivity scales as $1/N$ (where $N$ is the number of neurons), the dynamics of large networks can be described in the $N \to \infty$ limit by a neural field equation where the embedding is simply the interval $[0,1]$. In the following, we will describe a method of explicitly writing such a one-dimensional neural field.
+Moreover, this work is motivated by recent mathematical developments \citep{JabPoy21} in mean-field theories involving the theory of graphons. Informally, these results suggest that, as long as the connectivity scales as $1/N$ (where $N$ is the number of neurons), the dynamics of large networks can be described in the $N \to \infty$ limit by a neural field equation where the embedding is simply the interval $[0,1]$. The main contribution of this paper is the derivation of a method, allowing to explicitly write such a one-dimensional neural field, starting from a known higher-dimensional neural field.
 
-\subsection{Formulating a one-dimensional neural field}
+% \subsection{Formulating a one-dimensional neural field}
 
 % If we consider neural fields in abstract embedding spaces, which embedding space should we choose? More fundamentally, given some spatiotemporal dynamics, is there a "natural" choice for the embedding space?
 
@@ -135,13 +135,14 @@ Moreover, this work is motivated by recent mathematical developments \citep{JabP
 % TODO: do we talk about the tau=1, R=1 ?
 % TODO: do we talk about external currents ?
 
-Let us write a neural field associated with a $p$-dimensional embedding $\Rp$. $h(\vec z, t)$ describes the potential of the neural population at position $\vec z=(z_1,\cdots,z_p)$ in the embedding. The connectivity kernel $w(\vec y, \vec z)$ describes the amplitude of the recurrent currents from the population at $\vec z$ to the population at $\vec y$. $\rho(\vec z)$ measures the number of neurons per unit volume of the embedding space, and we use the notation $\rho(\mathrm d \vec y) := \rho(\vec y) \mathrm d \vec y$ to emphasize that the integral is weighted by the neuron density. The activation function $\phi(h)$ describes the firing rate of a given neuron (population) with potential $h$. The neural field then evolves according to \autoref{eq:nf-in-rp}:  
+Let us write a neural field associated with a $p$-dimensional embedding $\Rp$. $h(\vec z, t)$ describes the potential of the neural population at position $\vec z=(z_1,\cdots,z_p)$ in the embedding. The connectivity kernel $w(\vec y, \vec z)$ describes the amplitude of the recurrent currents from the population at $\vec z$ to the population at $\vec y$. Importantly, $w(\vec y, \vec z)$ is a ``smooth'' function in both arguments. This is a natural consequence of the derivation of neural field equations (rigorous proofs of convergence of networks to neural fields are still an active area of study, and we may cite \citep{CheDua19,AGATHENERINE202286} for recent developments).
+$\rho(\vec z)$ measures the number of neurons per unit volume of the embedding space, and we use the notation $\rho(\mathrm d \vec y) := \rho(\vec y) \mathrm d \vec y$ to emphasize that the integral is weighted by the neuron density. The activation function $\phi(h)$ describes the firing rate of a given neuron (population) with potential $h$. The neural field then evolves according to \autoref{eq:nf-in-rp}:  
 
 \begin{equation} \label{eq:nf-in-rp}
 \partial_t h(\vec z, t) = \underbrace{-h(\vec z, t)}_\text{exponential decay} + \underbrace{\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\mathrm d \vec y)}_\text{recurrent current}.
 \end{equation}
 
-The embedding space $\Rp$ can be mapped to $[0,1]^p$ via bijective functions between the two spaces. For instance, if the neuron density factorizes as $\rho(z_1, \cdots, z_p)= \rho_1(z_1) \cdots \rho_p(z_p)$, then the associated cumulative density functions can be used to perform a change of variables, resulting in the an equivalent "uniform" neural field equation:
+The embedding space $\Rp$ (or any $p$-dimensional space) can be mapped to $[0,1]^p$ via bijective functions between the two spaces. For instance, if the neuron density factorizes as $\rho(z_1, \cdots, z_p)= \rho_1(z_1) \cdots \rho_p(z_p)$, then the associated cumulative density functions can be used to perform a change of variables, resulting in the an equivalent "uniform" neural field equation:
 
 \begin{equation} \label{eq:nf-in-01p}
 \partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u.
@@ -149,30 +150,22 @@ The embedding space $\Rp$ can be mapped to $[0,1]^p$ via bijective functions bet
 
 If the neuron density does not factorize, then one can arrive at the same formulation by redefining the connectivity kernel to include the neuron density and the determinant of the transformation. [TODO: this sentence might need some work]
 
-In particular for $p=2$, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation, where the embedding space is simply the interval $[0,1]$, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not (and can't be, due to Netto's theorem [TODO: citation?]) diffeomorphisms.
+In particular for $p=2$, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation, where the embedding space is simply the interval $[0,1]$, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not diffeomorphisms.
 % Also, we show that although the connectivity kernel of the one-dimensional equation seems to have a fractal structure, it is sufficiently regular for its solution to be numerically approximated using standard grid-based simulations.
-The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [0,1]$ and a measure $\lambda : [0,1]^2 \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel defined as $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$. 
-The question of well-posedness of the neural field in \autoref{eq:nf-in-01} is defered in \autoref{sec:proof-equivalence}.
+The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [0,1]$ and a measure $\lambda : [0,1]^2 \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel defined as $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$. Doing this, we arrive at the following one-dimensional neural field equation: 
+% The question of well-posedness of the neural field in \autoref{eq:nf-in-01} is defered in \autoref{sec:proof-equivalence}.
 
 \begin{equation} \label{eq:nf-in-01}
 \partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta)
 \end{equation}
 
-\subsection{Regularity of the mapping}
+The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost. The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing "locality" $V(S^{-1})$, which measures if small neighbourhoods in $[0,1]^2$ are mapped to small neighbourhoods in $[0,1]$ by the mapping $S^{-1}$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
 
-[chap 1.4] introduce a random mapping to introduce locality
+% question of uniqueness, discretization error, mean field limit and locality, link with numerical simualtions. chap 1.4, chap 3.1
 
-figure 1.2
+% "discretization error"
 
-question of uniqueness, discretization error, mean field limit and locality, link with numerical simualtions. chap 1.4, chap 3.1
-
-"discretization error"
-
-argue over smoothness of the kernel (see presentation given for SPC)
-
-
-chap 1.1, chap 2.1, 2.5
-
+% chap 1.1, chap 2.1, 2.5
 
 Our results suggest that the notion of (spatial) dimensionality in neural field dynamics is not well-defined if not associated with a constraint on the regularity of the neural fields (and the connectivity kernel). Thereby, by studying a simple toy model, this work illustrates the importance of the analytic notion of regularity when neural population dynamics over abstract continuous spaces are considered. 
 
