@@ -135,20 +135,24 @@ Moreover, this work is motivated by recent mathematical developments \citep{JabP
 % TODO: do we talk about the tau=1, R=1 ?
 % TODO: do we talk about external currents ?
 
-Let us write a neural field associated with a $p$-dimensional embedding $\Rp$. $h(\vec z, t)$ describes the potential of the neural population at position $\vec z=(z_1,\cdots,z_p)$ in the embedding. The connectivity kernel $w(\vec y, \vec z)$ describes the amplitude of the recurrent currents from the population at $\vec z$ to the population at $\vec y$. Importantly, $w(\vec y, \vec z)$ is a ``smooth'' function in both arguments. This is a natural consequence of the derivation of neural field equations (rigorous proofs of convergence of networks to neural fields are still an active area of study, and we may cite \citep{CheDua19,AGATHENERINE202286} for recent developments).
-$\rho(\vec z)$ measures the number of neurons per unit volume of the embedding space, and we use the notation $\rho(\mathrm d \vec y) := \rho(\vec y) \mathrm d \vec y$ to emphasize that the integral is weighted by the neuron density. The activation function $\phi(h)$ describes the firing rate of a given neuron (population) with potential $h$. The neural field then evolves according to \autoref{eq:nf-in-rp}:  
+We begin our work by considering a neural field associated with a $p$-dimensional embedding $\Rp$. $h(\vec z, t)$ describes the potential of the neural population at position $\vec z=(z_1,\cdots,z_p)$ in the embedding. The connectivity kernel $w(\vec y, \vec z)$ describes the amplitude of the recurrent currents from the population at $\vec z$ to the population at $\vec y$. Importantly, $w(\vec y, \vec z)$ is a ``smooth'' function in both arguments. This is a natural consequence of the derivation of neural field equations (rigorous proofs of convergence of networks to neural fields are still an active area of study, and we may cite \citep{CheDua19,AGATHENERINE202286} for recent developments).
+$\rho(\vec z)$ measures the number of neurons per unit volume of the embedding space, effectively weighing the recurrent currents. The monotonic increasing activation function $\phi(h)$ describes the firing rate of a given neuron (population) with potential $h$. The neural field then evolves according to \autoref{eq:nf-in-rp}:  
 
 \begin{equation} \label{eq:nf-in-rp}
-\partial_t h(\vec z, t) = \underbrace{-h(\vec z, t)}_\text{exponential decay} + \underbrace{\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\mathrm d \vec y)}_\text{recurrent current}.
+\partial_t h(\vec z, t) = \underbrace{-h(\vec z, t)}_\text{exponential decay} + \underbrace{\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\vec y) \mathrm d \vec y}_\text{recurrent current}.
 \end{equation}
 
-The embedding space $\Rp$ (or any $p$-dimensional space) can be mapped to $[0,1]^p$ via bijective functions between the two spaces. For instance, if the neuron density factorizes as $\rho(z_1, \cdots, z_p)= \rho_1(z_1) \cdots \rho_p(z_p)$, then the associated cumulative density functions can be used to perform a change of variables, resulting in the an equivalent "uniform" neural field equation:
+Without loss of generality, a simple bijective mapping can be applied to reduce any $p$-dimensional neural field to a neural field on $[0,1]^p$, and the redefining the connectivity kernel to absorb the density and determinant of the transformation, we arrive at \autoref{eq:nf-in-01p}, a general form for any neural field equation in $p$ dimensions:
+
+% The embedding space $\Rp$ (or any $p$-dimensional space) can be mapped to $[0,1]^p$ via bijective functions between the two spaces. For instance, if the neuron density factorizes as $\rho(z_1, \cdots, z_p)= \rho_1(z_1) \cdots \rho_p(z_p)$, then the associated cumulative density functions can be used to perform a change of variables, resulting in the an equivalent "uniform" neural field equation:
 
 \begin{equation} \label{eq:nf-in-01p}
 \partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u.
 \end{equation}
 
-If the neuron density does not factorize, then one can arrive at the same formulation by redefining the connectivity kernel to include the neuron density and the determinant of the transformation. [TODO: this sentence might need some work]
+This form highlights the central role of the connectivity kernel $w_U$, which together with the initial condition $h_U(t=0, \vec v)$, uniquely determines the neural dynamics.
+
+% If the neuron density does not factorize, then one can arrive at the same formulation by redefining the connectivity kernel to include the neuron density and the determinant of the transformation. [TODO: this sentence might need some work]
 
 In particular for $p=2$, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation, where the embedding space is simply the interval $[0,1]$, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not diffeomorphisms.
 % Also, we show that although the connectivity kernel of the one-dimensional equation seems to have a fractal structure, it is sufficiently regular for its solution to be numerically approximated using standard grid-based simulations.
@@ -159,7 +163,7 @@ The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [
 \partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta)
 \end{equation}
 
-The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost. The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing "locality" $V(S^{-1})$, which measures if small neighbourhoods in $[0,1]^2$ are mapped to small neighbourhoods in $[0,1]$ by the mapping $S^{-1}$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
+The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost. The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing ``locality'' $V(S^{-1})$, which measures if small neighbourhoods in $[0,1]^2$ are mapped to small neighbourhoods in $[0,1]$ by the mapping $S^{-1}$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
 
 % question of uniqueness, discretization error, mean field limit and locality, link with numerical simualtions. chap 1.4, chap 3.1
 
@@ -167,7 +171,7 @@ The difficulty in writing the one-dimensional neural field, is that the spatial 
 
 % chap 1.1, chap 2.1, 2.5
 
-Our results suggest that the notion of (spatial) dimensionality in neural field dynamics is not well-defined if not associated with a constraint on the regularity of the neural fields (and the connectivity kernel). Thereby, by studying a simple toy model, this work illustrates the importance of the analytic notion of regularity when neural population dynamics over abstract continuous spaces are considered. 
+Our results suggest that the notion of spatial dimensionality in neural field dynamics is not well-defined if not associated with a constraint on the regularity of the neural fields (and the connectivity kernel). Thereby, by studying a simple toy model, this work illustrates the importance of the analytic notion of regularity when neural population dynamics over abstract continuous spaces are considered. 
 
 \section{Study of mappings from 2D to 1D}
 
