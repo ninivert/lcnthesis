@@ -1,10 +1,18 @@
 .PHONY: all clean pdf
 
+TEXC=pdflatex
+
 pdf: clean
-	xelatex equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.tex
-	bibtex equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.aux
-	xelatex equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.tex
-	xelatex equivalence-of-neural-field-dynamics-with-different-embedding-dimensionality.tex
+	mkdir tmp
+	cd tmp && \
+		cp ../{manuscript.tex,references.bib,plos2015.bst} . && \
+	    gpp -U "\\" "" "{" "}{" "}" "{" "}" "#" "" manuscript.tex -o manuscript-tmp.tex && \
+	    $(TEXC) manuscript-tmp.tex && \
+		bibtex manuscript-tmp.aux && \
+		gpp -U "\\" "" "{" "}{" "}" "{" "}" "#" "" -DSUBMISSION manuscript.tex -o manuscript-submission.tex && \
+		$(TEXC) manuscript-submission.tex && \
+		$(TEXC) manuscript-submission.tex
 
 clean:
-	rm -f *.aux *.log *.out
+	mkdir -p tmp && rm -r tmp
+	# rm -f *.aux *.log *.out
