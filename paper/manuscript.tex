@@ -167,6 +167,8 @@
 
 %% User macros
 
+\renewcommand{\equationautorefname}{Eq.}
+\renewcommand{\tableautorefname}{Tab.}
 \def\R{\mathbb R}
 \def\RR{\R^2}
 \def\Rp{\R^p}
@@ -263,13 +265,13 @@ This procedure is easily generalized to map between embeddings in arbitrary numb
 We introduce a measure of locality, which quantifies how the regularity of the neural fields in conserved through the mappings $S$. This allows us to show that the resulting neural field is well-behaved, and can therefore be approximated using classical grid-based methods.
 To illustrate these results through numerical models, we describe a coarse-graining procedure enforcing the locality of the numerically applied mappings.
 
+[TODO: add the pretty figure here]
 
 % Please keep the Author Summary between 150 and 200 words
 % Use first person. PLOS ONE authors please skip this step. 
 % Author Summary not valid for PLOS ONE submissions.   
 \section*{Author summary}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget porta erat. Morbi consectetur est vel gravida pretium. Suspendisse ut dui eu ante cursus gravida non sed sem. Nullam sapien tellus, commodo id velit id, eleifend volutpat quam. Phasellus mauris velit, dapibus finibus elementum vel, pulvinar non tellus. Nunc pellentesque pretium diam, quis maximus dolor faucibus id. Nunc convallis sodales ante, ut ullamcorper est egestas vitae. Nam sit amet enim ultrices, ultrices elit pulvinar, volutpat risus.
-
+[TODO]
 \linenumbers
 
 
@@ -289,7 +291,7 @@ As models of spatiotemporal neural population dynamics on the cortical sheet, ne
 
 More recent recording methods, especially in rodents, have provided evidence of low-dimensional organization of neuronal activity that does not depend on the physical locations of neurons on the cortical sheet. For example, contrary to cats' visual cortex, the orientation selectivity of pyramidal neurons in a rat's visual cortex does not depend on their locations, that is, orientation selectivity is heterogeneous at any given location \cite{OhkChu05}. Moreover, the activity of interneurons in any small volume of the visual cortex is also heterogeneous and seems to be structured by a low-dimensional manifold of fine cell subtypes \cite{BugDuf22}. The local functional heterogeneity of neuronal activity in the cortex challenges the old concept of functionally homogeneous cortical columns and, with it, classical neural field models. 
 
-While, historically, the spatial dimensions in neural field models have been the two dimensions of the cortical sheet (with the notable exception of the ring models for orientation selectivity in the visual cortex \cite{BenBar95} and the head-direction system \cite{Zha96}), the "space" in neural field models does not need to represent physical space but can represent any suitable abstract embedding space. Neural field models with abstract embedding spaces could constitute a generalization of classical neural field theory for cortical networks that are not solely structured by distances of neurons on the cortical sheet.
+While, historically, the spatial dimensions in neural field models have been the two dimensions of the cortical sheet (with the notable exception of the ring models for orientation selectivity in the visual cortex \cite{BenBar95} and the head-direction system \cite{Zha96}), the ``space'' in neural field models does not need to represent physical space but can represent any suitable abstract embedding space. Neural field models with abstract embedding spaces could constitute a generalization of classical neural field theory for cortical networks that are not solely structured by distances of neurons on the cortical sheet.
 
 Moreover, this work is motivated by recent mathematical developments \cite{JabPoy21} in mean-field theories involving the theory of graphons. Informally, these results suggest that, as long as the connectivity scales as $1/N$ (where $N$ is the number of neurons), the dynamics of large networks can be described in the $N \to \infty$ limit by a neural field equation where the embedding is simply the interval $[0,1]$. The main contribution of this paper is the derivation of a method, allowing to explicitly write such a one-dimensional neural field, starting from a known higher-dimensional neural field.
 
@@ -309,7 +311,7 @@ $\rho(\vec z)$ measures the number of neurons per unit volume of the embedding s
 \partial_t h(\vec z, t) = \underbrace{-h(\vec z, t)}_\text{exponential decay} + \underbrace{\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\vec y) \mathrm d \vec y}_\text{recurrent current}.
 \end{equation}
 
-Without loss of generality, a simple bijective mapping can be applied to reduce any $p$-dimensional neural field to a neural field on $[0,1]^p$, additionally redefining the connectivity kernel to absorb the density and determinant of the transformation, we arrive at \autoref{eq:nf-in-01p}, a general form for any neural field equation in $p$ dimensions:
+Without loss of generality, a simple bijective mapping can be applied to reduce any $p$-dimensional neural field to a neural field on $[0,1]^p$. Additionally redefining the connectivity kernel to absorb the density and determinant of the transformation, we arrive at \autoref{eq:nf-in-01p}, a general form for any neural field equation in $p$ dimensions:
 
 % The embedding space $\Rp$ (or any $p$-dimensional space) can be mapped to $[0,1]^p$ via bijective functions between the two spaces. For instance, if the neuron density factorizes as $\rho(z_1, \cdots, z_p)= \rho_1(z_1) \cdots \rho_p(z_p)$, then the associated cumulative density functions can be used to perform a change of variables, resulting in the an equivalent "uniform" neural field equation:
 
@@ -321,7 +323,7 @@ This form highlights the central role of the connectivity kernel $w_U$, which to
 
 % If the neuron density does not factorize, then one can arrive at the same formulation by redefining the connectivity kernel to include the neuron density and the determinant of the transformation. [TODO: this sentence might need some work]
 
-In particular for $p=2$, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation, where the embedding space is simply the interval $[0,1]$, from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not diffeomorphisms.
+In particular for $p=2$, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation (where the embedding space is simply the interval $[0,1]$), from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not diffeomorphisms.
 % Also, we show that although the connectivity kernel of the one-dimensional equation seems to have a fractal structure, it is sufficiently regular for its solution to be numerically approximated using standard grid-based simulations.
 The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [0,1]$ and a measure $\lambda : [0,1]^2 \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel defined as $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$. Doing this, we arrive at the following one-dimensional neural field equation: 
 % The question of well-posedness of the neural field in \autoref{eq:nf-in-01} is defered in \autoref{sec:proof-equivalence}.
@@ -330,7 +332,7 @@ The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [
 \partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta).
 \end{equation}
 
-The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost. The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing ``locality'' $V(S^{-1})$, which measures if small neighbourhoods in $[0,1]^2$ are mapped to small neighbourhoods in $[0,1]$ by the mapping $S^{-1}$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
+The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost. The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing the ``locality'' $V(S^{-1})$ of the mapping $S^{-1}$, which measures if small neighbourhoods in $[0,1]^2$ are mapped to small neighbourhoods in $[0,1]$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
 
 % question of uniqueness, discretization error, mean field limit and locality, link with numerical simualtions. chap 1.4, chap 3.1
 
@@ -342,32 +344,30 @@ Our results suggest that the notion of spatial dimensionality in neural field dy
 
 \section{Mappings $S$ from $[0,1]^2$ to $[0,1]$}
 
-\subsection{Motivation}
+\subsection{Motivation for a grid-based approach}
 
-We motivate the upcoming study of the mappings $S$ by considering a grid discretization of the original two-dimensional space $[0,1]^2$. For this, we subdivide each axis into $2^n$ equal segments, where $n \in \mathbb{N}$ describes the grid resolution. Each segment has a length of $2^{-n}$, resulting in a grid constituted of $2^n \times 2^n = 4^n$ squares in $[0,1]^2$. To each square bin indexed $i \in \{1,\cdots,4^n\}$, we associate a position $\vec{v_i} = (v_{i,1}, v_{i,2})$ located within the bounds of the bin. Since everytime $n$ is incremented by one, every axis is subdivided into two smaller equal parts, the positions $v_{i,1}$ and $v_{i,2}$ naturally lend themselves to a binary notation. We also introduce $v_\mu^{(n)}$ to denote the $n$-bit truncation of the position $v_\mu \in [0,1]$, where $\mu = 1,2$. Additionally, we write the error of the trunctation as a small corrective factor $0 \leq c^{(n)} < 2^{-n}$. Using this notation and dropping the index $i$ in favor of readability, we write the components of $\vec{v} \in [0,1]^2$ as:
+We motivate the upcoming study of the mappings $S$ by considering a grid discretization of the original two-dimensional space $[0,1]^2$. For this, we subdivide each axis into $2^n$ equal segments (each segment has a length of $2^{-n}$), where $n \in \mathbb{N}$ describes the grid resolution. This results in a grid constituted of $2^n \times 2^n = 4^n$ squares in $[0,1]^2$. To each square bin indexed $i \in \{1,\cdots,4^n\}$, we associate a position $\vec{v_i} = (v_{i,1}, v_{i,2})$ located within the bounds of the bin. Since everytime $n$ is incremented by one, every axis is subdivided into two smaller equal parts, the positions $v_{i,1}$ and $v_{i,2}$ naturally lend themselves to a binary notation. We introduce $v_\mu^{(n)}$ to denote the $n$-bit truncation of the position $v_\mu \in [0,1]$, where $\mu = 1,2$ indicates the axis of the dimension. Additionally, we write the error of the trunctation as a small corrective factor $0 \leq c^{(n)} < 2^{-n}$. Using this notation and dropping the index $i$ in favor of readability, we write the components of $\vec{v} \in [0,1]^2$ as:
 
 \begin{equation} \begin{aligned} \label{eq:positions-v}
 v_1 &= v_1^{(n)} + c_1^{(n)} = \sum_{l=1}^n b_1^l 2^{-l} + c_1^{(n)} = 0.b_1^1 b_1^2 \cdots b_1^n + c_1^{(n)}, \\
 v_2 &= v_2^{(n)} + c_2^{(n)} = \sum_{l=1}^n b_2^l 2^{-l} + c_2^{(n)} = 0.b_2^1 b_2^2 \cdots b_2^n + c_2^{(n)}.
 \end{aligned}\end{equation}
 
-It can easily be seen that $v_\mu^{(n)} \to v_\mu$ as $n\to\infty$. In general, the bits of the $v_\mu$ can be expressed as:
+Since $c_\mu^{(n)} < 2^n$, it can easily be seen that $v_\mu^{(n)} \to v_\mu$ as $n\to\infty$. In general, the bits of the $v_\mu$ can be expressed as:
 
 \begin{equation*}
 b_\mu^l = \mathrm{Ind} \left\{ 2^{l-1}v_\mu - \left\lfloor 2^{l-1}v_\mu \right\rfloor \right\}
 \end{equation*}
 
-[TODO: add a figure here of the discretization here ? do we need to clarify explicitly the bounds of each square bin ?]
-
-Sampling the original connectivity kernel at the points $\vec{v_i}$ and $\vec{v_j}$ yields a numerical connectivity matrix $J_{ij} := w_U(\vec{v_i}, \vec{v_j})$, which can be used to simulate the resulting population dynamics equation:
+Sampling the original connectivity kernel at the points $\vec{v_i}$ and $\vec{v_j}$ yields a numerical connectivity matrix $J_{ij} := w_U(\vec{v_i}, \vec{v_j})$, illustrated in Fig. [TODO: add a figure here of the discretization here and the sampling on a grid, and the limit of n to infty. do we need to clarify explicitly the bounds of each square bin ?], which can be used to simulate the resulting population dynamics equation:
 
 \begin{equation} \label{eq:population-dynamics}
 \frac{\d}{\d t} h_i(t) = -h_i(t) + \sum_{j=1}^{4^n} J_{ij} \phi(h_j(t)), \quad \text{for all } i \in \{1,\cdots,4^n\}.
 \end{equation}
 
-\autoref{eq:population-dynamics} can be seen as the discretized version of \autoref{eq:nf-in-01p}, where we associate $h_i(t) := h_U(\vec{v_i}, t)$. Indeed, by construction of the original neural field, the discrete dynamics converge to the true solution of the neural field, because the error of the mean-field approximation in $[0,1]^2$ vanishes as we take finer grids, letting $n \to \infty$.
+\autoref{eq:population-dynamics} can be seen as the discretized version of \autoref{eq:nf-in-01p}, where we associate $h_i(t) := h_U(\vec{v_i}, t)$. Indeed, by a mean-field argument on the original smooth neural field, the discrete dynamics converge to the true solution of the neural field, because the error of the mean-field approximation in $[0,1]^2$ vanishes as we take finer grids, letting $n \to \infty$.
 
-We would now like to derive a bijective mapping $S$, such that the same argument applies on the neural field in $[0,1]$. Intuively, we want $S$ to conserve the regularity of the neural field on $[0,1]^2$, since if the mean-field argument also carries over to the one-dimensional neural field, it seems likely that it will express identical dynamics.
+We would now like to derive a bijective mapping $S$, such that the same argument applies on the neural field in $[0,1]$. Intuively, we want $S$ to conserve the regularity of the neural field on $[0,1]^2$, since if the mean-field argument also carries over to the one-dimensional neural field, it seems natural that it will express identical dynamics.
 
 \subsection{$S$ as the pointwise limit of a sequence of bijections $S^n$}
 
@@ -378,56 +378,47 @@ S^n &: (v_1^{(n)}, v_2^{(n)}) = (0.b_1^1 b_1^2 \cdots b_1^n, 0.b_2^1 b_2^2 \cdot
 &\mapsto \alpha^n = 0.b^1 b^2 \cdots b^{2n}
 \end{aligned} \end{equation}
 
-We note that we write $\alpha^n$ using $2n$ bits, which is intuitively the lowest number of bits required so that $S^n$ remains a bijection. More than $2n$ bits could be allowed while maintaining bijectivity, but we omit this possibility, since they wouldn't strictly be required. Effectively, $S^n$ maps between $2\times n$ input bits and $2n$ output bits. In this formulation, it becomes clear that in order to be a bijection, every bit of the input must be used once and only once to form the output. Setting aside bit inversions, this means that $S^n$ defines a permutation of the $2n$ input bits. [TODO: are more details necessary ? I think this is clear enough, though in the thesis manuscript I got over this point in more detail]
+We write $\alpha^n$ using the $2n$ bits $\{b^1, b^2, \cdots, b^{2n}\}$, which is intuitively the lowest number of bits required so that $S^n$ remains a bijection, since it takes $2n$ bits of information as argument. More than $2n$ bits could be allowed while maintaining bijectivity, but we omit this possibility, since they wouldn't strictly be required. In this formulation, it becomes clear that in order to be a bijection, every bit of the input must be used once and only once to form the image. Setting aside bit inversions, this means that we let $S^n$ define a permutation of the $2n$ input bits. [TODO: are more details necessary ? I think this is clear enough, though in the thesis manuscript I got over this point in more detail]
 
-If it exists, we then we define $\alpha = S(v_1, v_2)$ as the pointwise limit of the sequence $\{S^n(v_1, v_2)\}_{n \in \mathbb N}$ (Note: We may define an extension of $S^n$ acting on an arbitrary $(v_1, v_2) \in [0,1]^2$ as $S^n(v_1, v_2) := S^n(v_1^{(n)}, v_2^{(n)})$. This extension is obviously not bijective, but in the $n \to \infty$ limit the finite-$n$ truncation converges, such that the pointwise limit may be a bijection). In terms of the current formulation, pointwise convergence requires that the least signficiant bits (LSB) of the input be mapped to the LSB of the output, and identically the most significant bits (MSB) of the input be mapped to the MSB of the output [TODO: do we need a proof of this ?]. This ensures that small corrections in the input $\vec{v}$ results in small corrections in the output $\alpha$.
+For any finite $n$ and any $(v_1,v_2) \in [0,1]^2$, we may extend the definition of $S^n$ with $S^n(v_1, v_2) := S^n(v_1^{(n)}, v_2^{(n)})$ such that it acts on the entire space $[0,1]^2$ instead of the finite set of grid points. While this extension is obviously not bijective (it maps a grid cell to a single point), in the $n \to \infty$ limit the finite-$n$ truncation converges, such that the pointwise limit could still be a bijection. In \autoref{sec:mapping-examples} we formulate two examples, where in one case the extension converges to a bijection, and in the other it doesn't.
 
-We will in the rest of this paper show that this simple formulation in terms of permutation of input bits is flexible enough to express mappings that have good properties such as ``locality'', while being simple enough to help build intuitions.
+Given $(v_1, v_2) \in [0,1]^2$ and the sequence $\{S^n(v_1, v_2)\}_{n \in \mathbb N}$, we then we define $\alpha = S(v_1, v_2)$ as its limit, if it exists. Informally, pointwise convergence of $\{S^n\}_{n\in\mathbb N}$ requires that the least signficiant bits (LSB) of the input be mapped to the LSB of the image, ensuring that small corrections in the input $\vec{v}$ result in small corrections in the image $\alpha$.
+% TODO: I would like to talk briefly about the MSB intuition
+% and identically the most significant bits (MSB) of the input be mapped to the MSB of the image. ``no information is lost''.
 
+To illustrate this, let us give an example of the sequence $\{A^n\}_{n \in \mathbb N}$ that does not converge pointwise:
 
+\begin{equation*}
+\alpha^{(n)} = A^n(v_1^{(n)},v_2^{(n)}) = 0.b_1^n b_2^n b_1^{n-1} b_2^{n-1} \cdots b_1^1 b_2^1 = \sum_{k=1}^n b_1^{n+1-k} 2^{1-2k} + b_2^{n+1-k} 2^{-2k}.
+\end{equation*}
 
----
+The permutation between the bits of $\alpha^{(n)}$, and the bits of $(v_1^{(n)}, v_2^{(n)})$ is illustrated in Fig. [TODO: arrow connecting the bits together], and shows how this example does not respect the bit ordering described previously.
+For finite $n$, $A^n$ is clearly bijective and has a well-defined inverse $A^n_\textrm{inv}$:
 
-let us think of what happens when we apply the mapping on a discrete grid of squares in [0,1]², and where the squares end up on the segment.
-the squares are bijectively mapped to segments on the unit line, i.e. it defines a permutation of the squares onto the segments, or as defining an "ordering" of the square bins in $[0,1]^2$. This is done using a mapping S : [0, 1]2 7 → [0, 1],
-where we cover the [0, 1]2 space by following the order assigned to the populations in
-the image [0, 1].
-considering finer and finer grids, we look/see/observe where the squares end up, and may define a sequence of mappings $S^n$ acting on finer and finer grids.
-if the sequence converges pointwise, we then define $S$ as the limit of the sequence of mappings $S^n$.
+\begin{equation*} \begin{aligned}
+v_1^{(n)} &= A^n_{\textrm{inv},1}(\alpha^{(n)}) = 0.b^{2n-1} b^{2n-3} \cdots b^1 = \sum_{k=1}^n b^{2(n-k)-1} 2^{-k}, \\
+v_2^{(n)} &= A^n_{\textrm{inv},2}(\alpha^{(n)}) = 0.b^{2n-2} b^{2n-4} \cdots b^2 = \sum_{k=1}^n b^{2(n+1-k)} 2^{-k}.
+\end{aligned} \end{equation*}
 
+However, for any $(v_1,v_2)$, the sequence $\{A^n(v_1, v_2)\}_{n \in \mathbb N}$ does not converge. In Fig. [TODO: fig 3.8 of the thesis] we graph the mapping $A^n$, which demonstrates that the image of any point $(v_1,v_2)$ in $[0,1]^2$ diverges as $n$ increases. As $n$ increases, $A^n$ ``refines'' its input with fluctuations of order $2^{-n}$ (because it works with truncations of $(v_1, v_2)$, which have error $c^{(n)} < 2^{-n}$), but the image $\alpha^{(n)}=b_1^n 4^{-1} + b_2^n 4^{-2} + b_1^{n-1} 4^{-3} + b_2^{n-1} 4^{-4} \cdots$ fluctuates (at least) with fixed amplitude $\sim 4^{-2}$, independantly of $n$. Therefore the image never converges, and $\{A_n\}_{n \in \mathbb N}$ is not pointwise convergent.
 
-here is how we mathematically write down / formalism for the mappings $S^n$.
-special case where the bins are uniformly spaced along each axis, and we obtain the next iteration by subdividing each bin of the axis into two equally smaller bins.
-along each axis, every bin can be located by a tuple of coordinates. a particularly elegant way to locate the square bins is to use binary notation (base 2), such that at iteration n, every coordinate has n bits of information. therefore every square can be uniquely located by a total of 2n bits.
-
-similarly, we subdivide the unit segment into 4 every time, such that the number of segments matches the number of squares.
-
-then
-
-\begin{equation} \begin{aligned}
-S^n &: (v_1^{(n)}, v_2^{(n)}) = (0.b_1^1 b_2^1 \cdots b_n^1, 0.b_1^2 b_2^2 \cdots b_n^2) \\
-&\mapsto \alpha^{(n)} = 0.b_1 b_2 \cdots b_{2n}
-\end{aligned} \end{equation}
+Within the context of sequences of mappings acting as permutations on the bits of continually refined grid points, the criterion of pointwise convergence restricts the general ``form'' that those mappings can take.
+In the following section, we give the standard examples of the Column and the Z-mapping, showing that our formulation is flexible enough to express mappings that have good properties such as ``locality'', while being simple enough to help build intuitions.
 
 
-\section{Locality of the Z-mapping and the Column mapping}
+\subsection{Two examples of sequences $\{S^n\}_{n \in \mathbb N}$: the Column and the Z-mapping} \label{sec:mapping-examples}
 
+introduce the Column mapping and the Z-mapping, show the figures
 
-% \subsection{$S$ as the limit of a sequence of mappings}
+\section{The measure of locality}
 
-% motivation, why do we do this
+where do the populations end up 
 
-% \subsection{The Z-mapping and Column mapping}
-
-% introduce the mappings and give plots
-
-% \subsection{Behavior and locality measures}
-
-% measure of locality, give examples applied to the mappings.
+\subsection{Locality of the Z-mapping and the Column mapping}
 
 % see how it scales, and say what we expect
 
-\subsection{Numerical demonstrations}
+\section{Numerical demonstrations}
 
 chap. 2.1, 
 
@@ -437,6 +428,8 @@ introduce coarse-graining procedure (applying the smoothness hypothesis numerica
 
 introduce the low-rank cycling model
 
+goal of this section : "it seems that it works for the Z-mapping"
+
 \section{Proof of results}
 
 \subsection{Analytical equivalence given $S$ measurable and bijective}
@@ -445,6 +438,12 @@ introduce the low-rank cycling model
 \subsection{Numerical convergence}
 
 \section{Conclusion}
+
+% TODO: are all bijective limits local ? does local imply bijection ?
+% in this case, we have shown that bijection + locality => we can safely do the mapping (bijection for the analytical approach, locality for the numerical approach)
+
+
+
 
 
 % Use "Eq" instead of "Equation" for equation citations.
