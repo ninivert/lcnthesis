@@ -346,20 +346,22 @@ Our results suggest that the notion of spatial dimensionality in neural field dy
 
 \subsection{Motivation for a grid-based approach}
 
-We motivate the upcoming study of the mappings $S$ by considering a grid discretization of the original two-dimensional space $[0,1]^2$. For this, we subdivide each axis into $2^n$ equal segments (each segment has a length of $2^{-n}$), where $n \in \mathbb{N}$ describes the grid resolution. This results in a grid constituted of $2^n \times 2^n = 4^n$ squares in $[0,1]^2$. To each square bin indexed $i \in \{1,\cdots,4^n\}$, we associate a position $\vec{v_i} = (v_{i,1}, v_{i,2})$ located within the bounds of the bin. Since everytime $n$ is incremented by one, every axis is subdivided into two smaller equal parts, the positions $v_{i,1}$ and $v_{i,2}$ naturally lend themselves to a binary notation. We introduce $v_\mu^{(n)}$ to denote the $n$-bit truncation of the position $v_\mu \in [0,1]$, where $\mu = 1,2$ indicates the axis of the dimension. Additionally, we write the error of the trunctation as a small corrective factor $0 \leq c^{(n)} < 2^{-n}$. Using this notation and dropping the index $i$ in favor of readability, we write the components of $\vec{v} \in [0,1]^2$ as:
+We motivate the upcoming study of the mappings $S$ by considering a grid discretization of the original two-dimensional space $[0,1]^2$. For this, we subdivide each axis into $2^n$ equal segments (each segment has a length of $2^{-n}$), where $n \in \mathbb{N}$ describes the grid resolution. This results in a grid constituted of $2^n \times 2^n = 4^n$ squares in $[0,1]^2$. To each square bin indexed $i \in \{1,\cdots,4^n\}$, we associate a position $\vec{v_i^{(n)}} = (v_{i,1}^{(n)}, v_{i,2}^{(n)})$ located at the origin of the bin. Since everytime $n$ is incremented by one, every axis is subdivided into two smaller equal parts, the positions $v_{i,1}^{(n)}$ and $v_{i,2}^{(n)}$ naturally lend themselves to a binary notation.
+
+For the component $v_\mu \in [0,1]$ of an arbitrary position $\vec{v} \in [0,1]^2$, we introduce $v_\mu^{(n)}$ to denote its $n$-bit truncation, where $\mu = 1,2$ (and in general for $p$-dimensional grids, $\mu=1, \cdots, p$) indicates the axis of the dimension. Additionally, we write the error of the trunctation as a small corrective factor $0 \leq c^{(n)} < 2^{-n}$. In bit notation, this yields: 
 
 \begin{equation} \begin{aligned} \label{eq:positions-v}
 v_1 &= v_1^{(n)} + c_1^{(n)} = \sum_{l=1}^n b_1^l 2^{-l} + c_1^{(n)} = 0.b_1^1 b_1^2 \cdots b_1^n + c_1^{(n)}, \\
 v_2 &= v_2^{(n)} + c_2^{(n)} = \sum_{l=1}^n b_2^l 2^{-l} + c_2^{(n)} = 0.b_2^1 b_2^2 \cdots b_2^n + c_2^{(n)}.
 \end{aligned}\end{equation}
 
-Since $c_\mu^{(n)} < 2^n$, it can easily be seen that $v_\mu^{(n)} \to v_\mu$ as $n\to\infty$. In general, the bits of the $v_\mu$ can be expressed as:
+Since $c_\mu^{(n)} < 2^n$, it can easily be seen that $v_\mu^{(n)} \to v_\mu$ as $n\to\infty$, that is, as we take finer and finer grids, the truncation tends to the true value of $\vec{v}$. In general, the bits of the component $v_\mu$ can be expressed as:
 
 \begin{equation*}
 b_\mu^l = \mathrm{Ind} \left\{ 2^{l-1}v_\mu - \left\lfloor 2^{l-1}v_\mu \right\rfloor \right\}
 \end{equation*}
 
-Sampling the original connectivity kernel at the points $\vec{v_i}$ and $\vec{v_j}$ yields a numerical connectivity matrix $J_{ij} := w_U(\vec{v_i}, \vec{v_j})$, illustrated in Fig. [TODO: add a figure here of the discretization here and the sampling on a grid, and the limit of n to infty. do we need to clarify explicitly the bounds of each square bin ?], which can be used to simulate the resulting population dynamics equation:
+Sampling the original connectivity kernel at the grid points $\vec{v_i}$ and $\vec{v_j}$ yields a numerical connectivity matrix $J_{ij} := w_U(\vec{v_i}, \vec{v_j})$, illustrated in Fig. [TODO: add a figure here of the discretization here and the sampling on a grid, and the limit of n to infty. do we need to clarify explicitly the bounds of each square bin ?], which can be used to simulate the resulting population dynamics equation:
 
 \begin{equation} \label{eq:population-dynamics}
 \frac{\d}{\d t} h_i(t) = -h_i(t) + \sum_{j=1}^{4^n} J_{ij} \phi(h_j(t)), \quad \text{for all } i \in \{1,\cdots,4^n\}.
@@ -371,54 +373,84 @@ We would now like to derive a bijective mapping $S$, such that the same argument
 
 \subsection{$S$ as the pointwise limit of a sequence of bijections $S^n$}
 
-Let us define a sequence of bijective mappings $S^n$, acting on the $n$-bit truncations of $\vec{v_i}$, as well as the sequence $\alpha_i^n \in [0,1]$ of positions resulting from the image of $\vec{v_i^{(n)}}$. In the following, we again drop the index $i$ for clarity.
+Let us define a sequence of bijective mappings $\{S^n\}_{n \in \mathbb N}$, acting on the $n$-bit truncations $\vec{v^{(n)}}$ of any $\vec{v} \in [0,1]^2$, as well as the corresponding sequence of images $\{\alpha^n := S^n(\vec{v^{(n)}})\}_{n \in \mathbb N}$. $S^n$ defines the following bijection between points on the two-dimensional grid and the one-dimensional line:
 
-\begin{equation} \begin{aligned}
-S^n &: (v_1^{(n)}, v_2^{(n)}) = (0.b_1^1 b_1^2 \cdots b_1^n, 0.b_2^1 b_2^2 \cdots b_2^n) \\
-&\mapsto \alpha^n = 0.b^1 b^2 \cdots b^{2n}
+\begin{equation} \label{eq:def-S} \begin{aligned}
+S^n :& \{\tfrac{j-1}{2^n}\;|\;j\in\{1,\cdots,2^n\}\}^2 \mapsto \{\tfrac{i-1}{4^n}\;|\;i\in\{1,\cdots,4^n\}\},\\
+\text{such that }&(v_1^{(n)}, v_2^{(n)}) = (0.b_1^1 b_1^2 \cdots b_1^n, 0.b_2^1 b_2^2 \cdots b_2^n) \mapsto \alpha^n = 0.b^1 b^2 \cdots b^{2n}.
 \end{aligned} \end{equation}
+
+% NOTE: it is important to write \alpha^n, and not \alpha^{(n)}, since in all generality the n-bit trunction of \alpha is NOT equal to \alpha^n (example: the column mapping \alpha^n = C(v))
 
 We write $\alpha^n$ using the $2n$ bits $\{b^1, b^2, \cdots, b^{2n}\}$, which is intuitively the lowest number of bits required so that $S^n$ remains a bijection, since it takes $2n$ bits of information as argument. More than $2n$ bits could be allowed while maintaining bijectivity, but we omit this possibility, since they wouldn't strictly be required. In this formulation, it becomes clear that in order to be a bijection, every bit of the input must be used once and only once to form the image. Setting aside bit inversions, this means that we let $S^n$ define a permutation of the $2n$ input bits. [TODO: are more details necessary ? I think this is clear enough, though in the thesis manuscript I got over this point in more detail]
 
-For any finite $n$ and any $(v_1,v_2) \in [0,1]^2$, we may extend the definition of $S^n$ with $S^n(v_1, v_2) := S^n(v_1^{(n)}, v_2^{(n)})$ such that it acts on the entire space $[0,1]^2$ instead of the finite set of grid points. While this extension is obviously not bijective (it maps a grid cell to a single point), in the $n \to \infty$ limit the finite-$n$ truncation converges, such that the pointwise limit could still be a bijection. In \autoref{sec:mapping-examples} we formulate two examples, where in one case the extension converges to a bijection, and in the other it doesn't.
+For any finite $n$ and any $(v_1,v_2) \in [0,1]^2$, we may extend the definition of $S^n$ with $S^n(v_1, v_2) := S^n(v_1^{(n)}, v_2^{(n)})$ such that it acts on the entire space $[0,1]^2$ instead of the finite set of grid points. While this extension is obviously not bijective (all points in a grid cell are ``rounded'' to the corresponding grid position), in the $n \to \infty$ limit the finite-$n$ truncation converges, such that the pointwise limit could still be a bijection. In \autoref{sec:mapping-examples} we formulate two examples, where in one case the extension converges to a bijection, and in the other it doesn't.
 
-Given $(v_1, v_2) \in [0,1]^2$ and the sequence $\{S^n(v_1, v_2)\}_{n \in \mathbb N}$, we then we define $\alpha = S(v_1, v_2)$ as its limit, if it exists. Informally, pointwise convergence of $\{S^n\}_{n\in\mathbb N}$ requires that the least signficiant bits (LSB) of the input be mapped to the LSB of the image, ensuring that small corrections in the input $\vec{v}$ result in small corrections in the image $\alpha$.
-% TODO: I would like to talk briefly about the MSB intuition
-% and identically the most significant bits (MSB) of the input be mapped to the MSB of the image. ``no information is lost''.
+Given $(v_1, v_2) \in [0,1]^2$ and the sequence $\{S^n(v_1, v_2)\}_{n \in \mathbb N}$, we then we define $\alpha = S(v_1, v_2)$ as its limit, if it exists. Informally, pointwise convergence of $\{S^n\}_{n\in\mathbb N}$ requires that the least signficiant bits of the input be mapped to the least significant bits of the image, ensuring that small corrections in the input $\vec{v}$ result in small corrections in the image $\alpha$.
 
 To illustrate this, let us give an example of the sequence $\{A^n\}_{n \in \mathbb N}$ that does not converge pointwise:
 
 \begin{equation*}
-\alpha^{(n)} = A^n(v_1^{(n)},v_2^{(n)}) = 0.b_1^n b_2^n b_1^{n-1} b_2^{n-1} \cdots b_1^1 b_2^1 = \sum_{k=1}^n b_1^{n+1-k} 2^{1-2k} + b_2^{n+1-k} 2^{-2k}.
+\alpha_A^n = A^n(v_1^{(n)},v_2^{(n)}) = 0.b_1^n b_2^n b_1^{n-1} b_2^{n-1} \cdots b_1^1 b_2^1 = \sum_{k=1}^n b_1^{n+1-k} 2^{1-2k} + b_2^{n+1-k} 2^{-2k}.
 \end{equation*}
 
-The permutation between the bits of $\alpha^{(n)}$, and the bits of $(v_1^{(n)}, v_2^{(n)})$ is illustrated in Fig. [TODO: arrow connecting the bits together], and shows how this example does not respect the bit ordering described previously.
+The permutation between the bits of $\alpha^n$, and the bits of $(v_1^{(n)}, v_2^{(n)})$ is illustrated in Fig. [TODO: arrow connecting the bits together], and shows how this example does not respect the bit ordering described previously.
 For finite $n$, $A^n$ is clearly bijective and has a well-defined inverse $A^n_\textrm{inv}$:
 
 \begin{equation*} \begin{aligned}
-v_1^{(n)} &= A^n_{\textrm{inv},1}(\alpha^{(n)}) = 0.b^{2n-1} b^{2n-3} \cdots b^1 = \sum_{k=1}^n b^{2(n-k)-1} 2^{-k}, \\
-v_2^{(n)} &= A^n_{\textrm{inv},2}(\alpha^{(n)}) = 0.b^{2n-2} b^{2n-4} \cdots b^2 = \sum_{k=1}^n b^{2(n+1-k)} 2^{-k}.
+v_1^{(n)} &= A^n_{\textrm{inv},1}(\alpha^n) = 0.b_A^{2n-1} b_A^{2n-3} \cdots b_A^1 = \sum_{k=1}^n b_A^{2(n-k)-1} 2^{-k}, \\
+v_2^{(n)} &= A^n_{\textrm{inv},2}(\alpha^n) = 0.b_A^{2n} b_A^{2n-2} \cdots b_A^2 = \sum_{k=1}^n b_A^{2(n+1-k)} 2^{-k}.
 \end{aligned} \end{equation*}
 
-However, for any $(v_1,v_2)$, the sequence $\{A^n(v_1, v_2)\}_{n \in \mathbb N}$ does not converge. In Fig. [TODO: fig 3.8 of the thesis] we graph the mapping $A^n$, which demonstrates that the image of any point $(v_1,v_2)$ in $[0,1]^2$ diverges as $n$ increases. As $n$ increases, $A^n$ ``refines'' its input with fluctuations of order $2^{-n}$ (because it works with truncations of $(v_1, v_2)$, which have error $c^{(n)} < 2^{-n}$), but the image $\alpha^{(n)}=b_1^n 4^{-1} + b_2^n 4^{-2} + b_1^{n-1} 4^{-3} + b_2^{n-1} 4^{-4} \cdots$ fluctuates (at least) with fixed amplitude $\sim 4^{-2}$, independantly of $n$. Therefore the image never converges, and $\{A_n\}_{n \in \mathbb N}$ is not pointwise convergent.
+However, for any $(v_1,v_2)$, the sequence $\{A^n(v_1, v_2)\}_{n \in \mathbb N}$ does not converge. In Fig. [TODO: fig 3.8 of the thesis] we graph the mapping $A^n$, which demonstrates that the image of any point $(v_1,v_2)$ in $[0,1]^2$ diverges as $n$ increases. As $n$ increases, $A^n$ ``refines'' its input with fluctuations of order $2^{-n}$ (because it works with truncations of $(v_1, v_2)$, which have error $c^{(n)} < 2^{-n}$), but the image $\alpha^n=b_1^n 2^{-1} + b_2^n 2^{-2} + b_1^{n-1} 2^{-3} + b_2^{n-1} 2^{-4} \cdots$ fluctuates (at least) with fixed amplitude $\sim 2^{-2}$, independantly of $n$. Therefore the image never converges, and $\{A_n\}_{n \in \mathbb N}$ is not pointwise convergent.
 
 Within the context of sequences of mappings acting as permutations on the bits of continually refined grid points, the criterion of pointwise convergence restricts the general ``form'' that those mappings can take.
 In the following section, we give the standard examples of the Column and the Z-mapping, showing that our formulation is flexible enough to express mappings that have good properties such as ``locality'', while being simple enough to help build intuitions.
 
 
-\subsection{Two examples of sequences $\{S^n\}_{n \in \mathbb N}$: the Column and the Z-mapping} \label{sec:mapping-examples}
+\subsection{Two examples of sequences of mappings: the Column and the Z-mapping} \label{sec:mapping-examples}
 
-introduce the Column mapping and the Z-mapping, show the figures
+Let us provide two examples of sequence of mappings that are pointwise convergent, and act as permutation of the grid point bits.
+We first define the sequence of Column mappings $\{C^n\}_{n\in\mathbb N}$ as the concatenation of the input bits of $v_1^{(n)}$, followed by the bits of $v_2^{(n)}$. We define the image $\alpha_C^n = 0.b_C^1 b_C^2 \cdots b_C^{2n}$ as:
 
-\section{The measure of locality}
+\begin{equation} \label{eq:def-column-mapping}
+\alpha_C^n := C^n(v_1^{(n)}, v_2^{(n)}) = 0.b_1^1 b_1^2 \cdots b_1^n b_2^1 b_2^2 \cdots b_2^n = \sum_{k=1}^n b_1^k 2^{-k} + b_2^k 2^{-(k+n)}.
+\end{equation}
 
-where do the populations end up 
+Instead of concatenation, we may also interleave the bits of $v_1^{(n)}$ and $v_2^{(n)}$, defining the sequence of Z-mappings $\{Z^n\}_{n\in\mathbb N}$. We define the image $\alpha_Z^n = 0.b_Z^1 b_Z^2 \cdots b_Z^{2n}$ as:
 
-\subsection{Locality of the Z-mapping and the Column mapping}
+\begin{equation} \label{eq:def-z-mapping}
+\alpha_Z^n := Z^n(v_1^{(n)}, v_2^{(n)}) = 0.b_1^1 b_2^1 b_1^2 b_2^2 \cdots b_1^n b_2^n = \sum_{k=1}^n b_1^k 2^{1-2k} + b_2^k 2^{-2k}.
+\end{equation}
 
-% see how it scales, and say what we expect
+We graph both mappings in Fig. [TODO]. At finite $n$, both mappings can be inversed to retrieve the truncations:
 
-\section{Numerical demonstrations}
+\begin{equation} \begin{aligned}
+C^n_{\textrm{inv},1}(\alpha_C^n) &= 0.b_C^1 b_C^2 \cdots b_C^n = \sum_{k=1}^n b_C^k 2^{-k} = v_1^{(n)}, \\
+C^n_{\textrm{inv},2}(\alpha_C^n) &= 0.b_C^{n+1} b_C^{n+2} \cdots b_C^{2n} = \sum_{k=1}^n b_C^{n+k} 2^{-k} = v_2^{(n)}, \\
+Z^n_{\textrm{inv},1}(\alpha_Z^n) &= 0.b_Z^1 b_Z^3 \cdots b_Z^{2n-1} = \sum_{k=1}^n b_Z^{2k-1} 2^{-k} = v_1^{(n)},\\
+Z^n_{\textrm{inv},2}(\alpha_Z^n) &= 0.b_Z^2 b_Z^4 \cdots b_Z^{2n} = \sum_{k=1}^n b_Z^{2k} 2^{-k} = v_2^{(n)}.
+\end{aligned} \end{equation}
+
+Both mappings converge pointwise, since for any $(v_1,v_2) \in [0,1]^2$, the limit exists, which we write as $C(v_1,v_2)$ and $Z(v_1,v_2)$ respectively, and we may find the following upper bounds:
+
+\begin{equation} \begin{aligned}
+& C(v_1,v_2) = \sum_{k=1}^\infty b_1^k 2^{-k} = v_1, \;\text{and}\; |C^n(v_1,v_2)-C(v_1,v_2)| \leq 2^{-n},\\
+& Z(v_1,v_2) = \sum_{k=1}^\infty b_1^k 2^{-k} + b_2^k 2^{-(k+n)}, \;\text{and}\; |Z^n(v_1,v_2)-Z(v_1,v_2)|\leq 2^{-(2n-1)}.
+\end{aligned} \end{equation}
+
+Importantly, the limit $C(v_1,v_2)=v_1$ is a projection, and is therefore not bijective. This result is not suprising, since in the definition of $C^n$ (\autoref{eq:def-column-mapping}) the information on the bits of $v_2$ appears only after the bit $n$, and gets discarded in the $n \to \infty$ limit. The Z-mapping does not suffer from the same problem, since informally the most significant bits of the input get mapped to the most significant bits of the image (no information gets lost), and we can conveniently take the $n \to \infty$ limit of $Z_{\textrm{inv},1}^n$ and $Z_{\textrm{inv},2}^n$:
+
+\begin{equation} \begin{aligned}
+&Z_{\textrm{inv,1}}^n(\alpha^n) \xrightarrow{n \to \infty} Z^{-1}_1(\alpha) = 0.b_Z^1 b_Z^3 \cdots = \sum_{k=1}^\infty b_Z^{2k-1} 2^{-k} = v_1,\\
+&Z_{\textrm{inv,2}}^n(\alpha^n) \xrightarrow{n \to \infty} Z^{-1}_2(\alpha) = 0.b_Z^2 b_Z^4 \cdots = \sum_{k=1}^\infty b_Z^{2k} 2^{-k} = v_2.
+\end{aligned} \end{equation}
+
+\section{Numerical simulations of mappings from two-dimensional to one-dimensional neural fields}
+
+\subsection{Coarse-graining the images to numerically validate the mean-field approximation}
+
+\subsection{The cycling gaussian low-rank neural field toy model}
 
 chap. 2.1, 
 
@@ -429,6 +461,10 @@ introduce coarse-graining procedure (applying the smoothness hypothesis numerica
 introduce the low-rank cycling model
 
 goal of this section : "it seems that it works for the Z-mapping"
+
+\section{The measure of locality}
+
+where do the populations end up 
 
 \section{Proof of results}
 
