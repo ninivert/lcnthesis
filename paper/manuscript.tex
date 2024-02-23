@@ -102,6 +102,8 @@
 % array package and thick rules for tables
 \usepackage{array}
 
+\ifndef{SUBMISSION}\usepackage{graphicx}\endif
+
 % create "+" rule type for thick vertical lines
 \newcolumntype{+}{!{\vrule width 2pt}}
 
@@ -255,6 +257,11 @@ Wulfram Gerstner\textsubscript{1}
 \end{flushleft}
 % Please keep the abstract below 300 words
 \section*{Abstract}
+
+\ifndef{SUBMISSION}
+\includegraphics[width=\textwidth]{../figures/cover.pdf}
+\endif
+
 Classical neural field models describe interactions between neurons positioned in an embedding; often a physical space (for instance, that of the cortical sheet) or, later, abstract spaces (for instance, that of neuron celltypes), in which the dynamics are highly regular in space and time. Recent improvements in recordings of neural activity have further demonstrated the smoothness of the neural dynamics, when placed in an appropriate embedding space.
 
 Decoupling the embedding space from the physical position of neurons begs the question of uniqueness of the embedding space. Given an embedding space and neural dynamics theron, are there other embedding spaces which can express the same behavior?
@@ -265,13 +272,11 @@ This procedure is easily generalized to map between embeddings in arbitrary numb
 We introduce a measure of locality, which quantifies how the regularity of the neural fields in conserved through the mappings $S$. This allows us to show that the resulting neural field is well-behaved, and can therefore be approximated using classical grid-based methods.
 To illustrate these results through numerical models, we describe a coarse-graining procedure enforcing the locality of the numerically applied mappings.
 
-[TODO: add the pretty figure here]
-
 % Please keep the Author Summary between 150 and 200 words
 % Use first person. PLOS ONE authors please skip this step. 
 % Author Summary not valid for PLOS ONE submissions.   
 \section*{Author summary}
-[TODO]
+[TODO?]
 \linenumbers
 
 
@@ -344,7 +349,7 @@ Our results suggest that the notion of spatial dimensionality in neural field dy
 
 \section{Mappings $S$ from $[0,1]^2$ to $[0,1]$}
 
-\subsection{Motivation for a grid-based approach}
+\subsection{Motivation for a grid-based approach} \label{sec:grid-motivation}
 
 We motivate the upcoming study of the mappings $S$ by considering a grid discretization of the original two-dimensional space $[0,1]^2$. For this, we subdivide each axis into $2^n$ equal segments (each segment has a length of $2^{-n}$), where $n \in \mathbb{N}$ describes the grid resolution. This results in a grid constituted of $2^n \times 2^n = 4^n$ squares in $[0,1]^2$. To each square bin indexed $i \in \{1,\cdots,4^n\}$, we associate a position $\vec{v_i^{(n)}} = (v_{i,1}^{(n)}, v_{i,2}^{(n)})$ located at the origin of the bin. Since everytime $n$ is incremented by one, every axis is subdivided into two smaller equal parts, the positions $v_{i,1}^{(n)}$ and $v_{i,2}^{(n)}$ naturally lend themselves to a binary notation.
 
@@ -361,11 +366,17 @@ Since $c_\mu^{(n)} < 2^n$, it can easily be seen that $v_\mu^{(n)} \to v_\mu$ as
 b_\mu^l = \mathrm{Ind} \left\{ 2^{l-1}v_\mu - \left\lfloor 2^{l-1}v_\mu \right\rfloor \right\}
 \end{equation*}
 
-Sampling the original connectivity kernel at the grid points $\vec{v_i}$ and $\vec{v_j}$ yields a numerical connectivity matrix $J_{ij} := w_U(\vec{v_i}, \vec{v_j})$, illustrated in Fig. [TODO: add a figure here of the discretization here and the sampling on a grid, and the limit of n to infty. do we need to clarify explicitly the bounds of each square bin ?], which can be used to simulate the resulting population dynamics equation:
+Sampling the original connectivity kernel at the grid points $\vec{v_i}$ and $\vec{u_j}$ yields a numerical connectivity matrix $J_{ij} := w_U(\vec{v_i}, \vec{u_j})$, illustrated in Fig. [TODO], which can be used to simulate the resulting population dynamics equation:
 
 \begin{equation} \label{eq:population-dynamics}
 \frac{\d}{\d t} h_i(t) = -h_i(t) + \sum_{j=1}^{4^n} J_{ij} \phi(h_j(t)), \quad \text{for all } i \in \{1,\cdots,4^n\}.
 \end{equation}
+
+\ifndef{SUBMISSION}
+\includegraphics[height=20em]{../figures/discretization.png}
+
+[TODO: the discretization here and the sampling on a grid, and the limit of n to infty. do we need to clarify explicitly the bounds of each square bin ?]
+\endif
 
 \autoref{eq:population-dynamics} can be seen as the discretized version of \autoref{eq:nf-in-01p}, where we associate $h_i(t) := h_U(\vec{v_i}, t)$. Indeed, by a mean-field argument on the original smooth neural field, the discrete dynamics converge to the true solution of the neural field, because the error of the mean-field approximation in $[0,1]^2$ vanishes as we take finer grids, letting $n \to \infty$.
 
@@ -373,10 +384,10 @@ We would now like to derive a bijective mapping $S$, such that the same argument
 
 \subsection{$S$ as the pointwise limit of a sequence of bijections $S^n$}
 
-Let us define a sequence of bijective mappings $\{S^n\}_{n \in \mathbb N}$, acting on the $n$-bit truncations $\vec{v^{(n)}}$ of any $\vec{v} \in [0,1]^2$, as well as the corresponding sequence of images $\{\alpha^n := S^n(\vec{v^{(n)}})\}_{n \in \mathbb N}$. $S^n$ defines the following bijection between points on the two-dimensional grid and the one-dimensional line:
+Let us define a sequence of bijective mappings $\{S^n\}_{n \in \mathbb N}$, acting on the $n$-bit truncations $\vec{v^{(n)}}$ of any $\vec{v} \in [0,1]^2$, as well as the corresponding sequence of images $\{\alpha^n := S^n(\vec{v^{(n)}})\}_{n \in \mathbb N}$. $S^n$ defines the following bijection between points on the two-dimensional and one-dimensional grids:
 
 \begin{equation} \label{eq:def-S} \begin{aligned}
-S^n :& \{\tfrac{j-1}{2^n}\;|\;j\in\{1,\cdots,2^n\}\}^2 \mapsto \{\tfrac{i-1}{4^n}\;|\;i\in\{1,\cdots,4^n\}\},\\
+S^n :& \{\tfrac{l-1}{2^n}\;|\;l\in\{1,\cdots,2^n\}\}^2 \mapsto \{\tfrac{i-1}{4^n}\;|\;i\in\{1,\cdots,4^n\}\},\\
 \text{such that }&(v_1^{(n)}, v_2^{(n)}) = (0.b_1^1 b_1^2 \cdots b_1^n, 0.b_2^1 b_2^2 \cdots b_2^n) \mapsto \alpha^n = 0.b^1 b^2 \cdots b^{2n}.
 \end{aligned} \end{equation}
 
@@ -402,7 +413,12 @@ v_1^{(n)} &= A^n_{\textrm{inv},1}(\alpha^n) = 0.b_A^{2n-1} b_A^{2n-3} \cdots b_A
 v_2^{(n)} &= A^n_{\textrm{inv},2}(\alpha^n) = 0.b_A^{2n} b_A^{2n-2} \cdots b_A^2 = \sum_{k=1}^n b_A^{2(n+1-k)} 2^{-k}.
 \end{aligned} \end{equation*}
 
-However, for any $(v_1,v_2)$, the sequence $\{A^n(v_1, v_2)\}_{n \in \mathbb N}$ does not converge. In Fig. [TODO: fig 3.8 of the thesis] we graph the mapping $A^n$, which demonstrates that the image of any point $(v_1,v_2)$ in $[0,1]^2$ diverges as $n$ increases. As $n$ increases, $A^n$ ``refines'' its input with fluctuations of order $2^{-n}$ (because it works with truncations of $(v_1, v_2)$, which have error $c^{(n)} < 2^{-n}$), but the image $\alpha^n=b_1^n 2^{-1} + b_2^n 2^{-2} + b_1^{n-1} 2^{-3} + b_2^{n-1} 2^{-4} \cdots$ fluctuates (at least) with fixed amplitude $\sim 2^{-2}$, independantly of $n$. Therefore the image never converges, and $\{A_n\}_{n \in \mathbb N}$ is not pointwise convergent.
+However, for any $(v_1,v_2)$, the sequence $\{A^n(v_1, v_2)\}_{n \in \mathbb N}$ does not converge. In Fig. [TODO] we graph the mapping $A^n$, which demonstrates that the image of any point $(v_1,v_2)$ in $[0,1]^2$ diverges as $n$ increases. As $n$ increases, $A^n$ ``refines'' its input with fluctuations of order $2^{-n}$ (because it works with truncations of $(v_1, v_2)$, which have error $c^{(n)} < 2^{-n}$), but the image $\alpha^n=b_1^n 2^{-1} + b_2^n 2^{-2} + b_1^{n-1} 2^{-3} + b_2^{n-1} 2^{-4} \cdots$ fluctuates (at least) with fixed amplitude $\sim 2^{-2}$, independantly of $n$. Therefore the image never converges, and $\{A_n\}_{n \in \mathbb N}$ is not pointwise convergent.
+
+\ifndef{SUBMISSION}
+\includegraphics[width=\linewidth]{../figures/mapping-A.pdf}
+[TODO: remove the numbers on this figure, dot the grid nodes]
+\endif
 
 Within the context of sequences of mappings acting as permutations on the bits of continually refined grid points, the criterion of pointwise convergence restricts the general ``form'' that those mappings can take.
 In the following section, we give the standard examples of the Column and the Z-mapping, showing that our formulation is flexible enough to express mappings that have good properties such as ``locality'', while being simple enough to help build intuitions.
@@ -432,6 +448,12 @@ Z^n_{\textrm{inv},1}(\alpha_Z^n) &= 0.b_Z^1 b_Z^3 \cdots b_Z^{2n-1} = \sum_{k=1}
 Z^n_{\textrm{inv},2}(\alpha_Z^n) &= 0.b_Z^2 b_Z^4 \cdots b_Z^{2n} = \sum_{k=1}^n b_Z^{2k} 2^{-k} = v_2^{(n)}.
 \end{aligned} \end{equation}
 
+\ifndef{SUBMISSION}
+\includegraphics[height=20em]{../figures/mapping-col-Z.pdf}
+
+[TODO: add labels, show n=3, etc.]
+\endif
+
 Both mappings converge pointwise, since for any $(v_1,v_2) \in [0,1]^2$, the limit exists, which we write as $C(v_1,v_2)$ and $Z(v_1,v_2)$ respectively, and we may find the following upper bounds:
 
 \begin{equation} \begin{aligned}
@@ -448,15 +470,56 @@ Importantly, the limit $C(v_1,v_2)=v_1$ is a projection, and is therefore not bi
 
 \section{Numerical simulations of mappings from two-dimensional to one-dimensional neural fields}
 
+In the interest of developing an insight on the properties of the two mappings introduced previously, let us now develop a numerical grid-based simulation.
+As established in the \autoref{sec:grid-motivation}, the original two-dimensional neural field can be simulated by sampling the connectivity kernel at pairs of discrete grid points $(\vec{v_i},\vec{u_j})$, discretizing the neural field to a set of $4^n$ scalars $\{h_i(t) \;|\; i=1,\cdots,4^n\}$.
+
+Naively, we could proceed in the same way to simulate the corresponding one-dimensional neural field, by sampling the connectivity kernel $\tilde w(\alpha_i, \beta_j) = w_U(S^{-1}(\alpha_i), S^{-1}(\beta_j)) = w_U(\vec{v_i}, \vec{u_j})$, where the pairs of discrete one-dimensional points $(\alpha_i,\beta_j)$ are obtained by mapping the two-dimensional grid-points $(\vec{v_i},\vec{u_j})$.
+
+Critically, since $S$ defines a bijection, it acts as a permutation on the discrete connectivity matrix indices. Furthermore the population dynamics in \autoref{eq:population-dynamics} are invariant to permutation in the indices, and the naively sampled connectivity matrix corresponding to the one-dimensional neural field trivially yields identical dynamics.
+
+In essence, since both connectivity matrices of the one- and two-dimensional neural fields have the same size, we are compensating for the reduction in dimensionality by increasing the one-dimensional grid resolution. In two dimensions, the $2^n \times 2^n = 4^n$ grid points are spaced with $2^{-n}$ along every axis, but after the mapping, those $4^n$ grid points are spaced every $4^{-n}$, since there are twice as many bits to describe the position along the unique axis. This is illustrated in Fig. [TODO].
+
+\ifndef{SUBMISSION}
+\includegraphics[width=\linewidth]{../figures/S-viz.export.pdf}
+[TODO: adapt this figure better, but gives the idea]
+\endif
+
+% We then loosely have the following correspondence between the discrete connectivity matrices for the one- and two-dimensional neural fields:
+
+% \begin{equation} \begin{aligned}
+% \tilde w(\alpha_i,\beta_j) &= \tilde J_{\alpha_i,\beta_j} \\
+% &= \tilde J_{S(\vec{v_i},\vec{u_j})} \\
+% &= J_{ij} \;\text{by definition} \\
+% &= w_U(\vec{v_i},\vec{u_j})
+% \end{aligned}\end{equation}
+
 \subsection{Coarse-graining the images to numerically validate the mean-field approximation}
+
+Coarse-graining adresses the problem of numerically enforcing the mean-field approximation. The mean-field approximation is done on the original two-dimensional neural field when sampling the connectivity matrix $J_{ij}$, as all neurons inside the same grid cells are assumed to be the same. This is not the case when defining the connectivity of the one-dimensional neural field as the permutation of rows and columns of $J_{ij}$.
+
+In order to perform the mean-field approximation on the one-dimensional neural field, we average together $2^n$ consecutive one-dimensional bins, each of length $4^{-n}$, resulting in $2^n$ coarse-grained bins. This is illustrated in Fig. [TODO] Specifically, for every coarse-grained bin $a=1,\cdots,2^n$, the set of consecutive positions $\mathcal{C}_a = \{\tfrac{a-1}{2^n} + \tfrac{l-1}{4^n} \;|\; l \in 1, \cdots, 2^n\}$, gets mapped to the two-dimensional grid points and averaged:
+
+\begin{equation*}
+\vec{\bar v_a} := \textrm{mean}(\{S^{-1}(\alpha_l) \;|\; \alpha_l \in \mathcal{C}_a\}).
+\end{equation*}
+
+\ifndef{SUBMISSION}
+\includegraphics[height=15em]{../figures/coarse-graining.pdf}
+
+[TODO: add the indices a,b and l on this figure, for clarity.]
+\endif
+
+The obtained coarse-grained points are then used to sample the connectivity kernel, and form the connectivity matrix of the one-dimensional neural field:
+
+\begin{equation}
+\tilde J_{ab} := w_U(\vec{\bar v_a}, \vec{\bar v_b}).
+\end{equation}
 
 \subsection{The cycling gaussian low-rank neural field toy model}
 
 chap. 2.1, 
 
 we stress that this toy model serves only for illustration purposes, and our results apply to any neural field
-
-introduce coarse-graining procedure (applying the smoothness hypothesis numerically)
 
 introduce the low-rank cycling model
 
@@ -477,7 +540,7 @@ where do the populations end up
 
 % TODO: are all bijective limits local ? does local imply bijection ?
 % in this case, we have shown that bijection + locality => we can safely do the mapping (bijection for the analytical approach, locality for the numerical approach)
-
+% TODO: mention the "standard example" of the Z-mapping
 
 
 
