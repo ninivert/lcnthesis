@@ -316,7 +316,7 @@ $\rho(\vec z)$ measures the number of neurons per unit volume of the embedding s
 \partial_t h(\vec z, t) = \underbrace{-h(\vec z, t)}_\text{exponential decay} + \underbrace{\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\vec y) \mathrm d \vec y}_\text{recurrent current}.
 \end{equation}
 
-Without loss of generality, a simple bijective mapping can be applied to reduce any $p$-dimensional neural field to a neural field on $[0,1]^p$. Additionally redefining the connectivity kernel to absorb the density and determinant of the transformation, we arrive at \autoref{eq:nf-in-01p}, a general form for any neural field equation in $p$ dimensions:
+Without loss of generality, a simple bijective mapping can be applied to reduce any $p$-dimensional neural field to a neural field on $[0,1]^p$. Additionally redefining the connectivity kernel to absorb the density and determinant of the transformation (see an example in section 2.5 of \cite{nvadot2023mathesis}), we arrive at \autoref{eq:nf-in-01p}, a general form for any neural field equation in $p$ dimensions:
 
 % The embedding space $\Rp$ (or any $p$-dimensional space) can be mapped to $[0,1]^p$ via bijective functions between the two spaces. For instance, if the neuron density factorizes as $\rho(z_1, \cdots, z_p)= \rho_1(z_1) \cdots \rho_p(z_p)$, then the associated cumulative density functions can be used to perform a change of variables, resulting in the an equivalent "uniform" neural field equation:
 
@@ -337,7 +337,15 @@ The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [
 \partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta).
 \end{equation}
 
-The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost. The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing the ``locality'' $V(S^{-1})$ of the mapping $S^{-1}$, which measures if small neighbourhoods in $[0,1]^2$ are mapped to small neighbourhoods in $[0,1]$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
+The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost.
+Fig. [TODO] illustrates this problem: if the mapping is seemingly random, the regularity of the orginal neural field is destroyed. Contrarily, if the mapping is ``local'', the resulting neural field might still be well-defined and exhibit identical dynamics, despite the apparent discontinuities.
+The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing the ``locality'' $V(S^{-1})$ of the mapping $S^{-1}$, which measures if small neighbourhoods in $[0,1]$ are mapped to small neighbourhoods in $[0,1]^2$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
+
+\ifndef{SUBMISSION}
+\includegraphics[height=15em]{../figures/locality.png}
+
+[TODO: clean up this graphic, cite it in text. we need to introduce a random mapping maybe ?]
+\endif
 
 % question of uniqueness, discretization error, mean field limit and locality, link with numerical simualtions. chap 1.4, chap 3.1
 
@@ -451,7 +459,7 @@ Z^n_{\textrm{inv},2}(\alpha_Z^n) &= 0.b_Z^2 b_Z^4 \cdots b_Z^{2n} = \sum_{k=1}^n
 \ifndef{SUBMISSION}
 \includegraphics[height=20em]{../figures/mapping-col-Z.pdf}
 
-[TODO: add labels, show n=3, etc.]
+[TODO: add labels, show n=3, etc. Comment on the recursive and fractal structure of the Z-mapping, and the projection for the Column mapping.]
 \endif
 
 Both mappings converge pointwise, since for any $(v_1,v_2) \in [0,1]^2$, the limit exists, which we write as $C(v_1,v_2)$ and $Z(v_1,v_2)$ respectively, and we may find the following upper bounds:
@@ -481,7 +489,7 @@ In essence, since both connectivity matrices of the one- and two-dimensional neu
 
 \ifndef{SUBMISSION}
 \includegraphics[width=\linewidth]{../figures/S-viz.export.pdf}
-[TODO: adapt this figure better, but gives the idea]
+[TODO: adapt this figure better, but gives the idea. We see the $4^n$ bins in 2D, and $4^n$ bins in 1D, but twice as many bits]
 \endif
 
 % We then loosely have the following correspondence between the discrete connectivity matrices for the one- and two-dimensional neural fields:
@@ -493,11 +501,11 @@ In essence, since both connectivity matrices of the one- and two-dimensional neu
 % &= w_U(\vec{v_i},\vec{u_j})
 % \end{aligned}\end{equation}
 
-\subsection{Coarse-graining the images to numerically validate the mean-field approximation}
+\subsection{Coarse-graining the images to numerically validate the mean-field approximation} \label{sec:coarse-graining}
 
 Coarse-graining adresses the problem of numerically enforcing the mean-field approximation. The mean-field approximation is done on the original two-dimensional neural field when sampling the connectivity matrix $J_{ij}$, as all neurons inside the same grid cells are assumed to be the same. This is not the case when defining the connectivity of the one-dimensional neural field as the permutation of rows and columns of $J_{ij}$.
 
-In order to perform the mean-field approximation on the one-dimensional neural field, we average together $2^n$ consecutive one-dimensional bins, each of length $4^{-n}$, resulting in $2^n$ coarse-grained bins. This is illustrated in Fig. [TODO] Specifically, for every coarse-grained bin $a=1,\cdots,2^n$, the set of consecutive positions $\mathcal{C}_a = \{\tfrac{a-1}{2^n} + \tfrac{l-1}{4^n} \;|\; l \in 1, \cdots, 2^n\}$, gets mapped to the two-dimensional grid points and averaged:
+In order to perform the mean-field approximation on the one-dimensional neural field, we average together $2^n$ consecutive one-dimensional bins, each of length $4^{-n}$, resulting in $2^n$ coarse-grained bins. This is illustrated in Fig. [TODO] Specifically, for every coarse-grained bin $a=1,\cdots,2^n$, the set of consecutive positions $\mathcal{C}_a = \{\tfrac{a-1}{2^n} + \tfrac{l-1}{4^n} \;|\; l \in 1, \cdots, 2^n\}$, gets mapped to the two-dimensional grid points and averaged, intuitively computing the ``center of mass'' of $\mathcal{C}_a$:
 
 \begin{equation*}
 \vec{\bar v_a} := \textrm{mean}(\{S^{-1}(\alpha_l) \;|\; \alpha_l \in \mathcal{C}_a\}).
@@ -511,36 +519,229 @@ In order to perform the mean-field approximation on the one-dimensional neural f
 
 The obtained coarse-grained points are then used to sample the connectivity kernel, and form the connectivity matrix of the one-dimensional neural field:
 
-\begin{equation}
+\begin{equation} \label{eq:def-tilde-J}
 \tilde J_{ab} := w_U(\vec{\bar v_a}, \vec{\bar v_b}).
 \end{equation}
 
 \subsection{The cycling gaussian low-rank neural field toy model}
 
-chap. 2.1, 
+By using the grid-based approach and the coarse-graining procedure, it is now possible to numerically simulate the two-dimensional neural field, and the mapping to the one-dimensional neural field. We introduce a toy model for illustration purposes, but we stress that our results apply to any neural field model.
 
-we stress that this toy model serves only for illustration purposes, and our results apply to any neural field
+We extend the model introduced in \cite{schmutz2023convergence}, which can be seen as a simple example of a ``Gaussian mixture low-rank network'' \cite{Beiran2021}. Given the $p$-dimensional embedding $\vec z = (z_1, \cdots, z_p) \in \Rp$, the neural field $h(\vec z, t)$ evolves as:
 
-introduce the low-rank cycling model
+\begin{equation*} \begin{aligned}
+\partial_t h(\vec z, t) &= -h(\vec z, t) + \int_{\Rp} w(\vec z, \vec y) \phi(h(\vec y, t)) \mathcal N^p(\vec y) \mathrm d \vec y, \\
+\text{with } w(\vec z, \vec y) &= \sum_{\mu=1}^p z_\mu \tilde\phi(y_\mu) \text{ the connectivity kernel}, \\
+\text{where } \tilde\phi(y) &= \frac{\phi(y) - \mathrm E_{y\sim\mathcal N}[\phi(y)]}{\mathrm{Var}_{y\sim\mathcal N}[\phi(y)]}, \quad \mathcal N(y) = \frac{1}{\sqrt{2\pi}} \mathrm{e}^{-\tfrac 12 y^2}, \\
+\text{and } \phi(y) &= \frac{1}{1+\mathrm{e}^{-y}}.
+\end{aligned} \end{equation*}
 
-goal of this section : "it seems that it works for the Z-mapping"
+The geometric view (see illustation in Fig. [TODO]) of this neural field is that the neuron populations are scattered in a $p$-dimensional Gaussian ball. With the exception of the zero fixed point, there are $p$ ``patterns'' (in this case, the basis functions $f_\mu(\vec z) = z_\mu,\,\mu=1,\cdots,p$) towards which the neural field $h(\vec z,t)$ may converge (we refer to \cite{nvadot2023mathesis}, appendix A for a derivation of the fixed points of this model, and a study of their stability). We stress that one should not confuse the embedding dimension $p$ with the rank of the connectivity kernel, which in this case also coincides with $p$.
+
+\ifndef{SUBMISSION}
+\includegraphics[height=15em]{../figures/lowrankgaussian.pdf}
+
+[TODO: does this need cleaning up (e.g. the Computer Modern font) ?]
+\endif
+
+This example is made particularly easy to study, because the kernel and dynamics both have the rank $p$. Firstly, the kernel's low-rank structure makes numerical simulations cheap, as we store $2p$ low-rank vectors of size $4^n$ instead of the full $4^n \times 4^n$ connectivity matrix (see the [TODO: source code url] for the full implementation details). Secondly, by projecting the neural field at any time $t$ onto the $p$ patterns, we can track the full state of the network (setting aside the orthogonal component, which is decoupled and decays exponentially) by following the trajectory in the latent space with the latent variables:
+% NOTE: in reality, the latent variables even form a closed system, but this is off-topic for this article
+
+\begin{equation} \label{eq:def-kappa}
+\kappa_\mu(t) = \int_{\Rp} y_\mu h(\vec y, t) \mathcal N^p(\vec y) \mathrm d \vec y,\quad \mu=1,\cdots,p.
+\end{equation}
+
+To illustrate the latent variables, suppose the neural field has converged to the pattern $h(\vec z, t \to \infty) = z_\mu$. Then the latent variable $\kappa_\mu = 1$, whereas all other latent variables are zero, $\kappa_\mu=0,\,\mu\neq\nu$.
+
+We extend this low-rank Gaussian model by making the dynamics cyclic: instead of converging to a single fixed point, we force the neural field to cycle between the fixed points. This modification makes any differences between numerically evaluated trajectories more apparent, which will be useful when asserting that the dynamics are conserved after the mapping to one dimension. To introduce a cycling behavior, the term $\delta > 0$ ``delays'' the integral term, and the ``rolling'' $z_\mu \mapsto z_{\mu+1}$ (with the convention that $p+1=1$) pushes the recurrent currents to the pattern $\mu+1$ when the neural field is close to the pattern $\mu$. The dynamics of the low-rank Gaussian cycling neural field in \autoref{eq:def-cycling-nf} are illustrated in Fig. [TODO]:
+
+\begin{equation} \label{eq:def-cycling-nf}
+\partial_t h(\vec z, t) = -h(\vec z, t) + \int_{\Rp} \sum_{\mu=1}^p z_{\mu+1} \tilde\phi(y_\mu) \phi(h(\vec y, t+\delta)) \mathcal N^p(\vec y) \mathrm d \vec y.
+\end{equation}
+
+\ifndef{SUBMISSION}
+\includegraphics[width=\linewidth]{../figures/cycling-illustration.png}
+
+[TODO: clean this up]
+\endif
+
+\subsection{Simulations of the Column and the Z-mappings applied to the toy model}
+
+In this section, we show numerical simulations of the neural field in $[0,1]$, obtained from applying mappings on higher-dimensional neural fields in $[0,1]^p$. We see that the coarse-graining procedure works when applied from $[0,1]^2$ to $[0,1]$. Then, we demonstrate that it can be applied iteratively, to map from $[0,1]^3$ to $[0,1]^2$, and from $[0,1]^2$ to $[0,1]$.
+
+We start with simulating the cycling neural field \autoref{eq:def-cycling-nf} using the grid-based approach. The connectivity matrix defined in \autoref{eq:def-tilde-J} is computed by applying different mappings to the matrix $J_{ij}$ (that is, permuting the rows and columns), followed by the coarse-graining procedure to reduce to a $2^n \times 2^n$ matrix. Setting $\delta=6$ and the initial condition $h(z_1, z_2, t < 0) = z_1$, simulations are presented in Fig. [TODO] showing the activity levels, recurrent currents, and the latent trajectory $(\kappa_1(t), \kappa_2(t))$. In order, we discuss:
+\begin{itemize}
+\item The original two-dimensional neural field evolves while oscillating between the patterns $\mu=1$ and $\mu=2$. The neural field is initialized in the $\mu=1$ state, and as a consequence $\kappa_1(0)=1$ and $\kappa_2(0)=0$. The oscillation can better be seen in the latent trajectory $(\kappa_1(t), \kappa_2(t))$, evolving somewhat between the points $(1,0)$ and $(0,1)$.
+\item A random mapping can be numerically evaluated as a random permutation of the rows and columns of $J_{ij}$, and is used as the ``worst-case'' example, since all regularity of the original neural field is obviously destroyed. The coarse-graining averages out all the structure of the activity, and the recurrent currents are zero, because the contributions from excitatory and inhibitory populations cancel out. This results in the erasure of the cycling behavior in the latent trajectory, and the latent trajectory stays at $(0,0)$.
+\item The Column mapping shows the projection of the initial condition onto the $z_1$ axis, yielding the sigmoidal shape in the $[0,1]$ embedding. Problematically, the current currents corresponding to the pattern $\mu=2$ cancel out and yield zero, and the latent trajectory quickly decays towards $(0,0)$.
+\item The Z-mapping shows that despite the fractal structure of the activity, there is still regularity in the $[0,1]$ embedding, resulting in non-zero recurrent currents. In consequence, the latent trajectory shows a clear cycling behavior, that closely matches that of the two-dimensional neural field.
+\end{itemize}
+
+
+\ifndef{SUBMISSION}
+\includegraphics[height=30em]{../figures/simulation-snapshots.png}
+
+[TODO: these are simulation snapshots. clean this up, adapt the legends, upload the videos]
+\endif
+
+These results suggest that the Z-mapping has the desired properties of conserving the regularity of the original smooth kernel. To further stress this, we demonstrate that we can repeat the dimensionality reduction of the embedding space, by iteratively applying the Z-mapping and coarse-graining. Starting with a three-dimensional neural field (setting $p=3$ in \autoref{eq:def-cycling-nf}), we can simulate the mapping from $[0,1]^3$ to $[0,1]^2$ (by applying, at constant $z_1$, the mapping $Z(z_2,z_3) = \alpha_{23}$), then from $[0,1]^2$ to $[0,1]$ (applying the mapping $Z(\alpha_{23},z_1)=\alpha_{123}$). This is shown in Fig. [TODO], and we assert equivalence of dynamics by studying the numerical equality of the latent trajectories. This demonstrates that for the mapping to yield identical dynamics, the starting kernel only has to be ``continuous on average''.
+
+\ifndef{SUBMISSION}
+\includegraphics[height=20em]{../figures/simulation-321-snapshots.png}
+
+[TODO: legend, link video]
+\endif
 
 \section{The measure of locality}
 
-where do the populations end up 
+In the previous sections we derived the Column and the Z-mapping, and showed that, at least numerically, the Z-mapping seems to be a ``local'' mapping, in the sense that small neighbourhoods in $[0,1]$ are mapped by $S^{-1}$ to small neighbourhoods in $[0,1]^2$. When writing the one-dimensional neural field in \autoref{eq:nf-in-01} with the kernel $\tilde w(\alpha,\beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$, are neural populations close in the one-dimensional embedding also close in the two-dimensional embedding?
+
+% TODO: rework this paragraph, i'm tired
+% Locality is closely tied to the coarse-graining procedure introduced in \autoref{sec:coarse-graining}, because local mappings will yield populations that are close in $[0,1]^2$, and coarse-graining will not introduce much error; the mean-field approximation is in this case valid. Contrarily, when the mapping is not local, the coarse-graing will average together positions that are far apart, resulting in inaccurate samplings of the connectivity kernel.  For the Column mapping, coarse-graining removes all variation on the vertical axis, reducing the sampling of the kernel $w_U$ to a line: the mapping is not local. The Z-mapping is local: even after coarse-graining, the sampling points span the full two-dimensional as $n \to \infty$.
+
+Locality is closely tied to the coarse-graining procedure introduced in \autoref{sec:coarse-graining}. 
+In Fig. [TODO], we colour-code the two-dimensional populations corresponding to the same $\mathcal{C}_a$ before coarse-graining.
+We see that the Z-mapping yields populations close in $[0,1]^2$, such that coarse-graining will not introduce much error and the kernel $w_U$ is sampled uniformly as $n \to \infty$: the mean-field approximation for the resulting one-dimensional neural field is valid. On the contrary, the coarse-grained populations of the Column mapping lie on a line in the two-dimensional embedding (it ``changes too fast''), resulting in non-uniform sampling of the kernel $w_U$: this mapping is not local and we cannot properly write the one-dimensional neural field.
+
+\ifndef{SUBMISSION}
+\includegraphics[height=20em]{../figures/where-are-the-coarse-grained-positions.png}
+
+[TODO: clean this up]
+\endif
+
+\subsection{Definition of locality}
+
+Given $n \in \mathbb N$, let us define the locality $V^n(S^n_\textrm{inv})$ as the average error made by the coarse-graining procedure. For this, we compute the maximum difference in positions of the two-dimensional embedding $\norm{S^n_\textrm{inv}(\alpha) - S^n_\textrm{inv}(\alpha^\prime)}_1$, associated to the one-dimensional populations in the bounds $\left[\tfrac{a-1}{2^n}, \tfrac{a}{2^n}\right]$ of the coarse-graining bin $\mathcal C_a$:
+
+\begin{equation} \label{eq:def-V}
+V^n(S^n_\textrm{inv}) = \frac{1}{2^n} \sum_{a=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\frac{a-1}{2^n}, \frac{a}{2^n} \right]} \norm{S^n_\textrm{inv}(\alpha) - S^n_\textrm{inv}(\alpha^\prime)}_1
+\end{equation}
+
+Within the context of a sequence of mappings, we are specifically interested in the $n \to \infty$ limit, that is, whether the error of the mean-field approximation vanishes as the grid becomes infinitely fine. For the random, Column and Z-mappings, we graph the scaling behavior of the numerator (the total error of the mean-field approximation) in Fig. [TODO]. As expected, we see that the total error of the Z-mapping scales much slower than $2^n$, whereas that of the Column (and random) mapping scales roughly as $2^n$.
+
+\ifndef{SUBMISSION}
+\includegraphics[height=15em]{../figures/locality-scaling.png}
+
+[TODO: cleanup]
+\endif
+
+\subsection{Computing the locality of the Column and the Z-mapping}
+
+In this section we analytically derive the locality of the Column and the Z-mapping, showing that $V^n(Z^n_\textrm{inv}) \xrightarrow{n \to \infty} 0$, but that $V^n(C^n_\textrm{inv}) > 0$ for all $n \in \mathbb{N}$.
+
+We consider the binary expansion of $\alpha$ and $\alpha^\prime$ which appear in the supremum of \autoref{eq:def-V}. For clarity of notation, we furthermore truncate the binary expansion to $2m$ bits (on most machines, $2m=64$ bits, but analytically $m$ may be arbitrarily large):
+
+\begin{equation*} \begin{aligned}
+\alpha &= 0. b^1 b^2 \cdots b^{2m-1} b^{2m},\\
+\alpha^\prime &= 0. b^{\prime 1} b^{\prime 2} \cdots b^{\prime 2m-1} b^{\prime 2m}. \\
+\end{aligned} \end{equation*}
+
+Furthermore, since $\alpha \in \left[\frac{i-1}{2^n}, \frac{i}{2^n} \right],\, i \in \{1, \cdots, 2^n\}$, we may express the first $n$ (where $n < 2m$) bits of $\alpha$ with the bits of $i=\sum_{k=0}^{n-1} i^k 2^k$ (ignoring $i=2^n$ for the sake of simplicity, which would introduce one more bit, $n+1$ in total):
+
+\begin{equation*} \begin{aligned}
+\alpha &= 0. i^{n-1} i^{n-2} \cdots i^1 i^0 b^n b^{n+1} \cdots b^{2m-1} b^{2m},\\
+\alpha^\prime &= 0. i^{n-1} i^{n-2} \cdots i^1 i^0 b^{\prime n} b^{\prime n+1} \cdots b^{\prime 2m-1} b^{\prime 2m}.
+\end{aligned} \end{equation*}
+
+\paragraph{Z-mapping.} Let us consider the Z-mapping. If $n$ is even, we write with $\alpha$ defined above (and similarly for $\alpha^\prime$):
+
+$$
+\begin{aligned}
+Z^n_{\textrm{inv},1}(\alpha) &= 0.\underbrace{i^{n-1} i^{n-3} \cdots i_1}_\text{$n/2$ bits} b^n b^{n+2} \cdots b^{2m-1}, \\
+Z^n_{\textrm{inv},2}(\alpha) &= 0.\underbrace{i^{n-2} i^{n-4} \cdots i_0}_\text{$n/2$ bits} b^{n+1} b^{n+3} \cdots b^{2m}.
+\end{aligned}
+$$
+
+If $n$ is odd, we have:
+
+$$
+\begin{aligned}
+Z^n_{\textrm{inv},1}(\alpha) &= 0.\underbrace{i^{n-1} i^{n-3} \cdots i^0}_\text{$(n+1)/2$ bits} b^n b^{n+2} \cdots b^{2m-1}, \\
+Z^n_{\textrm{inv},2}(\alpha) &= 0.\underbrace{i^{n-2} i^{n-4} \cdots i^1}_\text{$(n-1)/2$ bits} b^{n+1} b^{n+3} \cdots b^{2m}.
+\end{aligned}
+$$
+
+We only consider even $n$ in the following, as the proof for the latter case remains very similar. The key is that the first $n/2$ bits of the difference of the inverses cancel out:
+
+$$
+\begin{aligned}
+|Z^n_{\textrm{inv},1}(\alpha) - Z^n_{\textrm{inv},1}(\alpha^\prime)| &= \left|0.0 \cdots 0 (b^n b^{n+2} \cdots b^{2m-1} - b^{\prime n} b^{\prime n+2} \cdots b^{\prime 2m-1})\right| \\
+&= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b^{n+2k-1} - b^{\prime n+2k-1}) 2^{-k}\right| \\
+&\leq 2^{-n/2} \\
+|Z^n_{\textrm{inv},2}(\alpha) - Z^n_{\textrm{inv},2}(\alpha^\prime)| &= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b^{n+2k} - b^{\prime n+2k}) 2^{-k}\right| \\
+&\leq 2^{-n/2}
+\end{aligned}
+$$
+
+Putting everything together, we get the following vanishing upper bound:
+
+$$
+V^n(Z^n_\textrm{inv}) \leq \frac{1}{2^n} \sum_{i=1}^{2^n} 2^{-n/2} + 2^{-n/2} = 2^{-n/2+1} \xrightarrow{n \to \infty} 0
+$$
+
+\paragraph{Column mapping.} We now consider the Column mapping:
+
+$$
+\begin{aligned}
+C^n_{\textrm{inv},1}(\alpha) &= 0.i^{n-1} i^{n-2} \cdots i^1 i^0 b^n b^{n+1} \cdots b^m \\
+C^n_{\textrm{inv},2}(\alpha) &= 0.b^{m+1} b^{m+2} \cdots b^{2m}.
+\end{aligned}
+$$
+
+The first component can be bounded using the same trick as for the Z-mapping above:
+
+$$
+\begin{aligned}
+|C^n_{\textrm{inv},1}(\alpha) - C^n_{\textrm{inv},1}(\alpha^\prime)| &= \left| 2^{-n} \sum_{k=1}^{m-n+1} (b^{n+k-1} - b^{\prime n+k-1}) 2^{-k} \right| \\
+&\leq 2^{-n}.
+\end{aligned}
+$$
+
+However, problems arise due to the second component not being well-behaved. In particular, since we take the supremum on $\alpha,\alpha^\prime \in \left[\tfrac{i-1}{2^n},\tfrac{i}{2^n}\right]^2$, we can pick the specific values such that $b^k=1$ and $b^{\prime k}=0$ for all $k \in \{m+1, \cdots 2m\}$:
+
+$$
+\begin{aligned}
+|C^n_{\textrm{inv},2}(\alpha) - C^n_{\textrm{inv},2}(\alpha^\prime)| &= \left| \sum_{k=m+1}^{2m} (b^k - b^{\prime k}) 2^{-(k-m)} \right| \\
+&= \sum_{k=m+1}^{2m} 2^{-(k-m)} \\
+&> \frac 12.
+\end{aligned}
+$$
+
+Putting both together, we can write:
+
+$$
+\begin{aligned}
+V^n(C^n_\textrm{inv}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^n_{\textrm{inv},1}(\alpha^\prime) - C^n_{\textrm{inv},1}(\alpha)| + |C^n_{\textrm{inv},2}(\alpha^\prime) - C^n_{\textrm{inv},2}(\alpha)| \\
+&\geq
+\begin{aligned}[t]
+	\frac{1}{2^n}\sum_{i=1}^{2^n}&
+	\sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^n_{\textrm{inv},1}(\alpha^\prime) - C^n_{\textrm{inv},1}(\alpha)|\\
+	&+ \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^n_{\textrm{inv},2}(\alpha^\prime) - C^n_{\textrm{inv},2}(\alpha)|
+\end{aligned}\\
+&\geq \frac 12 + \bO(2^{-n}).
+\end{aligned}
+$$
+
+We following upper bound therefore shows that the locality measure cannot converge to zero as $n \to \infty$: 
+
+$$
+V^n(C^n_\textrm{inv}) > \frac 12.
+$$
+
 
 \section{Proof of results}
+
+\subsection{Locality garantees convergence of grid-based simulations as $n \to \infty$}.
 
 \subsection{Analytical equivalence given $S$ measurable and bijective}
 \label{sec:proof-equivalence}
 
-\subsection{Numerical convergence}
 
 \section{Conclusion}
 
 % TODO: are all bijective limits local ? does local imply bijection ?
 % in this case, we have shown that bijection + locality => we can safely do the mapping (bijection for the analytical approach, locality for the numerical approach)
-% TODO: mention the "standard example" of the Z-mapping
+% TODO: mention the "standard example" of the Z-mapping. This framework is surely not unique, for instance the reclocal bijection cannot easily be expressed as the permutation of bits, but it still works in the same way as the Z-mapping (fractal formulation), and numerical simulations are OK
 
 
 
