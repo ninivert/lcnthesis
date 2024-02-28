@@ -9,6 +9,8 @@ pdf: clean
 	    gpp -U "\\" "" "{" "}{" "}" "{" "}" "#" "" manuscript.tex -o manuscript-tmp.tex && \
 	    $(TEXC) manuscript-tmp.tex && \
 		bibtex manuscript-tmp.aux && \
+	    $(TEXC) manuscript-tmp.tex && \
+	    $(TEXC) manuscript-tmp.tex && \
 		gpp -U "\\" "" "{" "}{" "}" "{" "}" "#" "" -DSUBMISSION manuscript.tex -o manuscript-submission.tex && \
 		$(TEXC) manuscript-submission.tex && \
 		$(TEXC) manuscript-submission.tex

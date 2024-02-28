@@ -210,7 +210,7 @@
 \\
 Nicole Vadot\textsuperscript{1},
 Valentin Schmutz\textsuperscript{1},
-Wulfram Gerstner\textsubscript{1}
+Wulfram Gerstner\textsuperscript{1}
 % Name1 Surname\textsuperscript{1,2\Yinyang},
 % Name2 Surname\textsuperscript{2\Yinyang},
 % Name3 Surname\textsuperscript{2,3\textcurrency},
@@ -292,11 +292,11 @@ Early recordings of cats' somatosensory \cite{Mou57} and visual \cite{HubWie62} 
 
 The columnar organization of the cortex motivated the design of spatially structured models of neural population dynamics, namely neural field models \cite{WilCow73,Nun74,Ama77}, where the spatial dimensions corresponded to the two dimensions of the cortical sheet. 
 
-As models of spatiotemporal neural population dynamics on the cortical sheet, neural field models can be used to explain experimentally observed patterns of cortical activity, such as travelling waves in visual \cite{SatNau12,MulRey14}, somatosensory \cite{PetHah03,FerBol06}, motor \cite{RubRob06,TakKim15}, and hippocampal \cite{LubSia09,PatFuj12,PatSch13} cortices (see \cite{MulCha18} for a review), and are used to model large-scale brain signals, such as electroencephalography (EEG) recordings \cite{Bre17} (see also \cite{DipRan18} for an example of neural field modelling of calcium imaging recording of the visual cortex).
+As models of spatiotemporal neural population dynamics on the cortical sheet, neural field models can be used to explain experimentally observed patterns of cortical activity, such as travelling waves in visual \cite{SatNau12,MulRey14}, somatosensory \cite{PetHah03,FerBol06}, motor \cite{RubRob06,TakKim15}, and hippocampal \cite{LubSia09,PatFuj12,PatSch13} cortices (see \cite{MulCha18} for a review), and are used to model large-scale brain signals, such as electroencephalography (EEG) recordings \cite{Bre17} (see also \cite{DipRan18} for an example of neural field modeling of calcium imaging recordings of the visual cortex).
 
 More recent recording methods, especially in rodents, have provided evidence of low-dimensional organization of neuronal activity that does not depend on the physical locations of neurons on the cortical sheet. For example, contrary to cats' visual cortex, the orientation selectivity of pyramidal neurons in a rat's visual cortex does not depend on their locations, that is, orientation selectivity is heterogeneous at any given location \cite{OhkChu05}. Moreover, the activity of interneurons in any small volume of the visual cortex is also heterogeneous and seems to be structured by a low-dimensional manifold of fine cell subtypes \cite{BugDuf22}. The local functional heterogeneity of neuronal activity in the cortex challenges the old concept of functionally homogeneous cortical columns and, with it, classical neural field models. 
 
-While, historically, the spatial dimensions in neural field models have been the two dimensions of the cortical sheet (with the notable exception of the ring models for orientation selectivity in the visual cortex \cite{BenBar95} and the head-direction system \cite{Zha96}), the ``space'' in neural field models does not need to represent physical space but can represent any suitable abstract embedding space. Neural field models with abstract embedding spaces could constitute a generalization of classical neural field theory for cortical networks that are not solely structured by distances of neurons on the cortical sheet.
+While, historically, the spatial dimensions in neural field models have been the two dimensions of the cortical sheet (with the notable exception of the ring models for orientation selectivity in the visual cortex \cite{BenBar95} and the head-direction system \cite{Zha96}), the ``embedding space'' in neural field models does not need to represent physical space but can represent any suitable abstract space. Neural field models with abstract embedding spaces could constitute a generalization of classical neural field theory for cortical networks that are not solely structured by distances of neurons on the cortical sheet.
 
 Moreover, this work is motivated by recent mathematical developments \cite{JabPoy21} in mean-field theories involving the theory of graphons. Informally, these results suggest that, as long as the connectivity scales as $1/N$ (where $N$ is the number of neurons), the dynamics of large networks can be described in the $N \to \infty$ limit by a neural field equation where the embedding is simply the interval $[0,1]$. The main contribution of this paper is the derivation of a method, allowing to explicitly write such a one-dimensional neural field, starting from a known higher-dimensional neural field.
 
@@ -316,42 +316,40 @@ $\rho(\vec z)$ measures the number of neurons per unit volume of the embedding s
 \partial_t h(\vec z, t) = \underbrace{-h(\vec z, t)}_\text{exponential decay} + \underbrace{\int_{\mathbb{R}^p} w(\vec z, \vec y) \phi(h(\vec y, t)) \rho(\vec y) \mathrm d \vec y}_\text{recurrent current}.
 \end{equation}
 
+We do not address the question of well-posedness of the neural field equations in this paper; for proofs of the well-posedness of neural field equations, we refer the reader to \cite{faugeras2008absolute,faugeras2009persistent,veltz2009localglobal}.
+
 Without loss of generality, a simple bijective mapping can be applied to reduce any $p$-dimensional neural field to a neural field on $[0,1]^p$. Additionally redefining the connectivity kernel to absorb the density and determinant of the transformation (see an example in section 2.5 of \cite{nvadot2023mathesis}), we arrive at \autoref{eq:nf-in-01p}, a general form for any neural field equation in $p$ dimensions:
 
 % The embedding space $\Rp$ (or any $p$-dimensional space) can be mapped to $[0,1]^p$ via bijective functions between the two spaces. For instance, if the neuron density factorizes as $\rho(z_1, \cdots, z_p)= \rho_1(z_1) \cdots \rho_p(z_p)$, then the associated cumulative density functions can be used to perform a change of variables, resulting in the an equivalent "uniform" neural field equation:
 
 \begin{equation} \label{eq:nf-in-01p}
-\partial_t h_U(t, \vec v) = -h_U(t, \vec v) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(t, \vec u)) \mathrm d \vec u.
+\partial_t h_U(\vec v, t) = -h_U(\vec v, t) + \int_{[0,1]^p} w_U(\vec v, \vec u) \phi(h_U(\vec u, t)) \mathrm d \vec u.
 \end{equation}
 
-This form highlights the central role of the connectivity kernel $w_U$, which together with the initial condition $h_U(t=0, \vec v)$, uniquely determines the neural dynamics.
+This form highlights the central role of the connectivity kernel $w_U$, which together with the initial condition $h_U(\vec v, t=0)$, uniquely determines the neural dynamics.
 
 % If the neuron density does not factorize, then one can arrive at the same formulation by redefining the connectivity kernel to include the neuron density and the determinant of the transformation. [TODO: this sentence might need some work]
 
-In particular for $p=2$, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation (where the embedding space is simply the interval $[0,1]$), from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections are not diffeomorphisms.
+In particular for $p=2$, we show that for any two-dimensional neural field equation (that is, with two spatial dimensions), there is a one-dimensional neural field equation (where the embedding space is simply the interval $[0,1]$), from which the solution to the two-dimensional equation can be fully reconstructed. The mapping from the two-dimensional equation to the one-dimensional equation is done via well-known measurable bijections between the square $[0,1]^2$ and the interval $[0,1]$. Importantly, these bijections cannot be diffeomorphisms.
 % Also, we show that although the connectivity kernel of the one-dimensional equation seems to have a fractal structure, it is sufficiently regular for its solution to be numerically approximated using standard grid-based simulations.
-The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [0,1]$ and a measure $\lambda : [0,1]^2 \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel defined as $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$. Doing this, we arrive at the following one-dimensional neural field equation: 
+
+The main idea is to define a measurable bijective mapping $S : [0,1]^2 \mapsto [0,1]$ and the Lebesgue measure $\lambda : [0,1]^2 \mapsto \mathbb{R}^+$, such that we can write a one-dimensional neural field	$\tilde h(\alpha, t)$ with a connectivity kernel defined as $\tilde w(\alpha, \beta) = w_U(S^{-1}(\alpha), S^{-1}(\beta))$. Doing this, we arrive at the following one-dimensional neural field equation: 
 % The question of well-posedness of the neural field in \autoref{eq:nf-in-01} is defered in \autoref{sec:proof-equivalence}.
 
 \begin{equation} \label{eq:nf-in-01}
 \partial_t \tilde h(\alpha, t) = -\tilde h(\alpha, t) + \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta).
 \end{equation}
 
-The difficulty in writing the one-dimensional neural field, is that the spatial structure of the original neural field in $[0,1]^2$ may be lost.
-Fig. [TODO] illustrates this problem: if the mapping is seemingly random, the regularity of the orginal neural field is destroyed. Contrarily, if the mapping is ``local'', the resulting neural field might still be well-defined and exhibit identical dynamics, despite the apparent discontinuities.
-The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing the ``locality'' $V(S^{-1})$ of the mapping $S^{-1}$, which measures if small neighbourhoods in $[0,1]$ are mapped to small neighbourhoods in $[0,1]^2$. Using locality, we then prove that the mean-field approximation is still valid, implying that we can simulate the one-dimensional neural field using classical grid-based methods.
+The difficulty in writing the one-dimensional neural field is that the spatial structure of the original neural field in $[0,1]^2$ may be lost.
+Fig. [TODO] illustrates this problem: if the mapping is random, the regularity of the orginal neural field is destroyed. Contrarily, if the mapping is ``local'', the resulting neural field might still be well-defined and exhibit identical dynamics, despite the apparent discontinuities.
+
+The intuition is that we would like populations close in $[0,1]^2$ to be bijectively mapped to populations close in $[0,1]$. However, since $S^{-1}$ is a bijection, it cannot, by Netto's theorem, also be continuous. The core of our argument lies in the fact that we can relax the requirement that the spatial embedding is continuous, instead, we only require it is ``continuous on average''. We quantify this by introducing the ``locality'' $V(S^{-1})$ of the mapping $S^{-1}$, which measures if small neighbourhoods in $[0,1]$ are mapped to small neighbourhoods in $[0,1]^2$. Using locality, we then prove that the mean-field approximation applied to the one-dimensinoal neural field is still valid, implying that it can be simulated using classical grid-based methods.
 
 \ifndef{SUBMISSION}
 \includegraphics[height=15em]{../figures/locality.png}
 
 [TODO: clean up this graphic, cite it in text. we need to introduce a random mapping maybe ?]
 \endif
-
-% question of uniqueness, discretization error, mean field limit and locality, link with numerical simualtions. chap 1.4, chap 3.1
-
-% "discretization error"
-
-% chap 1.1, chap 2.1, 2.5
 
 Our results suggest that the notion of spatial dimensionality in neural field dynamics is not well-defined if not associated with a constraint on the regularity of the neural fields (and the connectivity kernel). Thereby, by studying a simple toy model, this work illustrates the importance of the analytic notion of regularity when neural population dynamics over abstract continuous spaces are considered. 
 
@@ -386,13 +384,13 @@ Sampling the original connectivity kernel at the grid points $\vec{v_i}$ and $\v
 [TODO: the discretization here and the sampling on a grid, and the limit of n to infty. do we need to clarify explicitly the bounds of each square bin ?]
 \endif
 
-\autoref{eq:population-dynamics} can be seen as the discretized version of \autoref{eq:nf-in-01p}, where we associate $h_i(t) := h_U(\vec{v_i}, t)$. Indeed, by a mean-field argument on the original smooth neural field, the discrete dynamics converge to the true solution of the neural field, because the error of the mean-field approximation in $[0,1]^2$ vanishes as we take finer grids, letting $n \to \infty$.
+\autoref{eq:population-dynamics} can be seen as the discretized version of \autoref{eq:nf-in-01p}, where we associate the samples $h_i(t) = h_U(\vec{v_i}, t)$. Indeed, by a mean-field argument on the original smooth neural field, the discrete population dynamics converge to the true solution of the neural field, because the error of the mean-field approximation in $[0,1]^2$ vanishes as we take finer grids, letting $n \to \infty$.
 
-We would now like to derive a bijective mapping $S$, such that the same argument applies on the neural field in $[0,1]$. Intuively, we want $S$ to conserve the regularity of the neural field on $[0,1]^2$, since if the mean-field argument also carries over to the one-dimensional neural field, it seems natural that it will express identical dynamics.
+We would now like to derive a bijective mapping $S$, such that the same argument applies to the neural field in $[0,1]$. Intuively, we want $S$ to conserve the regularity of the neural field on $[0,1]^2$, since if the mean-field argument also carries over to the one-dimensional neural field, it seems natural that it will express identical dynamics.
 
 \subsection{$S$ as the pointwise limit of a sequence of bijections $S^n$}
 
-Let us define a sequence of bijective mappings $\{S^n\}_{n \in \mathbb N}$, acting on the $n$-bit truncations $\vec{v^{(n)}}$ of any $\vec{v} \in [0,1]^2$, as well as the corresponding sequence of images $\{\alpha^n := S^n(\vec{v^{(n)}})\}_{n \in \mathbb N}$. $S^n$ defines the following bijection between points on the two-dimensional and one-dimensional grids:
+Let us define a sequence of bijective mappings $\{S^n\}_{n \in \mathbb N}$ acting on the $n$-bit truncations $\vec{v^{(n)}}$ of any $\vec{v} \in [0,1]^2$, as well as the corresponding sequence of images $\{\alpha^n := S^n(\vec{v^{(n)}})\}_{n \in \mathbb N}$. $S^n$ defines the following bijection between points on the two-dimensional and one-dimensional grids:
 
 \begin{equation} \label{eq:def-S} \begin{aligned}
 S^n :& \{\tfrac{l-1}{2^n}\;|\;l\in\{1,\cdots,2^n\}\}^2 \mapsto \{\tfrac{i-1}{4^n}\;|\;i\in\{1,\cdots,4^n\}\},\\
@@ -401,11 +399,11 @@ S^n :& \{\tfrac{l-1}{2^n}\;|\;l\in\{1,\cdots,2^n\}\}^2 \mapsto \{\tfrac{i-1}{4^n
 
 % NOTE: it is important to write \alpha^n, and not \alpha^{(n)}, since in all generality the n-bit trunction of \alpha is NOT equal to \alpha^n (example: the column mapping \alpha^n = C(v))
 
-We write $\alpha^n$ using the $2n$ bits $\{b^1, b^2, \cdots, b^{2n}\}$, which is intuitively the lowest number of bits required so that $S^n$ remains a bijection, since it takes $2n$ bits of information as argument. More than $2n$ bits could be allowed while maintaining bijectivity, but we omit this possibility, since they wouldn't strictly be required. In this formulation, it becomes clear that in order to be a bijection, every bit of the input must be used once and only once to form the image. Setting aside bit inversions, this means that we let $S^n$ define a permutation of the $2n$ input bits. [TODO: are more details necessary ? I think this is clear enough, though in the thesis manuscript I got over this point in more detail]
+We write $\alpha^n$ using the $2n$ bits $\{b^1, b^2, \cdots, b^{2n}\}$, which is intuitively the lowest number of bits required so that $S^n$ remains a bijection, since the mapping takes $2n$ bits of information as argument. More than $2n$ bits could be allowed while maintaining bijectivity, but we omit this possibility, since they wouldn't strictly be required. In this formulation, it becomes clear that in order to be a bijection, every bit of the input must be used once and only once to form the image. Setting aside bit inversions, this means that we let $S^n$ define a permutation of the $2n$ input bits. [TODO: are more details necessary ? I think this is clear enough, though in the thesis manuscript I got over this point in more detail]
 
 For any finite $n$ and any $(v_1,v_2) \in [0,1]^2$, we may extend the definition of $S^n$ with $S^n(v_1, v_2) := S^n(v_1^{(n)}, v_2^{(n)})$ such that it acts on the entire space $[0,1]^2$ instead of the finite set of grid points. While this extension is obviously not bijective (all points in a grid cell are ``rounded'' to the corresponding grid position), in the $n \to \infty$ limit the finite-$n$ truncation converges, such that the pointwise limit could still be a bijection. In \autoref{sec:mapping-examples} we formulate two examples, where in one case the extension converges to a bijection, and in the other it doesn't.
 
-Given $(v_1, v_2) \in [0,1]^2$ and the sequence $\{S^n(v_1, v_2)\}_{n \in \mathbb N}$, we then we define $\alpha = S(v_1, v_2)$ as its limit, if it exists. Informally, pointwise convergence of $\{S^n\}_{n\in\mathbb N}$ requires that the least signficiant bits of the input be mapped to the least significant bits of the image, ensuring that small corrections in the input $\vec{v}$ result in small corrections in the image $\alpha$.
+Given $(v_1, v_2) \in [0,1]^2$ and the sequence $\{S^n(v_1, v_2)\}_{n \in \mathbb N}$, we then define $\alpha = S(v_1, v_2)$ as its limit, if it exists. Informally, pointwise convergence of $\{S^n\}_{n\in\mathbb N}$ requires that the least signficiant bits of the input be mapped to the least significant bits of the image, ensuring that small corrections in the input $\vec{v}$ result in small corrections in the image $\alpha$.
 
 To illustrate this, let us give an example of the sequence $\{A^n\}_{n \in \mathbb N}$ that does not converge pointwise:
 
@@ -413,7 +411,7 @@ To illustrate this, let us give an example of the sequence $\{A^n\}_{n \in \math
 \alpha_A^n = A^n(v_1^{(n)},v_2^{(n)}) = 0.b_1^n b_2^n b_1^{n-1} b_2^{n-1} \cdots b_1^1 b_2^1 = \sum_{k=1}^n b_1^{n+1-k} 2^{1-2k} + b_2^{n+1-k} 2^{-2k}.
 \end{equation*}
 
-The permutation between the bits of $\alpha^n$, and the bits of $(v_1^{(n)}, v_2^{(n)})$ is illustrated in Fig. [TODO: arrow connecting the bits together], and shows how this example does not respect the bit ordering described previously.
+The permutation between the bits of $\alpha^n_A$, and the bits of $(v_1^{(n)}, v_2^{(n)})$ is illustrated in Fig. [TODO: arrow connecting the bits together], and shows how this example does not respect the bit ordering described previously.
 For finite $n$, $A^n$ is clearly bijective and has a well-defined inverse $A^n_\textrm{inv}$:
 
 \begin{equation*} \begin{aligned}
@@ -434,7 +432,7 @@ In the following section, we give the standard examples of the Column and the Z-
 
 \subsection{Two examples of sequences of mappings: the Column and the Z-mapping} \label{sec:mapping-examples}
 
-Let us provide two examples of sequence of mappings that are pointwise convergent, and act as permutation of the grid point bits.
+Let us provide two examples of sequences of mappings that are pointwise convergent, and act as permutations of the grid point bits.
 We first define the sequence of Column mappings $\{C^n\}_{n\in\mathbb N}$ as the concatenation of the input bits of $v_1^{(n)}$, followed by the bits of $v_2^{(n)}$. We define the image $\alpha_C^n = 0.b_C^1 b_C^2 \cdots b_C^{2n}$ as:
 
 \begin{equation} \label{eq:def-column-mapping}
@@ -475,6 +473,8 @@ Importantly, the limit $C(v_1,v_2)=v_1$ is a projection, and is therefore not bi
 &Z_{\textrm{inv,1}}^n(\alpha^n) \xrightarrow{n \to \infty} Z^{-1}_1(\alpha) = 0.b_Z^1 b_Z^3 \cdots = \sum_{k=1}^\infty b_Z^{2k-1} 2^{-k} = v_1,\\
 &Z_{\textrm{inv,2}}^n(\alpha^n) \xrightarrow{n \to \infty} Z^{-1}_2(\alpha) = 0.b_Z^2 b_Z^4 \cdots = \sum_{k=1}^\infty b_Z^{2k} 2^{-k} = v_2.
 \end{aligned} \end{equation}
+
+We finish by noting that by definition of the sequence of Z-mappings and the corresponding inverses, $2n$-bit truncations of $Z^{-1}(\alpha)$ (where $\alpha \in [0,1]$) give identical results to $Z^n_\textrm{inv}(\alpha^n)$ applied to the truncated $\alpha^n$. Where context allows it, we will therefore drop $n$ and directly write the limit $Z^{-1}$.
 
 \section{Numerical simulations of mappings from two-dimensional to one-dimensional neural fields}
 
@@ -611,13 +611,15 @@ We see that the Z-mapping yields populations close in $[0,1]^2$, such that coars
 
 \subsection{Definition of locality}
 
-Given $n \in \mathbb N$, let us define the locality $V^n(S^n_\textrm{inv})$ as the average error made by the coarse-graining procedure. For this, we compute the maximum difference in positions of the two-dimensional embedding $\norm{S^n_\textrm{inv}(\alpha) - S^n_\textrm{inv}(\alpha^\prime)}_1$, associated to the one-dimensional populations in the bounds $\left[\tfrac{a-1}{2^n}, \tfrac{a}{2^n}\right]$ of the coarse-graining bin $\mathcal C_a$:
+Given $n \in \mathbb N$, let us define the locality $V_n(S^{-1})$ as the average error made by the coarse-graining procedure. For this, we compute the maximum difference in positions of the two-dimensional embedding $\norm{S^{-1}(\alpha) - S^{-1}(\alpha^\prime)}_1$, associated to the one-dimensional populations in the bounds $\left[\tfrac{a-1}{2^n}, \tfrac{a}{2^n}\right]$ of the coarse-graining bin $\mathcal C_a$:
 
 \begin{equation} \label{eq:def-V}
-V^n(S^n_\textrm{inv}) = \frac{1}{2^n} \sum_{a=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\frac{a-1}{2^n}, \frac{a}{2^n} \right]} \norm{S^n_\textrm{inv}(\alpha) - S^n_\textrm{inv}(\alpha^\prime)}_1
+V_n(S^{-1}) = \frac{1}{2^n} \sum_{a=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\frac{a-1}{2^n}, \frac{a}{2^n} \right]} \norm{S^{-1}(\alpha) - S^{-1}(\alpha^\prime)}_1
 \end{equation}
 
-Within the context of a sequence of mappings, we are specifically interested in the $n \to \infty$ limit, that is, whether the error of the mean-field approximation vanishes as the grid becomes infinitely fine. For the random, Column and Z-mappings, we graph the scaling behavior of the numerator (the total error of the mean-field approximation) in Fig. [TODO]. As expected, we see that the total error of the Z-mapping scales much slower than $2^n$, whereas that of the Column (and random) mapping scales roughly as $2^n$.
+Within the context of a sequence of mappings, we are specifically interested in the $n \to \infty$ limit, that is, whether the error of the mean-field approximation vanishes as the grid becomes infinitely fine. We then say a mapping is local if and only if $V_n(S^{-1}) \to 0$ as $n \to \infty$. For the random, Column and Z-mappings, we graph the scaling behavior of the numerator (the total error of the mean-field approximation) in Fig. [TODO]. As expected, we see that the total error of the Z-mapping scales much slower than $2^n$, whereas that of the Column (and random) mapping scales roughly as $2^n$.
+
+% TODO: continuity and continuity on average
 
 \ifndef{SUBMISSION}
 \includegraphics[height=15em]{../figures/locality-scaling.png}
@@ -626,8 +628,9 @@ Within the context of a sequence of mappings, we are specifically interested in 
 \endif
 
 \subsection{Computing the locality of the Column and the Z-mapping}
+[TODO: should this section be moved to an appendix ?]
 
-In this section we analytically derive the locality of the Column and the Z-mapping, showing that $V^n(Z^n_\textrm{inv}) \xrightarrow{n \to \infty} 0$, but that $V^n(C^n_\textrm{inv}) > 0$ for all $n \in \mathbb{N}$.
+In this section we analytically derive the locality of the Column and the Z-mapping, showing that $V_n(Z^{-1}) \xrightarrow{n \to \infty} 0$, but that $V_n(C^{-1}) > 0$ for all $n \in \mathbb{N}$.
 
 We consider the binary expansion of $\alpha$ and $\alpha^\prime$ which appear in the supremum of \autoref{eq:def-V}. For clarity of notation, we furthermore truncate the binary expansion to $2m$ bits (on most machines, $2m=64$ bits, but analytically $m$ may be arbitrarily large):
 
@@ -647,8 +650,8 @@ Furthermore, since $\alpha \in \left[\frac{i-1}{2^n}, \frac{i}{2^n} \right],\, i
 
 $$
 \begin{aligned}
-Z^n_{\textrm{inv},1}(\alpha) &= 0.\underbrace{i^{n-1} i^{n-3} \cdots i_1}_\text{$n/2$ bits} b^n b^{n+2} \cdots b^{2m-1}, \\
-Z^n_{\textrm{inv},2}(\alpha) &= 0.\underbrace{i^{n-2} i^{n-4} \cdots i_0}_\text{$n/2$ bits} b^{n+1} b^{n+3} \cdots b^{2m}.
+Z^{-1}_1(\alpha) &= 0.\underbrace{i^{n-1} i^{n-3} \cdots i_1}_\text{$n/2$ bits} b^n b^{n+2} \cdots b^{2m-1}, \\
+Z^{-1}_2(\alpha) &= 0.\underbrace{i^{n-2} i^{n-4} \cdots i_0}_\text{$n/2$ bits} b^{n+1} b^{n+3} \cdots b^{2m}.
 \end{aligned}
 $$
 
@@ -656,8 +659,8 @@ If $n$ is odd, we have:
 
 $$
 \begin{aligned}
-Z^n_{\textrm{inv},1}(\alpha) &= 0.\underbrace{i^{n-1} i^{n-3} \cdots i^0}_\text{$(n+1)/2$ bits} b^n b^{n+2} \cdots b^{2m-1}, \\
-Z^n_{\textrm{inv},2}(\alpha) &= 0.\underbrace{i^{n-2} i^{n-4} \cdots i^1}_\text{$(n-1)/2$ bits} b^{n+1} b^{n+3} \cdots b^{2m}.
+Z^{-1}_1(\alpha) &= 0.\underbrace{i^{n-1} i^{n-3} \cdots i^0}_\text{$(n+1)/2$ bits} b^n b^{n+2} \cdots b^{2m-1}, \\
+Z^{-1}_2(\alpha) &= 0.\underbrace{i^{n-2} i^{n-4} \cdots i^1}_\text{$(n-1)/2$ bits} b^{n+1} b^{n+3} \cdots b^{2m}.
 \end{aligned}
 $$
 
@@ -665,10 +668,10 @@ We only consider even $n$ in the following, as the proof for the latter case rem
 
 $$
 \begin{aligned}
-|Z^n_{\textrm{inv},1}(\alpha) - Z^n_{\textrm{inv},1}(\alpha^\prime)| &= \left|0.0 \cdots 0 (b^n b^{n+2} \cdots b^{2m-1} - b^{\prime n} b^{\prime n+2} \cdots b^{\prime 2m-1})\right| \\
+|Z^{-1}_1(\alpha) - Z^{-1}_1(\alpha^\prime)| &= \left|0.0 \cdots 0 (b^n b^{n+2} \cdots b^{2m-1} - b^{\prime n} b^{\prime n+2} \cdots b^{\prime 2m-1})\right| \\
 &= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b^{n+2k-1} - b^{\prime n+2k-1}) 2^{-k}\right| \\
 &\leq 2^{-n/2} \\
-|Z^n_{\textrm{inv},2}(\alpha) - Z^n_{\textrm{inv},2}(\alpha^\prime)| &= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b^{n+2k} - b^{\prime n+2k}) 2^{-k}\right| \\
+|Z^{-1}_2(\alpha) - Z^{-1}_2(\alpha^\prime)| &= \left|2^{-n/2} \sum_{k=1}^{\tfrac{2m-n+1}{2}} (b^{n+2k} - b^{\prime n+2k}) 2^{-k}\right| \\
 &\leq 2^{-n/2}
 \end{aligned}
 $$
@@ -676,15 +679,15 @@ $$
 Putting everything together, we get the following vanishing upper bound:
 
 $$
-V^n(Z^n_\textrm{inv}) \leq \frac{1}{2^n} \sum_{i=1}^{2^n} 2^{-n/2} + 2^{-n/2} = 2^{-n/2+1} \xrightarrow{n \to \infty} 0
+V_n(Z^{-1}) \leq \frac{1}{2^n} \sum_{i=1}^{2^n} 2^{-n/2} + 2^{-n/2} = 2^{-n/2+1} \xrightarrow{n \to \infty} 0
 $$
 
-\paragraph{Column mapping.} We now consider the Column mapping:
+\paragraph{Column mapping.} We now consider the Column mapping. Although the inverse of the Column mapping is not well-defined as $n \to \infty$, we can still study how the it behaves on finite truncations of the input:
 
 $$
 \begin{aligned}
-C^n_{\textrm{inv},1}(\alpha) &= 0.i^{n-1} i^{n-2} \cdots i^1 i^0 b^n b^{n+1} \cdots b^m \\
-C^n_{\textrm{inv},2}(\alpha) &= 0.b^{m+1} b^{m+2} \cdots b^{2m}.
+C^{-1}_1(\alpha) &= 0.i^{n-1} i^{n-2} \cdots i^1 i^0 b^n b^{n+1} \cdots b^m, \\
+C^{-1}_2(\alpha) &= 0.b^{m+1} b^{m+2} \cdots b^{2m}.
 \end{aligned}
 $$
 
@@ -692,7 +695,7 @@ The first component can be bounded using the same trick as for the Z-mapping abo
 
 $$
 \begin{aligned}
-|C^n_{\textrm{inv},1}(\alpha) - C^n_{\textrm{inv},1}(\alpha^\prime)| &= \left| 2^{-n} \sum_{k=1}^{m-n+1} (b^{n+k-1} - b^{\prime n+k-1}) 2^{-k} \right| \\
+|C^{-1}_1(\alpha) - C^{-1}_1(\alpha^\prime)| &= \left| 2^{-n} \sum_{k=1}^{m-n+1} (b^{n+k-1} - b^{\prime n+k-1}) 2^{-k} \right| \\
 &\leq 2^{-n}.
 \end{aligned}
 $$
@@ -701,41 +704,149 @@ However, problems arise due to the second component not being well-behaved. In p
 
 $$
 \begin{aligned}
-|C^n_{\textrm{inv},2}(\alpha) - C^n_{\textrm{inv},2}(\alpha^\prime)| &= \left| \sum_{k=m+1}^{2m} (b^k - b^{\prime k}) 2^{-(k-m)} \right| \\
+|C^{-1}_2(\alpha) - C^{-1}_2(\alpha^\prime)| &= \left| \sum_{k=m+1}^{2m} (b^k - b^{\prime k}) 2^{-(k-m)} \right| \\
 &= \sum_{k=m+1}^{2m} 2^{-(k-m)} \\
 &> \frac 12.
 \end{aligned}
 $$
 
-Putting both together, we can write:
+Putting both together, we find the following upper bound, showing that the locality measure cannot converge to zero as $n \to \infty$:
 
 $$
 \begin{aligned}
-V^n(C^n_\textrm{inv}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^n_{\textrm{inv},1}(\alpha^\prime) - C^n_{\textrm{inv},1}(\alpha)| + |C^n_{\textrm{inv},2}(\alpha^\prime) - C^n_{\textrm{inv},2}(\alpha)| \\
+V_n(C^{-1}) &= \frac{1}{2^n}\sum_{i=1}^{2^n} \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C^{-1}_1(\alpha)| + |C^{-1}_2(\alpha^\prime) - C^{-1}_2(\alpha)| \\
 &\geq
 \begin{aligned}[t]
 	\frac{1}{2^n}\sum_{i=1}^{2^n}&
-	\sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^n_{\textrm{inv},1}(\alpha^\prime) - C^n_{\textrm{inv},1}(\alpha)|\\
-	&+ \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^n_{\textrm{inv},2}(\alpha^\prime) - C^n_{\textrm{inv},2}(\alpha)|
+	\sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_1(\alpha^\prime) - C^{-1}_1(\alpha)|\\
+	&+ \sup_{\alpha, \alpha^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} |C^{-1}_2(\alpha^\prime) - C^{-1}_2(\alpha)|
 \end{aligned}\\
 &\geq \frac 12 + \bO(2^{-n}).
 \end{aligned}
 $$
 
-We following upper bound therefore shows that the locality measure cannot converge to zero as $n \to \infty$: 
-
-$$
-V^n(C^n_\textrm{inv}) > \frac 12.
-$$
-
-
 \section{Proof of results}
 
-\subsection{Locality garantees convergence of grid-based simulations as $n \to \infty$}.
+\subsection{Locality garantees convergence of grid-based simulations as $n \to \infty$}
+
+In the previous sections we have made use of numerical simulations and coarse-graining, without analytic justification. Setting $S$ to the Z-mapping (or any other mapping with the locality property), does the numerical estimation of the integral in the neural field equation \autoref{eq:nf-in-01} converge to the true analytical value, as $n \to \infty$?
+
+The intuition behind the proof of convergence is that the variation coming from the coarse-graining of each bin $\mathcal C_a$ vanishes as we increase $n$, even though the neural field $\tilde h(\alpha, t)$ and the connectivity kernel $\tilde w(\alpha, \beta)$ become fractal.
+
+We define the one-dimensional field, sampled on the one-dimensional grid of size $2^n$:
+
+$$
+\tilde h_i(t) = \tilde h(\tfrac{i-1}{2^n}, t) = \tilde h(\beta_i, t),\,\beta_i=\tfrac{i-1}{2^n},\,i\in\{1,\cdots,2^n\}.
+$$
+
+For any $\alpha \in [0,1]$, let us define the numerical and analytical integral:
+$$
+\begin{aligned}
+\mathrm{NI}_n &= \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)), \\
+\mathrm{AI} &= \int_{[0,1]} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta).
+\end{aligned}
+$$
+
+We wish to prove that $|\mathrm{NI}_n - \mathrm{AI}| \xrightarrow{n \to \infty} 0$.
+
+The first part of the proof involves splitting the integral on $[0,1]$ into $2^n$ integrals over segments of length $2^{-n}$, and using the triangle inequality:
+
+$$
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \int_{0}^{1} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&= \left| \frac{1}{2^n} \sum_{i=1}^{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \sum_{i=1}^{2^n} \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&= \left| \sum_{i=1}^{2^n} \frac{1}{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&\leq \sum_{i=1}^{2^n} \left| \frac{1}{2^n} \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t)) \left[\lambda \circ S^{-1}\right](\d \beta) \right|.
+\end{aligned}
+$$
+
+We now want to prove that the integrand evaluated at each $\beta_i = \tfrac{i-1}{2^n}$ gives a good approximation of the integral. Because the Z-mapping is measure-preserving (see \autoref{sec:proof-equivalence}) and $\lambda$ is the Lebesgue measure on $[0,1]^2$, $\lambda \circ S^{-1}$ is a Lebesgue measure on $[0,1]$, and therefore $\int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \left[\lambda \circ S^{-1}\right](\d \beta) = \tfrac{1}{2^n}$. This allows us to write:
+
+$$
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &\leq \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \Delta(\beta) \left[\lambda \circ S^{-1}\right](\d \beta) \right|, \\
+\text{where}\ \Delta(\beta) &= \tilde w(\alpha, \beta_i) \phi(\tilde h_i(t)) - \tilde w(\alpha, \beta) \phi(\tilde h(\beta, t))\\
+&= w_U(S^{-1}(\alpha), S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) \\ &\qquad- w_U(S^{-1}(\alpha), S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)).
+\end{aligned}
+$$
+
+The main source of variance inside the integrand $\Delta(\beta)$ is the term $S^{-1}$, since $w_U$ and $h_U$ are ``nice'' functions. We express this regularity by the added assumption that $w_U(S^{-1}(\alpha), \vec u) \phi(h_U(t, \vec u))$ is Lipschitz in $\vec u$, with Lipschitz constant $L(\alpha)$. We argue this is not a strong assumption, because this is just expressing the regularity of the integrand in the original neural field equation.
+
+% A more pragmatic justification of this is to notice that the ``density of recurrent currents'' is expressed as:
+
+% $$
+% I^\text{rec}_U(\vec v, \vec u) = w_U(\vec v, \vec u) \phi(h_U(t, \vec u)),
+% $$
+
+% and that in @sec-cycling-nf, numerical simulations showed that $I^\text{rec}_U(\vec v, \vec u)$ (the integrand of the integral on $[0,1]^2$) is a well-behaved function.
+
+Applying the Lipschitz assumption yields the following inequality on the integrand:
+
+$$
+\begin{aligned}
+\Delta(\beta) &= w_U(\alpha, S^{-1}(\beta_i)) \phi(h_U(S^{-1}(\beta_i), t)) - w_U(\alpha, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \\
+&\leq L(\alpha) \norm{S^{-1}(\beta_i) - S^{-1}(\beta)}.
+\end{aligned}
+$$
+
+We now make use of our intuition of locality: points close in $[0,1]$ should be (on average) mapped to points close in $[0,1]^2$. Therefore, taking the sup inside each $2^{-n}$ segment does not introduce a too large error:
+
+$$
+\begin{aligned}
+|\mathrm{NI}_n - \mathrm{AI}| &\leq L(\alpha) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \left[\lambda \circ S^{-1}\right](\d \beta) \right| \\
+&\leq L(\alpha) \sum_{i=1}^{2^n} \left| \int_{\tfrac{i-1}{2^n}}^{\tfrac{i}{2^n}} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \left[\lambda \circ S^{-1}\right](\d \beta^\prime) \right| \\
+&= L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]} \norm{S^{-1}(\beta_i) - S^{-1}(\beta)} \\
+&\leq L(\alpha) \frac{1}{2^n} \sum_{i=1}^{2^n} \sup_{\beta, \beta^\prime \in \left[\tfrac{i-1}{2^n}, \tfrac{i}{2^n}\right]^2} \norm{S^{-1}(\beta^\prime) - S^{-1}(\beta)} \\
+&= L(\alpha) V_n(S^{-1}) \\
+&\xrightarrow{n \to \infty} 0.
+\end{aligned}
+$$
+
+We see that it is the property of locality associated to the mapping that allowed us to write the convergence of the numerical integral to the analytical value. In doing so, we exploited the fact that the variance in the image of each small segment in $[0,1]$ is small on average, and that the errors vanish as we take finer and finer grids.
 
 \subsection{Analytical equivalence given $S$ measurable and bijective}
 \label{sec:proof-equivalence}
+[TODO: should this section be moved to an appendix ?]
 
+In this section we prove that the analytical formulation of the one-dimensional neural field holds in the case that the mapping $S$ is bijective and measurable.
+In the our case of sequences of mappings acting on grid points, the finite-$n$ expansions $S^n$ are sums of piecewise constant functions, and therefore measureable. Since the limit of pointwise convergent measurable functions is also measurable, this implies that $S$ is measurable. The measurability of $S$ allows us to write $\lambda \circ S^{-1}$, the pushforward measure (or image measure) of $\lambda$ under the mapping $S$.
+
+With these two assumptions, let us prove that by defining the initial condition and connectivity kernel
+$$
+\begin{aligned}
+\tilde h(\alpha, t=0) &= h_U(S^{-1}(\alpha), t=0)\\
+\tilde w(\alpha, \beta) &= w_U(S^{-1}(\alpha), S^{-1}(\beta)),
+\end{aligned}
+$$
+
+then the solution $h_U(\vec v, t)$ of the neural field \autoref{eq:nf-in-01p} in $[0,1]^2$ uniquely defines the solution of the neural field equation in $[0,1]$ by taking
+
+\begin{equation} \label{eq:tilde-h-subst}
+\tilde h(\alpha, t) = h_U(S^{-1}(\alpha), t).
+\end{equation}
+
+Substituting \autoref{eq:tilde-h-subst}, the definitions of $\tilde h(\alpha, t)$ and $\tilde w(\alpha, \beta)$ into \autoref{eq:nf-in-01}, and denoting $\vec{v} = S^{-1}(\alpha)$, $\vec{u} = S^{-1}(\beta)$, we get:
+
+$$
+\begin{aligned}
+\partial_t h_U(S^{-1}(\alpha), t) &= 
+\begin{aligned}[t]
+	&-h_U(S^{-1}(\alpha), t)\\&+ \int_{[0,1]} w(S^{-1}(\alpha), S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \left[\lambda \circ S^{-1}\right](\d \beta)
+\end{aligned}\\
+&= \begin{aligned}[t]
+	&-h_U(\vec v, t)\\&+ \int_{[0,1]} w_U(\vec v, S^{-1}(\beta)) \phi(h_U(S^{-1}(\beta), t)) \left[\lambda \circ S^{-1}\right](\d \beta)
+\end{aligned}\\
+&= -h_U(\vec v, t) + \int_{[0,1]^2} w_U(\vec v, \vec u) \phi(h_U(\vec u, t)) \lambda(\d \vec u)
+\end{aligned}
+$$
+
+In the last line, we used a basic property of the pushfoward measure (see \cite{Bogachev2007}, Theorem 3.6.1, p. 190). The Lebesgue measure $\lambda$ simply plays the role of a uniform distribution on $[0,1]^2$, further simplifying into:
+
+$$
+\partial_t h_U(\vec v, t) = -h_U(\vec v, t) + \int_{[0,1]^2} w(\vec v, \vec u) \phi(h_U(\vec u, t)) \d \vec u.
+$$
+
+Therefore, if $h_U(\vec v, t)$ solves the neural field equation in $[0,1]^2$, then $\tilde h(\alpha, t) = (h_U(\cdot, t) \circ S^{-1})(\alpha)$ solves the equivalent neural field equation in $[0,1]$. The same reasoning applies in reverse: if $\tilde h(\alpha, t)$ solves the neural field equation in $[0,1]$, then $h_U(\vec v, t) = (\tilde h(\cdot, t) \circ S)(\vec v)$ solves the neural field in $[0,1]^2$.
 
 \section{Conclusion}
 
